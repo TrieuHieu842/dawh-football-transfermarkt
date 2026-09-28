@@ -1,0 +1,11 @@
+[2026-09-28 14:48:40,055] [INFO] [main.py:9] - ==================================================================
+[2026-09-28 14:48:40,055] [INFO] [main.py:10] - BẮT ĐẦU PIPELINE STAGE 1: LOAD STAGING RAW - BATCH: BATCH_20260928_144838
+[2026-09-28 14:48:40,055] [INFO] [main.py:11] - ==================================================================
+[2026-09-28 14:48:40,094] [INFO] [connection.py:9] - Kết nối Database thành công
+[2026-09-28 14:48:40,134] [INFO] [csv_extractor.py:24] - File [national_teams.csv] - Số dòng: 124 | MD5: 1fcdc3dd121973d6eb2785928a2b74eb
+[2026-09-28 14:48:40,135] [INFO] [raw_loader.py:13] - ---> Bắt đầu nạp file [national_teams.csv] vào bảng [stg_raw_national_teams]...
+[2026-09-28 14:48:40,408] [INFO] [raw_loader.py:51] - ---> [Thành công] Đã nạp tổng cộng 124 dòng vào [stg_raw_national_teams].
+[2026-09-28 14:48:40,409] [INFO] [main.py:51] - 
+================ TỔNG KẾT BÁO CÁO TẦNG STG_RAW ================
+[2026-09-28 14:48:40,409] [INFO] [main.py:53] - File: national_teams.csv     | Bảng: stg_raw_national_teams    | Nguồn:        124 | Nạp:        124 | Trạng thái: PASS
+[2026-09-28 14:48:40,409] [INFO] [main.py:58] - ==================================================================

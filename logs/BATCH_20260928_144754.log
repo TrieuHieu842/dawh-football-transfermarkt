@@ -1,0 +1,13 @@
+[2026-09-28 14:47:56,527] [INFO] [main.py:9] - ==================================================================
+[2026-09-28 14:47:56,527] [INFO] [main.py:10] - BẮT ĐẦU PIPELINE STAGE 1: LOAD STAGING RAW - BATCH: BATCH_20260928_144754
+[2026-09-28 14:47:56,527] [INFO] [main.py:11] - ==================================================================
+[2026-09-28 14:47:56,567] [INFO] [connection.py:9] - Kết nối Database thành công
+[2026-09-28 14:47:56,740] [INFO] [csv_extractor.py:24] - File [games.csv] - Số dòng: 88,958 | MD5: b81bb38d67495dac84a896893bbbe108
+[2026-09-28 14:47:56,740] [INFO] [raw_loader.py:13] - ---> Bắt đầu nạp file [games.csv] vào bảng [stg_raw_games]...
+[2026-09-28 14:48:09,932] [ERROR] [main.py:41] - Thất bại khi xử lý file [games.csv]: Can't reconnect until invalid transaction is rolled back.  Please rollback() fully before proceeding (Background on this error at: https://sqlalche.me/e/21/8s2b)
+[2026-09-28 14:48:10,024] [INFO] [csv_extractor.py:24] - File [club_games.csv] - Số dòng: 177,916 | MD5: a6f76a58af15ea183cbf692f3325a066
+[2026-09-28 14:48:10,024] [INFO] [raw_loader.py:13] - ---> Bắt đầu nạp file [club_games.csv] vào bảng [stg_raw_club_games]...
+[2026-09-28 14:48:20,122] [INFO] [raw_loader.py:51] - ---> [Thành công] Đã nạp tổng cộng 177,916 dòng vào [stg_raw_club_games].
+[2026-09-28 14:48:21,205] [INFO] [csv_extractor.py:24] - File [appearances.csv] - Số dòng: 1,894,350 | MD5: 2dc44c48ec4044e4ae48d2dc0a55ef8c
+[2026-09-28 14:48:21,205] [INFO] [raw_loader.py:13] - ---> Bắt đầu nạp file [appearances.csv] vào bảng [stg_raw_appearances]...
+[2026-09-28 14:48:29,814] [ERROR] [main.py:41] - Thất bại khi xử lý file [appearances.csv]: Can't reconnect until invalid transaction is rolled back.  Please rollback() fully before proceeding (Background on this error at: https://sqlalche.me/e/21/8s2b)

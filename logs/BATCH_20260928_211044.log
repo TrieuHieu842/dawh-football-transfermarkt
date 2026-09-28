@@ -1,0 +1,14 @@
+[2026-09-28 21:10:44,868] [INFO] [main_02_build_stg_clean.py:33] - ==================================================================
+[2026-09-28 21:10:44,869] [INFO] [main_02_build_stg_clean.py:34] - BẮT ĐẦU PIPELINE STAGE 2: TRANSFORM TO STAGING CLEAN - BATCH: BATCH_20260928_211044
+[2026-09-28 21:10:44,869] [INFO] [main_02_build_stg_clean.py:35] - ==================================================================
+[2026-09-28 21:10:44,930] [INFO] [connection.py:9] - Kết nối Database thành công
+[2026-09-28 21:11:16,762] [INFO] [clean_transformers.py:11] - Đang biến đổi dữ liệu: stg_clean_players...
+[2026-09-28 21:11:24,900] [INFO] [main_02_build_stg_clean.py:30] - ---> [Thành công] Đã nạp 50,149 dòng sạch vào [stg_clean_players].
+[2026-09-28 21:11:27,224] [INFO] [clean_transformers.py:42] - Đang biến đổi dữ liệu: stg_clean_club_games...
+[2026-09-28 21:11:35,542] [INFO] [main_02_build_stg_clean.py:30] - ---> [Thành công] Đã nạp 177,916 dòng sạch vào [stg_clean_club_games].
+[2026-09-28 21:11:41,281] [INFO] [clean_transformers.py:66] - Đang biến đổi dữ liệu: stg_clean_player_valuations...
+[2026-09-28 21:12:06,829] [INFO] [main_02_build_stg_clean.py:30] - ---> [Thành công] Đã nạp 656,301 dòng sạch vào [stg_clean_player_valuations].
+[2026-09-28 21:12:09,088] [INFO] [clean_transformers.py:100] - Đang biến đổi dữ liệu: stg_clean_transfers...
+[2026-09-28 21:12:17,514] [INFO] [main_02_build_stg_clean.py:30] - ---> [Thành công] Đã nạp 175,165 dòng sạch vào [stg_clean_transfers].
+[2026-09-28 21:12:17,514] [INFO] [main_02_build_stg_clean.py:60] - 
+=== Hoàn thành xuất sắc Pipeline Stage 2 (stg_clean)! ===

@@ -1,0 +1,10 @@
+1. Chuẩn bị file dữ liệu: Tạo thư mục data/raw/ và chép 12 file CSV tải từ Kaggle vào đó.
+2. Cài đặt thư viện: 
+pip install -r requirements.txt
+3. Sửa trong file settings.py, thay SERVER_NAME = tên Database của bạn
+SERVER_NAME = "MSI\\TRIEUHIEU" # Thay bằng tên Server Name trong SQL Server Management Studio
+DATABASE_NAME = "football_dwh"
+
+3. Chạy Pipeline Step 1 - tạo các table vào db: python main.py
+4. Chạy Pipeline Step 2 - làm sạch, biến đổi dữ liệu: python main_02_build_stg_clean.py
+5. Chạy Pipeline Step 3 - nạp các bảng chiều và xử lý scd: python main_03_load_dimensions.py

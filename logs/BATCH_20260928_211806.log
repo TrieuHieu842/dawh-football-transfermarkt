@@ -1,0 +1,12 @@
+[2026-09-28 21:18:07,002] [INFO] [main_03_load_dimensions.py:11] - ==================================================================
+[2026-09-28 21:18:07,002] [INFO] [main_03_load_dimensions.py:12] - BẮT ĐẦU PIPELINE STAGE 3: LOAD DIMENSION TABLES (DW) - BATCH: BATCH_20260928_211806
+[2026-09-28 21:18:07,002] [INFO] [main_03_load_dimensions.py:13] - ==================================================================
+[2026-09-28 21:18:07,048] [INFO] [connection.py:9] - Kết nối Database thành công
+[2026-09-28 21:18:07,048] [INFO] [dim_loader.py:11] - Đang sinh bảng Dim_Date từ năm 1990 đến 2030...
+[2026-09-28 21:18:07,938] [INFO] [main_03_load_dimensions.py:27] - ---> [Thành công] Đã nạp 14,976 ngày vào [dim_date].
+[2026-09-28 21:18:08,610] [INFO] [dim_loader.py:45] - Đang nạp Bảng Chiều SCD1: [dim_competition]...
+[2026-09-28 21:18:08,636] [INFO] [dim_loader.py:86] - ---> [SCD1] Đã chèn 65 bản ghi mới vào [dim_competition].
+[2026-09-28 21:18:09,349] [INFO] [dim_loader.py:93] - Đang nạp Bảng Chiều Dim_Player (SCD Type 2)...
+[2026-09-28 21:18:11,816] [INFO] [dim_loader.py:130] - ---> [SCD2] Khởi tạo Dim_Player thành công với 50,150 bản ghi.
+[2026-09-28 21:18:11,837] [INFO] [main_03_load_dimensions.py:43] - 
+=== Hoàn thành xuất sắc Pipeline Stage 3 (Load Dimensions)! ===
