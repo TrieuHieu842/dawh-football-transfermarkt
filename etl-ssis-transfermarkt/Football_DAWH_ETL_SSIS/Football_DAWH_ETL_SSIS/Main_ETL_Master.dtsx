@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Main_ETL_Master"
   DTS:PackageType="5"
-  DTS:VersionBuild="30"
-  DTS:VersionGUID="{AA5DCC95-AB28-4FC1-9044-A1BA2BEF5538}">
+  DTS:VersionBuild="33"
+  DTS:VersionGUID="{18F502E5-A4DC-4FBE-9069-151D876D645B}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -1540,7 +1540,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="LoadedAt">
       <DTS:VariableValue
-        DTS:DataType="7">9/29/2026 4:06:38 PM</DTS:VariableValue>
+        DTS:DataType="7">9/29/2026 10:19:36 PM</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -10324,6 +10324,256 @@
               version="1">
               <components>
                 <component
+                  refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType"
+                  componentClassID="Microsoft.DataConvert"
+                  contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Data Conversion"
+                  name="CV_ConvertDataType"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input]"
+                      name="Data Conversion Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[player_id]"
+                          cachedDataType="nText"
+                          cachedName="player_id"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[player_id]" />
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[current_club_id]"
+                          cachedDataType="nText"
+                          cachedName="current_club_id"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[current_club_id]" />
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[current_national_team_id]"
+                          cachedDataType="nText"
+                          cachedName="current_national_team_id"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[current_national_team_id]" />
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[height_in_cm]"
+                          cachedDataType="nText"
+                          cachedName="height_in_cm"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[height_in_cm]" />
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[market_value_in_eur]"
+                          cachedDataType="nText"
+                          cachedName="market_value_in_eur"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[market_value_in_eur]" />
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[highest_market_value_in_eur]"
+                          cachedDataType="nText"
+                          cachedName="highest_market_value_in_eur"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[highest_market_value_in_eur]" />
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[date_of_birth]"
+                          cachedDataType="nText"
+                          cachedName="date_of_birth"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[date_of_birth]" />
+                        <inputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input].Columns[contract_expiration_date]"
+                          cachedDataType="nText"
+                          cachedName="contract_expiration_date"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[contract_expiration_date]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output]"
+                      exclusionGroup="1"
+                      name="Data Conversion Output"
+                      synchronousInputId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[player_id_int]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[player_id_int]"
+                          name="player_id_int"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[player_id]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[current_club_id_int]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[current_club_id_int]"
+                          name="current_club_id_int"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[current_club_id]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[current_national_team_id_int]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[current_national_team_id_int]"
+                          name="current_national_team_id_int"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[current_national_team_id]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[height_in_cm_decimal]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[height_in_cm_decimal]"
+                          name="height_in_cm_decimal"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[height_in_cm]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[market_value_in_eur_decimal]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[market_value_in_eur_decimal]"
+                          name="market_value_in_eur_decimal"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[market_value_in_eur]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[highest_market_value_in_eur_decimal]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[highest_market_value_in_eur_decimal]"
+                          name="highest_market_value_in_eur_decimal"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[highest_market_value_in_eur]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[date_of_birth_date]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[date_of_birth_date]"
+                          name="date_of_birth_date"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[date_of_birth]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[contract_expiration_date_date]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output].Columns[contract_expiration_date_date]"
+                          name="contract_expiration_date_date"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players.Outputs[OLE DB Source Output].Columns[contract_expiration_date]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Data Conversion Error Output"
+                      synchronousInputId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
                   refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Data Conversion"
                   componentClassID="Microsoft.DataConvert"
                   contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
@@ -10652,6 +10902,55 @@
                           refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
                           dataType="i4"
                           lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="DC_ValidateHeight"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Inputs[Derived Column Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Outputs[Derived Column Error Output]"
+                      description="Error Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
                           name="ErrorColumn"
                           specialFlags="2" />
                       </outputColumns>
@@ -11622,6 +11921,16 @@ FROM dbo.stg_raw_players;</property>
                   endId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Derived Column.Inputs[Derived Column Input]"
                   name="Data Conversion Output"
                   startId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Data Conversion.Outputs[Data Conversion Output]" />
+                <path
+                  refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players.Paths[Data Conversion Output1]"
+                  endId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight.Inputs[Derived Column Input]"
+                  name="Data Conversion Output"
+                  startId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Outputs[Data Conversion Output]" />
+                <path
+                  refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players.Paths[Derived Column Output]"
+                  endId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType.Inputs[Data Conversion Input]"
+                  name="Derived Column Output"
+                  startId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Derived Column.Outputs[Derived Column Output]" />
                 <path
                   refId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players.Paths[OLE DB Source Output]"
                   endId="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Data Conversion.Inputs[Data Conversion Input]"
@@ -12673,45 +12982,45 @@ FROM dbo.stg_raw_players;</property>
     design-time-name="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="154.666666666667,42.6666666666667"
-          Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Derived Column"
-          TopLeft="160.874996965751,214.099991596938" />
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="181.333333333334,42.6666666666667"
           Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\SRC_stg_raw_players"
           TopLeft="102.999999314546,32.3999988484383" />
         <NodeLayout
+          Size="154.666666666667,42.6666666666667"
+          Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Derived Column"
+          TopLeft="123.999998614192,164.049993983508" />
+        <NodeLayout
           Size="157.333333333334,42.6666666666667"
           Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\Data Conversion"
-          TopLeft="125.624994384125,122.19999417305" />
+          TopLeft="46.8749979045242,98.1499953198434" />
         <EdgeLayout
           Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players.Paths[OLE DB Source Output]"
-          TopLeft="193.666665981213,75.0666655151049">
+          TopLeft="193.666665981213,75.066665515105">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="10.6249950695789,47.1333286579452"
+              EndConnector="-68.1250014100218,23.0833298047384"
               Start="0,0"
-              End="10.6249950695789,39.6333286579452">
+              End="-68.1250014100218,15.5833298047384">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,19.5666643289726" />
+                    End="0,7.54166490236919" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,19.5666643289726"
-                    Point2="0,23.5666643289726"
-                    Point3="4,23.5666643289726" />
+                    Point1="0,7.54166490236919"
+                    Point2="0,11.5416649023692"
+                    Point3="-4,11.5416649023692" />
                   <mssgle:LineSegment
-                    End="6.62499506957892,23.5666643289726" />
+                    End="-64.1250014100218,11.5416649023692" />
                   <mssgle:CubicBezierSegment
-                    Point1="6.62499506957892,23.5666643289726"
-                    Point2="10.6249950695789,23.5666643289726"
-                    Point3="10.6249950695789,27.5666643289726" />
+                    Point1="-64.1250014100218,11.5416649023692"
+                    Point2="-68.1250014100218,11.5416649023692"
+                    Point3="-68.1250014100218,15.5416649023692" />
                   <mssgle:LineSegment
-                    End="10.6249950695789,39.6333286579452" />
+                    End="-68.1250014100218,15.5833298047384" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -12722,30 +13031,100 @@ FROM dbo.stg_raw_players;</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players.Paths[Data Conversion Output]"
-          TopLeft="204.291661050792,164.866660839717">
+          TopLeft="125.541664571191,140.81666198651">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="33.9166692482924,49.2333307572211"
+              EndConnector="75.7916673763343,23.2333319969979"
               Start="0,0"
-              End="33.9166692482924,41.7333307572211">
+              End="75.7916673763343,15.7333319969979">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,20.6166653786106" />
+                    End="0,7.61666599849893" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,20.6166653786106"
-                    Point2="0,24.6166653786106"
-                    Point3="4,24.6166653786106" />
+                    Point1="0,7.61666599849893"
+                    Point2="0,11.6166659984989"
+                    Point3="4,11.6166659984989" />
                   <mssgle:LineSegment
-                    End="29.9166692482924,24.6166653786106" />
+                    End="71.7916673763343,11.6166659984989" />
                   <mssgle:CubicBezierSegment
-                    Point1="29.9166692482924,24.6166653786106"
-                    Point2="33.9166692482924,24.6166653786106"
-                    Point3="33.9166692482924,28.6166653786106" />
+                    Point1="71.7916673763343,11.6166659984989"
+                    Point2="75.7916673763343,11.6166659984989"
+                    Point3="75.7916673763343,15.6166659984989" />
                   <mssgle:LineSegment
-                    End="33.9166692482924,41.7333307572211" />
+                    End="75.7916673763343,15.7333319969979" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="180,42.6666666666667"
+          Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\CV_ConvertDataType"
+          TopLeft="203.124990919605,237.249988687039" />
+        <EdgeLayout
+          Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players.Paths[Derived Column Output]"
+          TopLeft="201.333331947525,206.716660650175">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="91.79165897208,30.5333280368642"
+              Start="0,0"
+              End="91.79165897208,23.0333280368642">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,11.2666640184321" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,11.2666640184321"
+                    Point2="0,15.2666640184321"
+                    Point3="4,15.2666640184321" />
+                  <mssgle:LineSegment
+                    End="87.79165897208,15.2666640184321" />
+                  <mssgle:CubicBezierSegment
+                    Point1="87.79165897208,15.2666640184321"
+                    Point2="91.79165897208,15.2666640184321"
+                    Point3="91.79165897208,19.2666640184321" />
+                  <mssgle:LineSegment
+                    End="91.79165897208,23.0333280368642" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="166.666666666667,42.6666666666667"
+          Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players\DC_ValidateHeight"
+          TopLeft="361.249983850867,298.349985773564" />
+        <EdgeLayout
+          Id="Package\Sequence Container 02 - Transform Staging Clean\DFT_stg_clean_players.Paths[Data Conversion Output1]"
+          TopLeft="383.124990919605,258.583322020372">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="60.1249929312618,39.7666637531918"
+              Start="0,0"
+              End="60.1249929312618,32.2666637531918">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="56.1249929312618,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="56.1249929312618,0"
+                    Point2="60.1249929312618,0"
+                    Point3="60.1249929312618,4" />
+                  <mssgle:LineSegment
+                    End="60.1249929312618,32.2666637531918" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
