@@ -1,0 +1,25 @@
+# ===== Visual Studio / SSIS: file sinh ra khi mở project, build hoặc chạy package =====
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.ispac
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+etl-python-transfermarkt/logs/
+*.log
+
+# ===== Dữ liệu nguồn: mỗi máy tự tải 10 file CSV từ Kaggle vào data/raw/ =====
+data/raw/*
+!data/raw/.gitkeep
+
+# ===== Linh tinh =====
+~$*
+*.tmp
+Thumbs.db
+.DS_Store

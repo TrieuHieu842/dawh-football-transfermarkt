@@ -1,6 +1,0 @@
-[2026-09-28 21:21:29,546] [INFO] [main_04_load_facts.py:11] - ==================================================================
-[2026-09-28 21:21:29,546] [INFO] [main_04_load_facts.py:12] - BẮT ĐẦU PIPELINE STAGE 4: LOAD FACT TABLES (DW) - BATCH: BATCH_20260928_212127
-[2026-09-28 21:21:29,546] [INFO] [main_04_load_facts.py:13] - ==================================================================
-[2026-09-28 21:21:29,588] [INFO] [connection.py:9] - Kết nối Database thành công
-[2026-09-28 21:21:29,588] [INFO] [fact_loader.py:72] - Đang nạp Bảng Sự Kiện: [fact_team_match]...
-[2026-09-28 21:21:34,538] [ERROR] [main_04_load_facts.py:32] - Lỗi trong quá trình chạy Pipeline Stage 4: You are trying to merge on int64 and str columns for key 'game_id'. If you wish to proceed you should use pd.concat

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="9/29/2026 10:26:18 PM"
@@ -7,12 +7,12 @@
   DTS:CreatorName="MSI\Admin"
   DTS:DTSID="{A9115E8F-FD54-4DE9-8D26-832065164768}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LastModifiedProductVersion="16.0.1000.6"
   DTS:LocaleID="1033"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
   DTS:VersionBuild="12"
-  DTS:VersionGUID="{E51F3F74-625A-4343-A878-B33ABB7D5A1B}">
+  DTS:VersionGUID="{F33189A5-E42F-4307-81AA-D9AC2BE813EF}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -644,7 +644,12 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT 
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">/* Khu trung: giu 1 dong moi khoa (competition_id), uu tien dong nap sau cung */
+SELECT [competition_id], [competition_name], [competition_type], [competition_sub_type], [country_name], [confederation], [batch_id], [loaded_at]
+FROM (
+    SELECT q.*, ROW_NUMBER() OVER (PARTITION BY q.competition_id ORDER BY q.loaded_at DESC) AS rn
+    FROM (
+SELECT 
     competition_id, competition_name, competition_type, competition_sub_type, 
     country_name, confederation, batch_id, loaded_at 
 FROM ( 
@@ -672,14 +677,17 @@ FROM (
             WHEN N'AMERIKA'  THEN N'Americas' 
             WHEN N'AMERICAS' THEN N'Americas' 
             WHEN N'FIFA'     THEN N'FIFA' 
-            ELSE N'Khong xac dinh' 
+            ELSE N'Không xác định' 
         END AS confederation, 
         CAST(c.batch_id AS NVARCHAR(30)) AS batch_id, 
         c.loaded_at 
     FROM dbo.stg_raw_competitions c 
     LEFT JOIN dbo.stg_raw_countries co 
         ON CAST(c.country_id AS NVARCHAR(20)) = CAST(co.country_id AS NVARCHAR(20)) 
-) x;</property>
+) x
+    ) q
+) d
+WHERE d.rn = 1 OR d.competition_id IS NULL;</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -1667,7 +1675,12 @@ FROM (
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT 
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">/* Khu trung: giu 1 dong moi khoa (game_id), uu tien dong nap sau cung */
+SELECT [game_id], [competition_id], [season_start_year], [season_label], [season_short], [game_date], [round], [round_type], [stadium], [referee], [home_formation], [away_formation], [attendance_band], [home_club_id], [away_club_id], [home_club_goals], [away_club_goals], [batch_id], [loaded_at]
+FROM (
+    SELECT q.*, ROW_NUMBER() OVER (PARTITION BY q.game_id ORDER BY q.loaded_at DESC) AS rn
+    FROM (
+SELECT 
     game_id, competition_id, 
     season_start_year, season_label, season_short, 
     game_date, round, round_type, 
@@ -1755,7 +1768,7 @@ FROM (
                     CAST(attendance AS NVARCHAR(20))
                 )), N'') AS BIGINT
             ) IS NULL 
-                THEN N'Khong xac dinh'
+                THEN N'Không xác định'
 
             WHEN TRY_CAST(
                 NULLIF(LTRIM(RTRIM(
@@ -1796,7 +1809,10 @@ FROM (
         loaded_at 
 
     FROM dbo.stg_raw_games 
-) x;</property>
+) x
+    ) q
+) d
+WHERE d.rn = 1 OR d.game_id IS NULL;</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -2269,12 +2285,12 @@ FROM (
       DTS:LocaleID="-1"
       DTS:ObjectName="SQL_Truncate_Competitions"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="1">
+      DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{A0F48220-ADB3-45F7-8829-01BD617D5B7A}"
-          SQLTask:SqlStatementSource="TRUNCATE TABLE stg_clean.competitions;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="TRUNCATE TABLE stg_clean.competitions;&#xA;DELETE FROM dbo.etl_reject WHERE source_table IN (N'stg_raw_competitions', N'stg_raw_countries');" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -2286,7 +2302,7 @@ FROM (
       DTS:LocaleID="-1"
       DTS:ObjectName="SQL_Truncate_Games"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
+      DTS:ThreadHint="1">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData

@@ -35,11 +35,10 @@ CREATE TABLE stg_clean.clubs (
     club_name               NVARCHAR(200)  NULL,
     club_type               NVARCHAR(20)   NOT NULL,      -- Club | National Team
     domestic_competition_id NVARCHAR(20)   NULL,
-    country_name            NVARCHAR(100)  NULL,          -- chi co voi National Team (clubs lay qua competition o buoc Dim)
-    confederation           NVARCHAR(20)   NULL,          -- chi co voi National Team
+    country_name            NVARCHAR(100)  NULL,          -- CLB: lay theo giai VDQG (competitions); doi tuyen: national_teams
+    confederation           NVARCHAR(20)   NULL,          -- chuan hoa: UEFA | AFC | CAF | Americas | OFC | FIFA | Không xác định
     stadium_name            NVARCHAR(200)  NULL,
     stadium_capacity_band   NVARCHAR(30)   NOT NULL,      -- < 20.000 | 20.000-39.999 | 40.000-59.999 | >= 60.000 | Không xác định
-    coach_name              NVARCHAR(200)  NULL,
     batch_id                NVARCHAR(30)   NULL,
     loaded_at               DATETIME       NULL
 );

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="9/29/2026 10:27:00 PM"
@@ -7,25 +7,25 @@
   DTS:CreatorName="MSI\Admin"
   DTS:DTSID="{8D1DD41D-97F0-41F8-90A9-35AB5544760C}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LastModifiedProductVersion="16.0.1000.6"
   DTS:LocaleID="1033"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
   DTS:VersionBuild="23"
-  DTS:VersionGUID="{E07A6D56-E4DB-4BB8-8BB0-13E8762CD020}">
+  DTS:VersionGUID="{514A967C-E3D3-49E3-9D88-03ACABEB8A49}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+      DTS:refId="Package.ConnectionManagers[OLEDB_Staging]"
       DTS:CreationName="OLEDB"
       DTS:DTSID="{ACC4C750-A12B-466D-9103-B76F15570620}"
-      DTS:ObjectName="DESKTOP-2OIAAJU\SSAS.football_dwh_staging">
+      DTS:ObjectName="OLEDB_Staging">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:ConnectRetryCount="1"
           DTS:ConnectRetryInterval="5"
-          DTS:ConnectionString="Data Source=DESKTOP-2OIAAJU\SSAS;Initial Catalog=football_dwh_staging;Provider=SQLOLEDB.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{ACC4C750-A12B-466D-9103-B76F15570620}DESKTOP-2OIAAJU\SSAS.football_dwh_staging;Auto Translate=False;" />
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=football_dwh_staging;Provider=SQLOLEDB.1;Integrated Security=SSPI;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -323,6 +323,254 @@
                       refId="Package\DFT_Clean_Transfers\CS_Validate_Transfer.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
                       dataType="i4"
                       lineageId="Package\DFT_Clean_Transfers\CS_Validate_Transfer.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_Reject_Transfer_MissingKey"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Inputs[Derived Column Input].Columns[player_id]"
+                      cachedDataType="i4"
+                      cachedName="player_id"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[player_id]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Inputs[Derived Column Input].Columns[transfer_date]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="transfer_date"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[transfer_date]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[source_table]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      length="100"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[source_table]"
+                      name="source_table"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          name="Expression">(DT_WSTR,100)"stg_raw_transfers"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_WSTR,100)"stg_raw_transfers"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[natural_key]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      length="200"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[natural_key]"
+                      name="natural_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          name="Expression">(DT_WSTR,200)((ISNULL(#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[player_id]}) ? "player_id=NULL" : "player_id=" + (DT_WSTR,20)#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[player_id]}) + "|" + (ISNULL(#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[transfer_date]}) ? "NULL" : (DT_WSTR,10)#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[transfer_date]}))</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_WSTR,200)((ISNULL(player_id) ? "player_id=NULL" : "player_id=" + (DT_WSTR,20)player_id) + "|" + (ISNULL(transfer_date) ? "NULL" : (DT_WSTR,10)transfer_date))</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[reason]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      length="200"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[reason]"
+                      name="reason"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          name="Expression">(DT_WSTR,200)"Thiếu player_id hoặc transfer_date"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_WSTR,200)"Thiếu player_id hoặc transfer_date"</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="DC_Reject_Transfer_Negative"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Inputs[Derived Column Input].Columns[player_id]"
+                      cachedDataType="i4"
+                      cachedName="player_id"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[player_id]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Inputs[Derived Column Input].Columns[transfer_date]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="transfer_date"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[transfer_date]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[source_table]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      length="100"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[source_table]"
+                      name="source_table"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          name="Expression">(DT_WSTR,100)"stg_raw_transfers"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_WSTR,100)"stg_raw_transfers"</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[natural_key]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      length="200"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[natural_key]"
+                      name="natural_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          name="Expression">(DT_WSTR,200)((ISNULL(#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[player_id]}) ? "player_id=NULL" : "player_id=" + (DT_WSTR,20)#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[player_id]}) + "|" + (ISNULL(#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[transfer_date]}) ? "NULL" : (DT_WSTR,10)#{Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[transfer_date]}))</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_WSTR,200)((ISNULL(player_id) ? "player_id=NULL" : "player_id=" + (DT_WSTR,20)player_id) + "|" + (ISNULL(transfer_date) ? "NULL" : (DT_WSTR,10)transfer_date))</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[reason]"
+                      dataType="wstr"
+                      errorRowDisposition="FailComponent"
+                      length="200"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[reason]"
+                      name="reason"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          name="Expression">(DT_WSTR,200)"Phí hoặc giá trị thị trường âm"</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_WSTR,200)"Phí hoặc giá trị thị trường âm"</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
                       name="ErrorColumn"
                       specialFlags="2" />
                   </outputColumns>
@@ -664,8 +912,8 @@ where [refTable].[player_id] = ?</property>
               <connections>
                 <connection
                   refId="Package\DFT_Clean_Transfers\LKP_Player_DOB_Transfer.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
                   description="Connection manager used to access lookup data."
                   name="OleDbConnection" />
               </connections>
@@ -753,6 +1001,324 @@ where [refTable].[player_id] = ?</property>
               </outputs>
             </component>
             <component
+              refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE_DST_Reject_Transfer_MissingKey"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[etl_reject]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].Columns[batch_id]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="batch_id"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[batch_id]"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[batch_id]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].Columns[source_table]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="source_table"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[source_table]"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[source_table]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].Columns[natural_key]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="natural_key"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[natural_key]"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[natural_key]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].Columns[reason]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="reason"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[reason]"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output].Columns[reason]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[reject_id]"
+                      dataType="i8"
+                      name="reject_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[batch_id]"
+                      dataType="wstr"
+                      length="30"
+                      name="batch_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[source_table]"
+                      dataType="wstr"
+                      length="100"
+                      name="source_table" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[natural_key]"
+                      dataType="wstr"
+                      length="200"
+                      name="natural_key" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[reason]"
+                      dataType="wstr"
+                      length="200"
+                      name="reason" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input].ExternalColumns[rejected_at]"
+                      dataType="dbTimeStamp"
+                      name="rejected_at" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE_DST_Reject_Transfer_Negative"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[etl_reject]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].Columns[batch_id]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="batch_id"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[batch_id]"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output].Columns[batch_id]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].Columns[source_table]"
+                      cachedDataType="wstr"
+                      cachedLength="100"
+                      cachedName="source_table"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[source_table]"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[source_table]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].Columns[natural_key]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="natural_key"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[natural_key]"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[natural_key]" />
+                    <inputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].Columns[reason]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="reason"
+                      externalMetadataColumnId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[reason]"
+                      lineageId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output].Columns[reason]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[reject_id]"
+                      dataType="i8"
+                      name="reject_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[batch_id]"
+                      dataType="wstr"
+                      length="30"
+                      name="batch_id" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[source_table]"
+                      dataType="wstr"
+                      length="100"
+                      name="source_table" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[natural_key]"
+                      dataType="wstr"
+                      length="200"
+                      name="natural_key" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[reason]"
+                      dataType="wstr"
+                      length="200"
+                      name="reason" />
+                    <externalMetadataColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input].ExternalColumns[rejected_at]"
+                      dataType="dbTimeStamp"
+                      name="rejected_at" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
               refId="Package\DFT_Clean_Transfers\OLE_DST_Transfers"
               componentClassID="Microsoft.OLEDBDestination"
               contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
@@ -811,8 +1377,8 @@ where [refTable].[player_id] = ?</property>
               <connections>
                 <connection
                   refId="Package\DFT_Clean_Transfers\OLE_DST_Transfers.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -1029,7 +1595,12 @@ where [refTable].[player_id] = ?</property>
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">/* Khu trung: giu 1 dong moi khoa (player_id, transfer_date, from_club_id, to_club_id), uu tien dong nap sau cung */
+SELECT [player_id], [transfer_date], [transfer_season], [from_club_id], [to_club_id], [transfer_fee_eur], [market_value_eur], [batch_id], [loaded_at]
+FROM (
+    SELECT q.*, ROW_NUMBER() OVER (PARTITION BY q.player_id, q.transfer_date, q.from_club_id, q.to_club_id ORDER BY q.loaded_at DESC) AS rn
+    FROM (
+SELECT
     TRY_CAST(
         NULLIF(LTRIM(RTRIM(CAST(player_id AS NVARCHAR(50)))), '')
         AS INT
@@ -1068,19 +1639,22 @@ where [refTable].[player_id] = ?</property>
     ) AS to_club_id,
 
     TRY_CAST(
-        NULLIF(LTRIM(RTRIM(CAST(transfer_fee AS NVARCHAR(50)))), '')
+        TRY_CAST(NULLIF(LTRIM(RTRIM(CAST(transfer_fee AS NVARCHAR(50)))), '') AS DECIMAL(19,3))
         AS BIGINT
     ) AS transfer_fee_eur,
 
     TRY_CAST(
-        NULLIF(LTRIM(RTRIM(CAST(market_value_in_eur AS NVARCHAR(50)))), '')
+        TRY_CAST(NULLIF(LTRIM(RTRIM(CAST(market_value_in_eur AS NVARCHAR(50)))), '') AS DECIMAL(19,3))
         AS BIGINT
     ) AS market_value_eur,
 
     CAST(batch_id AS NVARCHAR(30)) AS batch_id,
     loaded_at
 
-FROM dbo.stg_raw_transfers;</property>
+FROM dbo.stg_raw_transfers
+    ) q
+) d
+WHERE d.rn = 1 OR d.player_id IS NULL OR d.transfer_date IS NULL OR d.from_club_id IS NULL OR d.to_club_id IS NULL;</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -1106,8 +1680,8 @@ FROM dbo.stg_raw_transfers;</property>
               <connections>
                 <connection
                   refId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -1697,25 +2271,35 @@ FROM dbo.stg_raw_transfers;</property>
           </components>
           <paths>
             <path
-              refId="Package\DFT_Clean_Transfers.Paths[Data Conversion Output]"
-              endId="Package\DFT_Clean_Transfers\UA_Transfer_PlayerLookup.Inputs[Union All Input 1]"
-              name="Data Conversion Output"
-              startId="Package\DFT_Clean_Transfers\CONV_Match_DOB.Outputs[Data Conversion Output]" />
-            <path
               refId="Package\DFT_Clean_Transfers.Paths[Data Conversion Output1]"
               endId="Package\DFT_Clean_Transfers\DC_Transfer_Attributes.Inputs[Derived Column Input]"
               name="Data Conversion Output"
               startId="Package\DFT_Clean_Transfers\CONV_Transfer_Date.Outputs[Data Conversion Output]" />
             <path
-              refId="Package\DFT_Clean_Transfers.Paths[Derived Column Output]"
-              endId="Package\DFT_Clean_Transfers\UA_Transfer_PlayerLookup.Inputs[Union All Input 2]"
+              refId="Package\DFT_Clean_Transfers.Paths[Data Conversion Output]"
+              endId="Package\DFT_Clean_Transfers\UA_Transfer_PlayerLookup.Inputs[Union All Input 1]"
+              name="Data Conversion Output"
+              startId="Package\DFT_Clean_Transfers\CONV_Match_DOB.Outputs[Data Conversion Output]" />
+            <path
+              refId="Package\DFT_Clean_Transfers.Paths[Derived Column Output3]"
+              endId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_Negative.Inputs[OLE DB Destination Input]"
               name="Derived Column Output"
-              startId="Package\DFT_Clean_Transfers\DC_Transfer_NoMatch.Outputs[Derived Column Output]" />
+              startId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_Clean_Transfers.Paths[Derived Column Output2]"
+              endId="Package\DFT_Clean_Transfers\OLE_DST_Reject_Transfer_MissingKey.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Outputs[Derived Column Output]" />
             <path
               refId="Package\DFT_Clean_Transfers.Paths[Derived Column Output1]"
               endId="Package\DFT_Clean_Transfers\OLE_DST_Transfers.Inputs[OLE DB Destination Input]"
               name="Derived Column Output"
               startId="Package\DFT_Clean_Transfers\DC_Transfer_Attributes.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_Clean_Transfers.Paths[Derived Column Output]"
+              endId="Package\DFT_Clean_Transfers\UA_Transfer_PlayerLookup.Inputs[Union All Input 2]"
+              name="Derived Column Output"
+              startId="Package\DFT_Clean_Transfers\DC_Transfer_NoMatch.Outputs[Derived Column Output]" />
             <path
               refId="Package\DFT_Clean_Transfers.Paths[Lookup Match Output]"
               endId="Package\DFT_Clean_Transfers\CONV_Match_DOB.Inputs[Data Conversion Input]"
@@ -1731,6 +2315,16 @@ FROM dbo.stg_raw_transfers;</property>
               endId="Package\DFT_Clean_Transfers\CS_Validate_Transfer.Inputs[Conditional Split Input]"
               name="OLE DB Source Output"
               startId="Package\DFT_Clean_Transfers\OLE_SRC_Transfers.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\DFT_Clean_Transfers.Paths[Reject_Missing_Key]"
+              endId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_MissingKey.Inputs[Derived Column Input]"
+              name="Reject_Missing_Key"
+              startId="Package\DFT_Clean_Transfers\CS_Validate_Transfer.Outputs[Reject_Missing_Key]" />
+            <path
+              refId="Package\DFT_Clean_Transfers.Paths[Reject_Negative_Money]"
+              endId="Package\DFT_Clean_Transfers\DC_Reject_Transfer_Negative.Inputs[Derived Column Input]"
+              name="Reject_Negative_Money"
+              startId="Package\DFT_Clean_Transfers\CS_Validate_Transfer.Outputs[Reject_Negative_Money]" />
             <path
               refId="Package\DFT_Clean_Transfers.Paths[Union All Output 1]"
               endId="Package\DFT_Clean_Transfers\CONV_Transfer_Date.Inputs[Data Conversion Input]"
@@ -2526,8 +3120,8 @@ where [refTable].[player_id] = ?</property>
               <connections>
                 <connection
                   refId="Package\DFT_Clean_Valuations\LKP_Player_DOB_Valuation.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
                   description="Connection manager used to access lookup data."
                   name="OleDbConnection" />
               </connections>
@@ -2673,8 +3267,8 @@ where [refTable].[player_id] = ?</property>
               <connections>
                 <connection
                   refId="Package\DFT_Clean_Valuations\OLE_DST_Reject_Valuations.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -2832,8 +3426,8 @@ where [refTable].[player_id] = ?</property>
               <connections>
                 <connection
                   refId="Package\DFT_Clean_Valuations\OLE_DST_Valuations.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -3048,6 +3642,11 @@ where [refTable].[player_id] = ?</property>
 
     FROM dbo.stg_raw_player_valuations
 ),
+dedup AS
+(
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY player_id, valuation_date ORDER BY loaded_at DESC) AS rn
+    FROM src
+),
 calc AS
 (
     SELECT
@@ -3066,7 +3665,8 @@ calc AS
 
         batch_id,
         loaded_at
-    FROM src
+    FROM dedup
+    WHERE rn = 1 OR player_id IS NULL OR valuation_date IS NULL
 )
 SELECT
     player_id,
@@ -3103,8 +3703,8 @@ FROM calc;</property>
               <connections>
                 <connection
                   refId="Package\DFT_Clean_Valuations\OLE_SRC_Valuations.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
-                  connectionManagerRefId="Package.ConnectionManagers[DESKTOP-2OIAAJU\SSAS.football_dwh_staging]"
+                  connectionManagerID="Package.ConnectionManagers[OLEDB_Staging]"
+                  connectionManagerRefId="Package.ConnectionManagers[OLEDB_Staging]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -4019,21 +4619,6 @@ FROM calc;</property>
               name="Data Conversion Output"
               startId="Package\DFT_Clean_Valuations\CONV_Dates.Outputs[Data Conversion Output]" />
             <path
-              refId="Package\DFT_Clean_Valuations.Paths[Derived Column Output]"
-              endId="Package\DFT_Clean_Valuations\UA_Valuation_PlayerLookup.Inputs[Union All Input 1]"
-              name="Derived Column Output"
-              startId="Package\DFT_Clean_Valuations\DC_Valuation_Matched.Outputs[Derived Column Output]" />
-            <path
-              refId="Package\DFT_Clean_Valuations.Paths[Derived Column Output1]"
-              endId="Package\DFT_Clean_Valuations\UA_Valuation_PlayerLookup.Inputs[Union All Input 2]"
-              name="Derived Column Output"
-              startId="Package\DFT_Clean_Valuations\DC_Valuation_NoMatch.Outputs[Derived Column Output]" />
-            <path
-              refId="Package\DFT_Clean_Valuations.Paths[Derived Column Output2]"
-              endId="Package\DFT_Clean_Valuations\OLE_DST_Valuations.Inputs[OLE DB Destination Input]"
-              name="Derived Column Output"
-              startId="Package\DFT_Clean_Valuations\DC_Age_Valuation.Outputs[Derived Column Output]" />
-            <path
               refId="Package\DFT_Clean_Valuations.Paths[Derived Column Output3]"
               endId="Package\DFT_Clean_Valuations\UA_Reject_Valuations.Inputs[Union All Input 1]"
               name="Derived Column Output"
@@ -4043,6 +4628,21 @@ FROM calc;</property>
               endId="Package\DFT_Clean_Valuations\UA_Reject_Valuations.Inputs[Union All Input 2]"
               name="Derived Column Output"
               startId="Package\DFT_Clean_Valuations\DC_Reject_Valuation_Negative.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_Clean_Valuations.Paths[Derived Column Output2]"
+              endId="Package\DFT_Clean_Valuations\OLE_DST_Valuations.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\DFT_Clean_Valuations\DC_Age_Valuation.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_Clean_Valuations.Paths[Derived Column Output]"
+              endId="Package\DFT_Clean_Valuations\UA_Valuation_PlayerLookup.Inputs[Union All Input 1]"
+              name="Derived Column Output"
+              startId="Package\DFT_Clean_Valuations\DC_Valuation_Matched.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\DFT_Clean_Valuations.Paths[Derived Column Output1]"
+              endId="Package\DFT_Clean_Valuations\UA_Valuation_PlayerLookup.Inputs[Union All Input 2]"
+              name="Derived Column Output"
+              startId="Package\DFT_Clean_Valuations\DC_Valuation_NoMatch.Outputs[Derived Column Output]" />
             <path
               refId="Package\DFT_Clean_Valuations.Paths[Lookup Match Output]"
               endId="Package\DFT_Clean_Valuations\DC_Valuation_Matched.Inputs[Derived Column Input]"
@@ -4069,15 +4669,15 @@ FROM calc;</property>
               name="Reject_Negative_Value"
               startId="Package\DFT_Clean_Valuations\CS_Validate_Valuation.Outputs[Reject_Negative_Value]" />
             <path
-              refId="Package\DFT_Clean_Valuations.Paths[Union All Output 1]"
-              endId="Package\DFT_Clean_Valuations\CONV_Dates.Inputs[Data Conversion Input]"
-              name="Union All Output 1"
-              startId="Package\DFT_Clean_Valuations\UA_Valuation_PlayerLookup.Outputs[Union All Output 1]" />
-            <path
               refId="Package\DFT_Clean_Valuations.Paths[Union All Output 11]"
               endId="Package\DFT_Clean_Valuations\OLE_DST_Reject_Valuations.Inputs[OLE DB Destination Input]"
               name="Union All Output 1"
               startId="Package\DFT_Clean_Valuations\UA_Reject_Valuations.Outputs[Union All Output 1]" />
+            <path
+              refId="Package\DFT_Clean_Valuations.Paths[Union All Output 1]"
+              endId="Package\DFT_Clean_Valuations\CONV_Dates.Inputs[Data Conversion Input]"
+              name="Union All Output 1"
+              startId="Package\DFT_Clean_Valuations\UA_Valuation_PlayerLookup.Outputs[Union All Output 1]" />
             <path
               refId="Package\DFT_Clean_Valuations.Paths[Valid_Valuation]"
               endId="Package\DFT_Clean_Valuations\LKP_Player_DOB_Valuation.Inputs[Lookup Input]"
@@ -4101,7 +4701,7 @@ FROM calc;</property>
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{ACC4C750-A12B-466D-9103-B76F15570620}"
-          SQLTask:SqlStatementSource="TRUNCATE TABLE stg_clean.transfers;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="TRUNCATE TABLE stg_clean.transfers;&#xA;DELETE FROM dbo.etl_reject WHERE source_table = N'stg_raw_transfers';" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -4118,7 +4718,7 @@ FROM calc;</property>
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{ACC4C750-A12B-466D-9103-B76F15570620}"
-          SQLTask:SqlStatementSource="TRUNCATE TABLE stg_clean.player_valuations;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="TRUNCATE TABLE stg_clean.player_valuations;&#xA;DELETE FROM dbo.etl_reject WHERE source_table = N'stg_raw_player_valuations';" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
