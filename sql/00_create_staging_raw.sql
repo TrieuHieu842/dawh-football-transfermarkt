@@ -8,8 +8,6 @@ GO
 
 USE football_dwh_staging;
 GO
-IF SCHEMA_ID(N'stg_clean') IS NULL EXEC('CREATE SCHEMA stg_clean');
-GO
 
 DROP TABLE IF EXISTS [dbo].[stg_raw_appearances];
 CREATE TABLE [dbo].[stg_raw_appearances] (
@@ -230,5 +228,19 @@ CREATE TABLE [dbo].[stg_raw_transfers] (
     [batch_id] NVARCHAR(MAX) NULL,
     [loaded_at] DATETIME NULL,
     [source_file] NVARCHAR(MAX) NULL
+);
+GO
+
+-- ============================================================
+-- Bang ghi dong loi (reject) cua cac data flow nap fact
+-- ============================================================
+DROP TABLE IF EXISTS dbo.etl_reject;
+CREATE TABLE dbo.etl_reject (
+    reject_id               BIGINT IDENTITY(1,1) PRIMARY KEY,
+    batch_id                NVARCHAR(30)   NULL,
+    source_table            NVARCHAR(100)  NOT NULL,      -- vd: stg_raw_appearances
+    natural_key             NVARCHAR(200)  NULL,          -- vd: appearance_id
+    reason                  NVARCHAR(200)  NOT NULL,      -- vd: minutes_played ngoài 0-130
+    rejected_at             DATETIME       NOT NULL DEFAULT GETDATE()
 );
 GO

@@ -1,5 +1,5 @@
 /* =====================================================================
-   03_create_dw.sql
+   01_create_dw.sql
    Tạo kho dữ liệu football_dwh_dw theo tài liệu thiết kế (mục 5, 6, 7.3).
    Chỉ gồm các thuộc tính / measure đã chọn lọc trong thiết kế:
    mỗi cột đều có nguồn và có ý nghĩa phân tích ở ít nhất một chiều.
@@ -92,9 +92,9 @@ CREATE TABLE dbo.dim_club
     previous_league_name   NVARCHAR(200) NULL,             -- SCD3
     stadium_name           NVARCHAR(200) NOT NULL,         -- SCD2
     stadium_capacity_band  NVARCHAR(30)  NOT NULL,         -- SCD2
-    effective_date         DATE          NOT NULL,
-    expiry_date            DATE          NOT NULL,
-    is_current             BIT           NOT NULL,
+    effective_date         DATE          NOT NULL DEFAULT ('1900-01-01'),
+    expiry_date            DATE          NOT NULL DEFAULT ('9999-12-31'),
+    is_current             BIT           NOT NULL DEFAULT (1),
     batch_id               NVARCHAR(30)  NULL
 );
 CREATE INDEX ix_dim_club_nk ON dbo.dim_club (club_id, is_current) INCLUDE (effective_date, expiry_date);
@@ -116,9 +116,9 @@ CREATE TABLE dbo.dim_player
     agent_name               NVARCHAR(200) NOT NULL,       -- SCD2
     contract_expiry_year     SMALLINT      NULL,           -- SCD1
     international_caps_band  NVARCHAR(30)  NOT NULL,       -- SCD1
-    effective_date           DATE          NOT NULL,
-    expiry_date              DATE          NOT NULL,
-    is_current               BIT           NOT NULL,
+    effective_date           DATE          NOT NULL DEFAULT ('1900-01-01'),
+    expiry_date              DATE          NOT NULL DEFAULT ('9999-12-31'),
+    is_current               BIT           NOT NULL DEFAULT (1),
     batch_id                 NVARCHAR(30)  NULL
 );
 CREATE INDEX ix_dim_player_nk ON dbo.dim_player (player_id, is_current) INCLUDE (effective_date, expiry_date);
@@ -144,7 +144,7 @@ GO
 CREATE TABLE dbo.dim_manager
 (
     manager_key   INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    manager_name  NVARCHAR(200) NOT NULL UNIQUE,
+    manager_name  NVARCHAR(200) COLLATE Latin1_General_CS_AS NOT NULL UNIQUE,  -- phân biệt hoa thường giống SSIS Lookup
     batch_id      NVARCHAR(30)  NULL
 );
 GO
@@ -393,4 +393,44 @@ SET IDENTITY_INSERT dbo.dim_match OFF;
 SET IDENTITY_INSERT dbo.dim_manager ON;
 INSERT dbo.dim_manager (manager_key, manager_name) VALUES (-1, N'Không xác định');
 SET IDENTITY_INSERT dbo.dim_manager OFF;
+GO
+
+/* =====================================================================
+   SCD Type 2: đóng phiên bản hiện tại và thêm phiên bản mới (gọi từ OLE DB Command)
+   ===================================================================== */
+CREATE OR ALTER PROCEDURE dbo.usp_DimClub_NewVersion
+    @club_key INT, @club_name NVARCHAR(200), @club_type NVARCHAR(20), @country_name NVARCHAR(100),
+    @confederation NVARCHAR(20), @current_league_id NVARCHAR(20), @current_league_name NVARCHAR(200),
+    @stadium_name NVARCHAR(200), @stadium_capacity_band NVARCHAR(30), @batch_id NVARCHAR(30)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN;
+    INSERT dbo.dim_club (club_id, club_name, club_type, country_name, confederation, current_league_id, current_league_name,
+                         previous_league_name, stadium_name, stadium_capacity_band, effective_date, expiry_date, is_current, batch_id)
+    SELECT d.club_id, @club_name, @club_type, @country_name, @confederation, @current_league_id, @current_league_name,
+           CASE WHEN ISNULL(@current_league_id, N'') <> ISNULL(d.current_league_id, N'') THEN d.current_league_name ELSE d.previous_league_name END,
+           @stadium_name, @stadium_capacity_band, CAST(GETDATE() AS DATE), '9999-12-31', 1, @batch_id
+    FROM dbo.dim_club d WHERE d.club_key = @club_key;
+    UPDATE dbo.dim_club SET expiry_date = DATEADD(DAY, -1, CAST(GETDATE() AS DATE)), is_current = 0 WHERE club_key = @club_key;
+    COMMIT;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.usp_DimPlayer_NewVersion
+    @player_key INT, @full_name NVARCHAR(200), @date_of_birth DATE, @country_of_birth NVARCHAR(100), @citizenship NVARCHAR(100),
+    @position NVARCHAR(50), @sub_position NVARCHAR(50), @foot NVARCHAR(20), @height_band NVARCHAR(30), @agent_name NVARCHAR(200),
+    @contract_expiry_year SMALLINT, @international_caps_band NVARCHAR(30), @batch_id NVARCHAR(30)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRAN;
+    INSERT dbo.dim_player (player_id, full_name, date_of_birth, country_of_birth, citizenship, position, sub_position, foot,
+                           height_band, agent_name, contract_expiry_year, international_caps_band, effective_date, expiry_date, is_current, batch_id)
+    SELECT d.player_id, @full_name, @date_of_birth, @country_of_birth, @citizenship, @position, @sub_position, @foot,
+           @height_band, @agent_name, @contract_expiry_year, @international_caps_band, CAST(GETDATE() AS DATE), '9999-12-31', 1, @batch_id
+    FROM dbo.dim_player d WHERE d.player_key = @player_key;
+    UPDATE dbo.dim_player SET expiry_date = DATEADD(DAY, -1, CAST(GETDATE() AS DATE)), is_current = 0 WHERE player_key = @player_key;
+    COMMIT;
+END;
 GO
