@@ -409,3 +409,24 @@
         COMMIT;
     END;
     GO
+
+    /* ---------------------------------------------------------------------
+    Cấp quyền đọc kho cho tài khoản dịch vụ SSAS (instance mặc định).
+    Cube SSAS cần đọc football_dwh_dw khi Process. Khi database bị tạo lại
+    (chạy 00_create_staging_raw.sql) user cũ mất theo, nên cấp lại ở đây.
+    Máy chưa cài SSAS thì bỏ qua, không báo lỗi.
+    --------------------------------------------------------------------- */
+    USE football_dwh_dw;
+    GO
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = N'NT SERVICE\MSSQLServerOLAPService')
+            CREATE LOGIN [NT SERVICE\MSSQLServerOLAPService] FROM WINDOWS;
+        IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = N'NT SERVICE\MSSQLServerOLAPService')
+            CREATE USER [NT SERVICE\MSSQLServerOLAPService] FOR LOGIN [NT SERVICE\MSSQLServerOLAPService];
+        ALTER ROLE db_datareader ADD MEMBER [NT SERVICE\MSSQLServerOLAPService];
+        PRINT N'Đã cấp quyền đọc kho cho NT SERVICE\MSSQLServerOLAPService (SSAS).';
+    END TRY
+    BEGIN CATCH
+        PRINT N'Bỏ qua cấp quyền SSAS: ' + ERROR_MESSAGE();
+    END CATCH;
+    GO

@@ -1051,6 +1051,8 @@
                       </xs:restriction>
                     </xs:simpleType>
                   </xs:element>
+                <xs:element name="fee_band_order" msdata:ReadOnly="true" msprop:design-time-name="3aa410b8-3fb6-4c53-8ad5-9a9d900e54c9" msprop:DbColumnName="fee_band_order" msprop:ComputedColumnExpression="CASE fee_band WHEN N'&lt; 1 triệu' THEN 1 WHEN N'1-10 triệu' THEN 2 WHEN N'10-50 triệu' THEN 3 WHEN N'&gt; 50 triệu' THEN 4 WHEN N'Không áp dụng' THEN 5 ELSE 9 END" msprop:Description="" msprop:IsLogical="True" msprop:FriendlyName="fee_band_order" type="xs:int" minOccurs="0" />
+                <xs:element name="type_label" msdata:ReadOnly="true" msprop:design-time-name="c33f9127-0977-43bd-999b-3e4b94d2e078" msprop:DbColumnName="type_label" msprop:ComputedColumnExpression="CASE WHEN fee_band IN (N'Không áp dụng', N'Không xác định') THEN fee_status ELSE fee_status + N' ' + fee_band END" msprop:Description="" msprop:IsLogical="True" msprop:FriendlyName="type_label" minOccurs="0"><xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="80" /></xs:restriction></xs:simpleType></xs:element>
                 </xs:sequence>
               </xs:complexType>
             </xs:element>
@@ -1105,6 +1107,7 @@
                     </xs:simpleType>
                   </xs:element>
                   <xs:element name="has_age" msdata:ReadOnly="true" msprop:DbColumnName="has_age" msprop:IsLogical="True" msprop:design-time-name="a4151f33-fe76-4926-9047-9bd773936c27" msprop:Description="" msprop:FriendlyName="has_age" msprop:ComputedColumnExpression="CASE WHEN age_at_valuation IS NULL THEN 0 ELSE 1 END" type="xs:int" minOccurs="0" />
+                <xs:element name="age_key" msdata:ReadOnly="true" msprop:design-time-name="7faa9189-c99d-46e1-a434-b4df1f3c1ec5" msprop:DbColumnName="age_key" msprop:ComputedColumnExpression="ISNULL(CAST(age_at_valuation AS int), 0)" msprop:Description="" msprop:IsLogical="True" msprop:FriendlyName="age_key" type="xs:int" minOccurs="0" />
                 </xs:sequence>
               </xs:complexType>
             </xs:element>
@@ -1168,10 +1171,12 @@
                   <xs:element name="pro_age" msdata:ReadOnly="true" msprop:DbColumnName="pro_age" msprop:IsLogical="True" msprop:design-time-name="30cadd9c-1ea0-4dcb-ab25-4ebaacb49b97" msprop:Description="" msprop:FriendlyName="pro_age" msprop:ComputedColumnExpression="CASE WHEN is_youth_transfer = 0 THEN age_at_transfer END" type="xs:unsignedByte" minOccurs="0" />
                   <xs:element name="pro_count" msdata:ReadOnly="true" msprop:DbColumnName="pro_count" msprop:IsLogical="True" msprop:design-time-name="7a0af1d3-8bab-4f6a-94ec-2acb5de8e312" msprop:Description="" msprop:FriendlyName="pro_count" msprop:ComputedColumnExpression="CASE WHEN is_youth_transfer = 0 AND age_at_transfer IS NOT NULL THEN 1 ELSE 0 END" type="xs:int" minOccurs="0" />
                   <xs:element name="has_premium" msdata:ReadOnly="true" msprop:DbColumnName="has_premium" msprop:IsLogical="True" msprop:design-time-name="b4dafd1c-5bfa-4d5c-bdbf-a227bfd8acb9" msprop:Description="" msprop:FriendlyName="has_premium" msprop:ComputedColumnExpression="CASE WHEN fee_premium_eur IS NULL THEN 0 ELSE 1 END" type="xs:int" minOccurs="0" />
+                <xs:element name="transfer_age_key" msdata:ReadOnly="true" msprop:design-time-name="d85ac337-3ed0-4a8a-9bd1-b4a55fdce6bd" msprop:DbColumnName="transfer_age_key" msprop:ComputedColumnExpression="ISNULL(CAST(age_at_transfer AS int), 0)" msprop:Description="" msprop:IsLogical="True" msprop:FriendlyName="transfer_age_key" type="xs:int" minOccurs="0" />
                 </xs:sequence>
               </xs:complexType>
             </xs:element>
-          </xs:choice>
+          <xs:element name="dim_age" msprop:design-time-name="8b28912f-ac57-4f08-8175-bf1f98538120" msprop:QueryDefinition="SELECT a.age_key,&#10;       CASE WHEN a.age_key = 0 THEN N'Không rõ' ELSE CAST(a.age_key AS nvarchar(3)) END AS age_label,&#10;       CASE WHEN a.age_key = 0 THEN N'Không rõ' WHEN a.age_key &lt; 18 THEN N'Dưới 18' WHEN a.age_key &lt;= 21 THEN N'18-21'&#10;            WHEN a.age_key &lt;= 24 THEN N'22-24' WHEN a.age_key &lt;= 28 THEN N'25-28' WHEN a.age_key &lt;= 31 THEN N'29-31' ELSE N'32+' END AS age_group,&#10;       CASE WHEN a.age_key = 0 THEN 9 WHEN a.age_key &lt; 18 THEN 1 WHEN a.age_key &lt;= 21 THEN 2 WHEN a.age_key &lt;= 24 THEN 3&#10;            WHEN a.age_key &lt;= 28 THEN 4 WHEN a.age_key &lt;= 31 THEN 5 ELSE 6 END AS age_group_order&#10;FROM (SELECT ISNULL(CAST(age_at_valuation AS int), 0) AS age_key FROM dbo.fact_player_valuation&#10;      UNION SELECT ISNULL(CAST(age_at_transfer AS int), 0) FROM dbo.fact_transfer) AS a" msprop:DbTableName="dim_age" msprop:QueryBuilder="GenericQueryBuilder" msprop:IsLogical="True" msprop:FriendlyName="dim_age" msprop:TableType="View" msprop:Description="Tuổi lúc định giá / chuyển nhượng (0 = không rõ) và nhóm tuổi"><xs:complexType><xs:sequence><xs:element name="age_key" msprop:design-time-name="829aa5b8-9fee-4da5-87ec-9d35ffebc433" msprop:DbColumnName="age_key" msprop:FriendlyName="age_key" type="xs:int" /><xs:element name="age_label" msprop:design-time-name="70348a80-4996-4098-8b34-3333052b194e" msprop:DbColumnName="age_label" msprop:FriendlyName="age_label" minOccurs="0"><xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="20" /></xs:restriction></xs:simpleType></xs:element><xs:element name="age_group" msprop:design-time-name="1f13ebfb-4fcf-4052-9247-c68ad0840ef8" msprop:DbColumnName="age_group" msprop:FriendlyName="age_group" minOccurs="0"><xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="20" /></xs:restriction></xs:simpleType></xs:element><xs:element name="age_group_order" msprop:design-time-name="9acc37f5-ddfb-4e18-b6e2-e3fee6e88979" msprop:DbColumnName="age_group_order" msprop:FriendlyName="age_group_order" type="xs:int" /></xs:sequence></xs:complexType></xs:element>
+            </xs:choice>
         </xs:complexType>
         <xs:unique name="Constraint1" msdata:PrimaryKey="true">
           <xs:selector xpath=".//dbo_dim_club" />
@@ -1315,7 +1320,10 @@
           <xs:selector xpath=".//dbo_fact_player_appearance" />
           <xs:field xpath="competition_key" />
         </xs:keyref>
-      </xs:element>
+      <xs:unique name="dim_age_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true"><xs:selector xpath=".//dim_age" /><xs:field xpath="age_key" /></xs:unique>
+        <xs:keyref name="FK_fact_player_valuation_dim_age" refer="dim_age_Constraint1"><xs:selector xpath=".//dbo_fact_player_valuation" /><xs:field xpath="age_key" /></xs:keyref>
+        <xs:keyref name="FK_fact_transfer_dim_age" refer="dim_age_Constraint1"><xs:selector xpath=".//dbo_fact_transfer" /><xs:field xpath="transfer_age_key" /></xs:keyref>
+        </xs:element>
     </xs:schema>
     <Football_x0020_DWH xmlns="" />
   </Schema>

@@ -63,15 +63,46 @@ ssas-transfermarkt/Football_DAWH_SSAS/
     ├── Ngay.dim, Mua giai.dim       Dimension thời gian    – khung (có sẵn, đã điền)
     ├── Giai dau.dim, Tran dau.dim, HLV.dim, CLB.dim        – Phần 1
     ├── Loai chuyen nhuong.dim, Cau thu.dim                 – Phần 3
-    └── Football DWH.cube            Cube (4 measure group) – khung có sẵn; Calculations / KPI: mỗi phần một khối (1, 2, 3)
+    ├── Football DWH.cube            Cube tổng (khung, measure gốc) – có sẵn, giữ nguyên
+    ├── Hieu suat doi bong.cube      Cube riêng của Phần 1 – tự tạo
+    ├── Hieu suat cau thu.cube       Cube riêng của Phần 2 – tự tạo
+    └── Thi truong cau thu.cube      Cube riêng của Phần 3 – đã tạo (mẫu)
 ```
 
 - Mỗi file `.dim` là một file riêng, nên ai sửa dim của người nấy thì không bị xung đột.
-- **`.dsv` và `.cube` dùng chung.** Ai cần sửa phải **giữ lượt**: nhắn nhóm "đang giữ cube", `git pull`, sửa, deploy, commit + push, rồi nhắn "trả cube". Không để 2 người sửa cùng lúc, vì hai bản XML này không merge được.
-- Tab *Calculations* của cube đã chia sẵn khối cho từng phần (`/* ===== Phần 1 … ===== */`). Chỉ viết vào khối của mình.
+- **Mỗi phần có một file `.cube` riêng**, nên ai sửa cube của người nấy, không lo xung đột.
+- **Chỉ `.dsv` là file dùng chung.** Ai cần sửa DSV phải **giữ lượt**: nhắn nhóm "đang giữ DSV", `git pull`, sửa, deploy, commit + push, rồi nhắn "trả DSV". Không để 2 người sửa cùng lúc, vì XML này không merge được.
+- Cube `Football DWH` giữ nguyên làm cube tổng. **Không viết calculated member / KPI vào cube này.** Các khối *Phần 1–3* trong tab Calculations của nó để trống.
 - Cần thêm cột tính trong DSV (Named Calculation) thì nhờ người tạo khung thêm.
 - Không commit tên server riêng. Máy dùng instance khác `localhost` thì sửa `Football DWH.ds` trên máy mình và chạy `git update-index --skip-worktree` cho file đó.
 - Tên measure tiếng Việt, đúng như trong `Tinh_toan_trong_ETL_va_Measure.md` (Điểm, Tỉ lệ thắng, Bàn mỗi 90 phút…).
+
+
+### Mỗi phần tạo một cube riêng
+
+Không dồn mọi thứ vào cube `Football DWH`. Mỗi phần tạo **một cube riêng** cho quy trình nghiệp vụ của mình. Cube đó chỉ chứa fact và dimension cần thiết, và phải nói rõ **giá trị mang lại** (trả lời câu hỏi gì, hỗ trợ quyết định gì).
+
+| Cube | File | Phần | Fact (measure group) | Cube dimension | Giá trị mang lại |
+|---|---|---|---|---|---|
+| Football DWH | `Football DWH.cube` | khung (có sẵn, giữ nguyên) | cả 4 fact, chỉ measure gốc | tất cả | Cube tổng để kiểm tra số liệu và làm trang *Tổng quan* |
+| **Hiệu suất đội bóng** | `Hieu suat doi bong.cube` | 1 | Trận đấu đội (fact_team_match) | Ngày, Mùa giải, Giải đấu, Trận đấu, CLB, CLB đối thủ, HLV, HLV đối thủ | Bảng xếp hạng, phong độ theo mùa, HLV hiệu quả, lợi thế sân nhà → đánh giá thành tích, giữ hay thay HLV, đặt mục tiêu điểm |
+| **Hiệu suất cầu thủ** | `Hieu suat cau thu.cube` | 2 | Lượt ra sân + Trận có ra sân (Distinct Count match_key) | Ngày, Mùa giải, Giải đấu, Trận đấu, CLB, Cầu thủ | Vua phá lưới, bàn mỗi 90 phút, cầu thủ ra sân nhiều, trọng tài khắt khe → tuyển trạch, đánh giá và gia hạn cầu thủ |
+| **Thị trường cầu thủ** | `Thi truong cau thu.cube` | 3 | Định giá + Chuyển nhượng | Ngày, Mùa giải, Giải đấu, Cầu thủ, Tuổi, CLB, CLB đi, CLB đến, Loại chuyển nhượng | Giá trị đội hình, độ tuổi đỉnh giá trị, chi tiêu ròng, mua đắt hay rẻ, tỉ lệ thương vụ miễn phí / đội trẻ → quản lý tài sản cầu thủ và ngân sách chuyển nhượng (**đã làm xong**, dùng làm mẫu) |
+
+Cách tạo cube riêng trong Visual Studio:
+1. Chuột phải **Cubes → New Cube** → *Use existing tables*.
+2. **Measure group tables:** chỉ chọn fact của phần mình.
+3. **Measures:** chọn các cột measure và các Named Calculation đã có trong DSV (ví dụ `home_win`). Bỏ cột khóa và `batch_id`. Đổi tên sang tiếng Việt.
+   - Measure Sum trên cột tinyint/smallint: đặt **DataType** của measure là Integer (hoặc BigInt nếu là tiền), để cộng dồn không bị tràn số.
+4. **Dimensions:** chỉ chọn các dim có sẵn mà phần mình dùng. **Không tạo dim mới bằng wizard.**
+5. **Đặt tên cube** theo bảng trên.
+6. Ở khung Dimensions của cube, đổi tên các bản role-playing (CLB đối thủ, CLB đi, CLB đến, HLV đối thủ).
+7. Kiểm tra tab **Dimension Usage**.
+8. Chọn cube → Properties → **Description**: ghi giá trị mang lại. Ghi lại nội dung này ở đầu tab Calculations dưới dạng chú thích `/* … */`.
+9. Viết calculated member và KPI vào tab **Calculations / KPIs** của **cube mình**.
+10. Deploy, kiểm tra số liệu với SQL.
+
+Cube `Thi truong cau thu.cube` là mẫu đầy đủ: có Description, MDX, KPI và đã khớp SQL.
 
 ### Điểm dễ sai
 
@@ -82,6 +113,7 @@ ssas-transfermarkt/Football_DAWH_SSAS/
 | `market_value_eur` | Semi-additive: **LastNonEmpty** theo thời gian, cộng theo cầu thủ / CLB |
 | `transfer_fee_eur` NULL | Giữ NULL; đếm riêng "không công bố". Đổi NULL thành 0 sẽ làm phí trung bình sai |
 | Dòng Unknown (-1) | Giữ; khi xếp hạng thì lọc bỏ "Không xác định" |
+| `ASSOCIATED_MEASURE_GROUP` trong `CREATE MEMBER` | Ghi **tên hiển thị** của measure group (ví dụ 'Định giá'), không ghi ID ('Fact Player Valuation'). Ghi ID sẽ báo lỗi *measure group was not found* |
 | Thuộc tính SCD2 | Fact tra theo phiên bản hiện tại, nên vị trí / sân / người đại diện là giá trị hiện tại |
 
 ### Kết quả chuẩn để kiểm tra cube (đã đúng trên SQL)
@@ -94,7 +126,7 @@ ssas-transfermarkt/Football_DAWH_SSAS/
 
 ### Khung SSAS (đã tạo sẵn)
 
-Project `Football_DAWH_SSAS` đã có sẵn: Data Source, DSV (12 bảng + Named Calculation), 8 dimension (Ngày, Mùa giải đã điền đủ; 6 dim còn lại chỉ có khóa và tên), cube `Football DWH` với 5 measure group, role-playing dimension, Dimension Usage và khung tab Calculations chia khối theo phần. Cứ `git pull` là có.
+Project `Football_DAWH_SSAS` đã có sẵn: Data Source, DSV (12 bảng + Named Calculation), 8 dimension (Ngày, Mùa giải đã điền đủ; 6 dim còn lại chỉ có khóa và tên), cube tổng `Football DWH` với 5 measure group, role-playing dimension, Dimension Usage. Cứ `git pull` là có. Mỗi phần tự tạo **cube riêng** của mình theo mục C (*Mỗi phần tạo một cube riêng*). Cube `Thị trường cầu thủ` của Phần 3 đã có sẵn để làm mẫu.
 
 ### 4 phần việc (nhóm tự nhận)
 
@@ -110,12 +142,20 @@ Project `Football_DAWH_SSAS` đã có sẵn: Data Source, DSV (12 bảng + Named
 | Giai đoạn | Phần 1, 2, 3 | Phần 4 |
 |---|---|---|
 | 1 | Điền dim của phần mình; viết câu hỏi, SQL đối chiếu, nháp MDX | Theme, layout, phác thảo các trang (có thể Import thẳng từ kho để làm nháp) |
-| 2 | Đưa MDX / KPI vào cube (giữ lượt), kiểm tra cube = SQL, minh họa OLAP | Dựng các trang Power BI khi cube có measure |
+| 2 | Tạo cube riêng, viết MDX / KPI vào cube của mình, kiểm tra cube = SQL, minh họa OLAP | Dựng các trang Power BI khi cube có measure |
 | 3 | Ảnh minh chứng, phần báo cáo; Phần 2 tổng hợp bảng đối chiếu | Hoàn thiện Power BI, ảnh từng trang |
 
 ## E. Phần việc: hiệu suất cầu thủ + tổng hợp đối chiếu số liệu
 
 **Fact:** `fact_player_appearance`. **Dimension:** Ngày, Mùa giải, Giải đấu, Trận đấu, Cầu thủ, CLB.
+
+### E0. Cube riêng của phần này: **Hiệu suất cầu thủ** (`Hieu suat cau thu.cube`)
+- Measure group *Lượt ra sân* từ `fact_player_appearance`: Số phút, Bàn thắng cầu thủ, Kiến tạo, Thẻ vàng, Thẻ đỏ, Số trận ra sân.
+- Measure group thứ hai *Trận có ra sân*: New Measure → Usage *Distinct count* trên `match_key`, dùng cho thẻ phạt mỗi trận.
+- Cube dimension: Ngày, Mùa giải, Giải đấu, Trận đấu, CLB, Cầu thủ.
+- Description (giá trị mang lại): vua phá lưới, bàn mỗi 90 phút, cầu thủ ra sân nhiều, trọng tài khắt khe → tuyển trạch, đánh giá và gia hạn cầu thủ.
+- Calculated member và KPI viết vào tab Calculations / KPIs của **cube này**. `ASSOCIATED_MEASURE_GROUP = 'Lượt ra sân'`.
+- Dim Cầu thủ đã được Phần 3 điền đủ, gồm hierarchy *Vị trí - Vị trí chi tiết - Cầu thủ*. Dùng luôn, không cần sửa.
 
 ### E1. Câu hỏi nghiệp vụ
 | # | Câu hỏi | Measure | Chiều |
