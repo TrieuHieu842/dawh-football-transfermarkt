@@ -28,7 +28,7 @@ Package gồm **3 Sequence Container chạy nối tiếp**, đi đúng thứ t�
 |---|---|---|---|
 | 1 | **01 - Trích xuất file CSV vào Staging** | 1 Execute SQL + 10 Data Flow | Extract: CSV → Staging |
 | 2 | **02 - Làm sạch và nạp Dimension** | 6 Data Flow | Transform + Load: Staging → Dimension |
-| 3 | **03 - Làm sạch tính toán và nạp Fact** | 1 Execute SQL + 4 Data Flow | Transform + Load: Staging → Fact |
+| 3 | **03 - Làm sạch tính toán và nạp Fact** | 3 Execute SQL + 4 Data Flow | Transform + Load: Staging → Fact, ghi nhật ký lần chạy |
 
 Ràng buộc thứ tự (Precedence Constraint, *Success*): `01 - Trích xuất file CSV vào Staging` → `02 - Làm sạch và nạp Dimension`; `02 - Làm sạch và nạp Dimension` → `03 - Làm sạch tính toán và nạp Fact`. Dimension phải nạp trước fact vì fact cần tra surrogate key từ dimension.
 
@@ -36,8 +36,8 @@ Ràng buộc thứ tự (Precedence Constraint, *Success*): `01 - Trích xuất 
 
 | Biến | Kiểu | Giá trị hiện tại | Dùng ở đâu |
 |---|---|---|---|
-| `BatchID` | String | BATCH_20261018 | Mã lần nạp, ghi vào cột `batch_id` của Staging |
-| `LoadedAt` | DateTime | 10/18/2026 9:36:27 PM | Thời điểm nạp, ghi vào cột `loaded_at` của Staging |
+| `BatchID` | String | BATCH_20261018_224515 | Mã lần chạy `BATCH_yyyyMMdd_HHmmss`, tính từ `System::StartTime` nên cố định suốt một lần chạy và khác nhau giữa các lần chạy; ghi vào cột `batch_id` của Staging, dimension, fact và `etl_batch` |
+| `LoadedAt` | DateTime | 10/18/2026 10:45:19 PM | Thời điểm nạp, ghi vào cột `loaded_at` của Staging |
 | `LoadFrom` | DateTime | 1/1/1900 | Ngày bắt đầu cửa sổ nạp: *Kiểm tra hợp lệ và cửa sổ nạp* của 4 Data Flow fact chi tiết; *Ghi cửa sổ nạp gia tăng* |
 | `LoadTo` | DateTime | 12/31/9999 | Ngày kết thúc cửa sổ nạp |
 
@@ -109,7 +109,7 @@ TRUNCATE TABLE dbo.stg_raw_transfers;
 
 **Thêm cột truy vết** (ví dụ của `Chép file appearances vào Staging`; `source_file` đổi theo từng file):
 
-- `batch_id` (DT_WSTR(14)) = `@[User::BatchID]`
+- `batch_id` (DT_WSTR(30)) = `@[User::BatchID]`
 - `loaded_at` (DT_DATE) = `@[User::LoadedAt]`
 - `source_file` (DT_WSTR(15)) = `"appearances.csv"`
 
@@ -1366,10 +1366,12 @@ Ghi dữ liệu vào bảng đích (Fast load).
 
 ```
 Ghi cửa sổ nạp gia tăng
+   ──► Ghi nhật ký bắt đầu lần chạy
    ──► Nạp Fact_Team_Match
    ──► Nạp Fact_Player_Appearance
    ──► Nạp Fact_Player_Valuation
    ──► Nạp Fact_Transfer
+   ──► Ghi nhật ký kết thúc lần chạy
 ```
 
 **Ghi cửa sổ nạp gia tăng** · *Execute SQL Task* — kết nối `localhost.football_dwh_dw`. Thuộc tính `SqlStatementSource` được sinh bằng **Expression** từ hai biến `LoadFrom`, `LoadTo`:
@@ -1387,6 +1389,25 @@ WHERE source_table IN (N'stg_raw_club_games', N'stg_raw_appearances', N'stg_raw_
 ```
 
 Ý nghĩa: (1) ghi cửa sổ nạp vào bảng điều khiển `etl_load_window` để truy vết lần nạp; (2) xóa các dòng reject cũ của fact trong Staging. Task này **không cập nhật bảng phân tích nào** trong kho.
+
+**Ghi nhật ký bắt đầu lần chạy** · *Execute SQL Task* — kết nối `localhost.football_dwh_dw`. Thêm 1 dòng vào etl_batch: mã lần chạy, cửa sổ nạp, giờ bắt đầu, tổng số dòng fact trước khi nạp; lần chạy trước còn RUNNING (bị dừng giữa chừng) đánh dấu FAILED. Câu lệnh thực tế khi chạy:
+
+```sql
+UPDATE dbo.etl_batch SET status = N'FAILED' WHERE status = N'RUNNING';
+INSERT INTO dbo.etl_batch (batch_id, window_from, window_to, started_at, status, fact_rows_before)
+VALUES (N'BATCH_20261018_224515', '1900-01-01', '9999-12-31', '2026-10-18 22:45:15', N'RUNNING',
+        (SELECT COUNT(*) FROM dbo.fact_team_match) + (SELECT COUNT(*) FROM dbo.fact_player_appearance) + (SELECT COUNT(*) FROM dbo.fact_player_valuation) + (SELECT COUNT(*) FROM dbo.fact_transfer));
+```
+
+**Ghi nhật ký kết thúc lần chạy** · *Execute SQL Task* — kết nối `localhost.football_dwh_dw`. Cập nhật dòng etl_batch của lần chạy này: giờ kết thúc, trạng thái SUCCESS, tổng số dòng fact sau khi nạp. Câu lệnh thực tế khi chạy:
+
+```sql
+UPDATE dbo.etl_batch SET finished_at = GETDATE(), status = N'SUCCESS',
+       fact_rows_after = (SELECT COUNT(*) FROM dbo.fact_team_match) + (SELECT COUNT(*) FROM dbo.fact_player_appearance) + (SELECT COUNT(*) FROM dbo.fact_player_valuation) + (SELECT COUNT(*) FROM dbo.fact_transfer)
+WHERE batch_id = N'BATCH_20261018_224515';
+```
+
+Ý nghĩa: mỗi lần chạy có đúng 1 dòng trong `etl_batch`. So `fact_rows_before` và `fact_rows_after` để thấy lần nạp đó thêm bao nhiêu dòng (lần chạy lại toàn bộ thì hai số bằng nhau). Nếu một lần chạy dừng giữa chừng, dòng của nó còn `RUNNING`; lần chạy sau sẽ đổi thành `FAILED`. Dòng fact nào cũng truy được về lần chạy đã nạp nó qua `batch_id`.
 
 ### 4.2. Khung xử lý chung của 4 Data Flow fact chi tiết
 

@@ -22,6 +22,25 @@ SELECT w.window_from, w.window_to,
        (SELECT MAX(date_key) FROM dbo.fact_transfer)          AS max_ngay_transfer
 FROM dbo.etl_load_window w;
 
+-- 2b. Nhật ký các lần chạy: mỗi lần 1 dòng; lần chạy lại toàn bộ có so_dong_them = 0
+SELECT run_id, batch_id, window_from, window_to, started_at, finished_at, status,
+       fact_rows_before, fact_rows_after, fact_rows_after - fact_rows_before AS so_dong_them
+FROM dbo.etl_batch
+ORDER BY run_id;
+
+-- 2c. Số dòng fact theo từng lần chạy (batch_id)
+SELECT batch_id,
+       SUM(CASE WHEN f = 'team_match' THEN n ELSE 0 END) AS team_match,
+       SUM(CASE WHEN f = 'appearance' THEN n ELSE 0 END) AS appearance,
+       SUM(CASE WHEN f = 'valuation'  THEN n ELSE 0 END) AS valuation,
+       SUM(CASE WHEN f = 'transfer'   THEN n ELSE 0 END) AS transfer
+FROM (SELECT 'team_match' f, batch_id, COUNT(*) n FROM dbo.fact_team_match GROUP BY batch_id
+      UNION ALL SELECT 'appearance', batch_id, COUNT(*) FROM dbo.fact_player_appearance GROUP BY batch_id
+      UNION ALL SELECT 'valuation',  batch_id, COUNT(*) FROM dbo.fact_player_valuation GROUP BY batch_id
+      UNION ALL SELECT 'transfer',   batch_id, COUNT(*) FROM dbo.fact_transfer GROUP BY batch_id) x
+GROUP BY batch_id
+ORDER BY batch_id;
+
 -- 3. Dòng lỗi bị đẩy vào etl_reject
 SELECT source_table, reason, COUNT(*) AS so_dong
 FROM football_dwh_staging.dbo.etl_reject

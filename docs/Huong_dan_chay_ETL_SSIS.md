@@ -69,7 +69,7 @@ Kết nối Server name `localhost` (Windows Authentication), mở và chạy (F
 
 Chạy **`sql/01_create_dw.sql`**. Script này:
 
-- Tạo 8 dim, 4 fact chi tiết, `etl_load_window` (cửa sổ nạp), `etl_batch`.
+- Tạo 8 dim, 4 fact chi tiết, `etl_load_window` (cửa sổ nạp), `etl_batch` (nhật ký mỗi lần chạy).
 - Sinh sẵn 3 dim tĩnh: **Dim_Date** (1990–2030), **Dim_Season** (41 mùa), **Dim_Transfer_Type** (6 loại phí).
 - Thêm dòng **Unknown (key = -1)** cho mọi dim.
 - Tạo 2 stored procedure cho SCD Type 2: `usp_DimClub_NewVersion`, `usp_DimPlayer_NewVersion`.
@@ -122,7 +122,15 @@ Container 01 và Container 03 chạy lâu nhất, vì có bảng appearances 1,9
 | 3 | 12/31/9999 | Nạp phần còn lại |
 | 4 | 12/31/9999 (chạy lại) | Fact **không tăng dòng nào**; dim chỉ cập nhật nếu nguồn thay đổi |
 
-Sau mỗi lần chạy, chạy câu truy vấn ở [mục 5](#5-kiểm-tra-kết-quả) để thấy số dòng tăng dần.
+Sau mỗi lần chạy, chạy câu truy vấn ở [mục 5](#5-kiểm-tra-kết-quả) để thấy số dòng tăng dần. Nhanh nhất là xem nhật ký:
+
+```sql
+SELECT run_id, batch_id, window_from, window_to, status, fact_rows_before, fact_rows_after,
+       fact_rows_after - fact_rows_before AS so_dong_them
+FROM football_dwh_dw.dbo.etl_batch ORDER BY run_id;
+```
+
+Mong đợi: 4 dòng `SUCCESS`; `so_dong_them` của lần 1–3 dương, của lần 4 bằng **0**.
 
 ### Chạy ngoài Visual Studio (tùy chọn)
 
@@ -152,7 +160,7 @@ Dim phải nạp xong trước, vì fact cần Lookup sang dim để lấy surro
 |---|---|---|
 | **01 - Trích xuất file CSV vào Staging** | *Xóa dữ liệu cũ trong Staging* → 10 Data Flow *Chép file … vào Staging* (song song) | Extract |
 | **02 - Làm sạch và nạp Dimension** | *Nạp Dim_Competition (SCD1)* → *Nạp Dim_Club (SCD1 SCD2 SCD3)* → *Bổ sung CLB chỉ có trong Fact vào Dim_Club* → *Nạp Dim_Player (SCD1 SCD2)* → *Nạp Dim_Match (SCD1)* → *Nạp Dim_Manager* | Transform + Load |
-| **03 - Làm sạch tính toán và nạp Fact** | *Ghi cửa sổ nạp gia tăng* → *Nạp Fact_Team_Match* → *Nạp Fact_Player_Appearance* → *Nạp Fact_Player_Valuation* → *Nạp Fact_Transfer* | Transform + Load |
+| **03 - Làm sạch tính toán và nạp Fact** | *Ghi cửa sổ nạp gia tăng* → *Ghi nhật ký bắt đầu lần chạy* → *Nạp Fact_Team_Match* → *Nạp Fact_Player_Appearance* → *Nạp Fact_Player_Valuation* → *Nạp Fact_Transfer* → *Ghi nhật ký kết thúc lần chạy* | Transform + Load |
 
 ### Các Execute SQL Task
 
@@ -160,6 +168,10 @@ Dim phải nạp xong trước, vì fact cần Lookup sang dim để lấy surro
 |---|---|
 | *Xóa dữ liệu cũ trong Staging* | TRUNCATE 10 bảng `stg_raw_*`, để nạp lại không bị nhân đôi |
 | *Ghi cửa sổ nạp gia tăng* | Ghi `LoadFrom`/`LoadTo` vào bảng điều khiển `etl_load_window`; xóa reject cũ của các bảng fact (không cập nhật bảng phân tích nào) |
+| *Ghi nhật ký bắt đầu lần chạy* | Thêm 1 dòng vào `etl_batch`: `batch_id`, cửa sổ nạp, giờ bắt đầu, `status = RUNNING`, tổng số dòng 4 fact **trước** khi nạp. Lần chạy trước còn `RUNNING` (bị dừng giữa chừng) được đổi thành `FAILED` |
+| *Ghi nhật ký kết thúc lần chạy* | Cập nhật dòng đó: giờ kết thúc, `status = SUCCESS`, tổng số dòng 4 fact **sau** khi nạp |
+
+Biến `BatchID` có dạng `BATCH_yyyyMMdd_HHmmss`, lấy từ giờ bắt đầu chạy (`System::StartTime`). Mỗi lần chạy có một mã riêng, ghi vào cột `batch_id` của Staging, dimension, fact và `etl_batch`, nên dòng nào cũng truy được về lần chạy đã nạp nó.
 
 ---
 
