@@ -1,6 +1,6 @@
 # Hướng dẫn chạy ETL SSIS – Football Transfermarkt DWH
 
-Tài liệu mô tả cách chạy thực tế toàn bộ quy trình ETL và cấu trúc chi tiết của package `Main_ETL_Master.dtsx`: các Control Flow, Data Flow và component bên trong.
+Tài liệu mô tả cách chạy thực tế toàn bộ quy trình ETL và cấu trúc package `Main_ETL_Master.dtsx`. Cấu hình chi tiết từng component (câu SQL, biểu thức, Lookup, Aggregate…) xem ở `docs/Dien_giai_chi_tiet_SSIS.md`.
 
 - Package: `etl-ssis-transfermarkt/Football_DAWH_ETL_SSIS/Football_DAWH_ETL_SSIS/Main_ETL_Master.dtsx`
 - Script SQL: `sql/00_create_staging_raw.sql`, `sql/01_create_dw.sql`
@@ -22,23 +22,26 @@ Tài liệu mô tả cách chạy thực tế toàn bộ quy trình ETL và cấ
 ## 1. Kiến trúc tổng quan
 
 ```
-10 file CSV ──► stg_raw (football_dwh_staging) ──► Dim / Fact (football_dwh_dw) ──► Bảng tổng hợp
-            Container 01                      Container 02 (Dim), 03 (Fact)     Container 04
+10 file CSV ──01──► stg_raw (football_dwh_staging) ──02──► Dimension ──03──► Fact chi tiết ──► SSAS / Power BI
+             Extract                                  Transform + Load        Transform + Load      (tổng hợp)
 ```
 
 | Lớp | Nội dung | Nguyên tắc |
 |---|---|---|
 | **Stage** (`stg_raw_*`) | Bản sao nguyên trạng 10 file CSV, mọi cột kiểu chuỗi | Không biến đổi; TRUNCATE rồi nạp lại mỗi lần chạy |
-| **DW** (`dim_*`, `fact_*`) | Kho dữ liệu theo thiết kế Kimball | Chỉ chứa các thuộc tính, measure đã chọn lọc trong tài liệu thiết kế |
-| **Tổng hợp** | `fact_club_season_summary`, `fact_player_season_summary` | Tính lại cho các mùa có dữ liệu trong cửa sổ nạp |
+| **DW – Dimension** (`dim_*`) | 8 dimension theo thiết kế Kimball | Chỉ chứa thuộc tính đã chọn lọc; SCD1/2/3 |
+| **DW – Fact chi tiết** | `fact_team_match`, `fact_player_appearance`, `fact_player_valuation`, `fact_transfer` | Nạp gia tăng, chỉ thêm dòng chưa có |
+| **Tầng phân tích** | SSAS / Power BI | Tổng hợp theo mùa, CLB, HLV…; tính tỉ lệ (không lưu trong kho) |
 
-Nguyên tắc của phần ETL (Stage → DW):
+Nguyên tắc của phần ETL:
 
+- **Measure mức từng dòng tính trong ETL, trước khi ghi vào kho** (Extract → Transform → Load). Kho chỉ lưu, không chạy SQL tính toán sau khi nạp, không UPDATE/DELETE fact. **Tổng hợp** do SSAS / Power BI làm. Danh mục phép tính: `docs/Tinh_toan_trong_ETL_va_Measure.md`.
 - **Mỗi dim, mỗi fact là một Data Flow**, đi thẳng từ stage tới đích, không qua bảng trung gian.
-- **OLE DB Source chỉ `SELECT CAST(cột AS NVARCHAR(n))`** đúng các cột đã chọn. Phép CAST là bắt buộc, vì SSIS đọc kiểu `NVARCHAR(MAX)` thành `DT_NTEXT` và không dùng được hàm chuỗi trên kiểu này.
-- **Mọi xử lý đều là component SSIS:** làm sạch, ép kiểu, khử trùng, chuẩn hóa, kiểm tra, lọc cửa sổ nạp, Lookup, SCD.
-- **Ngoại lệ duy nhất dùng SQL:** `value_change_eur` của FactPlayerValuation tính bằng `LAG`, vì SSIS không có hàm tương đương.
-- **Nạp gia tăng:** fact không bị xóa. Mỗi lần chạy chỉ lấy sự kiện trong cửa sổ `LoadFrom`–`LoadTo`, và `LKP - Fact... (đã có chưa)` chặn các dòng đã nạp trước đó.
+- **Tên container, Data Flow, component đặt theo chức năng** (Đọc…, Làm sạch…, Ép kiểu…, Tính…, Tra khóa…, Ghi vào…).
+- **Nguồn (OLE DB Source) chỉ `SELECT CAST(cột AS NVARCHAR(n))`** đúng các cột đã chọn, vì SSIS đọc `NVARCHAR(MAX)` thành `DT_NTEXT` và không dùng được hàm chuỗi.
+- **Tính toán mức từng dòng** bằng Derived Column (cờ thắng/hòa/thua, điểm, hiệu số, tuổi, phí chênh, band, khóa ngày); ngoại lệ duy nhất dùng SQL là `value_change_eur` tính bằng `LAG` trong câu nguồn.
+- **Không có bảng tổng hợp trong kho**, không còn container Aggregate chạy SQL sau khi nạp.
+- **Nạp gia tăng:** fact chi tiết lấy sự kiện trong cửa sổ `LoadFrom`–`LoadTo`; bước *Bỏ qua dòng đã có trong Fact* chặn dòng đã nạp.
 
 ---
 
@@ -66,7 +69,7 @@ Kết nối Server name `localhost` (Windows Authentication), mở và chạy (F
 
 Chạy **`sql/01_create_dw.sql`**. Script này:
 
-- Tạo 8 dim, 4 fact, 2 bảng tổng hợp, `etl_load_window` (cửa sổ nạp), `etl_batch`.
+- Tạo 8 dim, 4 fact chi tiết, `etl_load_window` (cửa sổ nạp), `etl_batch`.
 - Sinh sẵn 3 dim tĩnh: **Dim_Date** (1990–2030), **Dim_Season** (41 mùa), **Dim_Transfer_Type** (6 loại phí).
 - Thêm dòng **Unknown (key = -1)** cho mọi dim.
 - Tạo 2 stored procedure cho SCD Type 2: `usp_DimClub_NewVersion`, `usp_DimPlayer_NewVersion`.
@@ -80,7 +83,7 @@ Chạy **`sql/01_create_dw.sql`**. Script này:
 3. Kiểm tra khung **Connection Managers** ở cuối màn hình thiết kế:
    - 2 kết nối OLE DB (`...football_dwh_staging`, `...football_dwh_dw`): Server name = `localhost`, bấm **Test Connection**.
    - 10 kết nối `FFCM ...`: double-click và kiểm tra **File name** trỏ đúng tới `data\raw\<tên>.csv` trên máy.
-4. Package được sinh bằng code nên các khối chưa có vị trí sắp sẵn. Vào **Format → Auto Layout → Diagram** ở tab Control Flow, rồi làm tương tự trong từng Data Flow cho dễ nhìn.
+4. Bố cục Control Flow và các Data Flow đã được sắp sẵn trong file. **Không** bấm *Format → Auto Layout* ở tab Control Flow (sẽ kéo Container 01 thành một hàng dài).
 
 ### Bước 4. Đặt cửa sổ nạp
 
@@ -97,7 +100,7 @@ Dim luôn được nạp đầy đủ. Dòng mới được thêm, dòng thay đ
 
 | Muốn chạy | Cách làm |
 |---|---|
-| **Toàn bộ** (01 → 02 → 03 → 04) | Nhấn **F5** (Start Debugging) khi đang mở `Main_ETL_Master.dtsx` |
+| **Toàn bộ** (01 → 02 → 03) | Nhấn **F5** (Start Debugging) khi đang mở `Main_ETL_Master.dtsx` |
 | Một container | Chuột phải container → **Execute Container** |
 | Một Data Flow hoặc task | Chuột phải khối → **Execute Task** |
 
@@ -108,15 +111,15 @@ Trong lúc chạy:
 - Nhật ký nằm ở tab **Progress**; tên tab đổi thành *Execution Results* sau khi dừng.
 - Chạy xong, nhấn **Shift+F5** để thoát chế độ debug.
 
-Container 01 và Container 03 chạy lâu nhất, vì có bảng appearances 1,9 triệu dòng.
+Container 01 và Container 03 chạy lâu nhất, vì có bảng appearances 1,9 triệu dòng (dùng trong *Nạp Fact_Player_Appearance*).
 
 ### Bước 6. Demo nạp gia tăng
 
 | Lần chạy | `LoadTo` | Kết quả mong đợi |
 |---|---|---|
-| 1 | 12/31/2018 | Dim nạp đầy đủ; fact chỉ có sự kiện đến hết 2018 |
-| 2 | 12/31/2021 | Fact **chỉ thêm** dữ liệu 2019–2021; dòng của lần 1 bị Lookup fact chặn |
-| 3 | 12/31/9999 | Nạp phần còn lại (từ 2022) |
+| 1 | 12/31/2018 | Dim nạp đầy đủ; fact chi tiết chỉ có sự kiện đến hết 2018 |
+| 2 | 12/31/2021 | Fact **chỉ thêm** dữ liệu 2019–2021; dòng cũ không bị sửa |
+| 3 | 12/31/9999 | Nạp phần còn lại |
 | 4 | 12/31/9999 (chạy lại) | Fact **không tăng dòng nào**; dim chỉ cập nhật nếu nguồn thay đổi |
 
 Sau mỗi lần chạy, chạy câu truy vấn ở [mục 5](#5-kiểm-tra-kết-quả) để thấy số dòng tăng dần.
@@ -137,250 +140,46 @@ Với đồ án, chạy trong Visual Studio là đủ.
 ## 3. Control Flow của Main_ETL_Master
 
 ```
-Container 01 - Load Source to Stage
+01 - Trích xuất file CSV vào Staging
         │
         ▼
-Container 02 - Load Dimensions
-        │
-        ▼
-Container 03 - Load Facts
-        │
-        ▼
-Container 04 - Aggregate
+02 - Làm sạch và nạp Dimension ──► 03 - Làm sạch tính toán và nạp Fact
 ```
 
-Dim phải nạp xong trước, vì fact cần Lookup sang dim để lấy surrogate key.
+Dim phải nạp xong trước, vì fact cần Lookup sang dim để lấy surrogate key. Không có container *Aggregate*: phép tổng hợp do SSAS / Power BI thực hiện trên fact chi tiết.
 
-| Container | Task bên trong (theo thứ tự chạy) | Kết nối |
+| Container | Task bên trong (theo thứ tự chạy) | Giai đoạn |
 |---|---|---|
-| **01 - Load Source to Stage** | `SQL_Truncate_Staging_Raw` → 10 Data Flow `DFT_Load_stg_raw_*` (chạy song song) | Flat File → Staging |
-| **02 - Load Dimensions** | `DF - Load DimCompetition` → `DF - Load DimClub` → `DF - Load DimClub (CLB chỉ có trong fact)` → `DF - Load DimPlayer` → `DF - Load DimMatch` → `DF - Load DimManager` | Staging → DW |
-| **03 - Load Facts** | `SQL - Set Load Window` → `DF - Load FactTeamMatch` → `DF - Load FactPlayerAppearance` → `DF - Load FactPlayerValuation` → `DF - Load FactTransfer` | Staging → DW |
-| **04 - Aggregate** | `SQL - Rebuild Season Summary` | DW |
+| **01 - Trích xuất file CSV vào Staging** | *Xóa dữ liệu cũ trong Staging* → 10 Data Flow *Chép file … vào Staging* (song song) | Extract |
+| **02 - Làm sạch và nạp Dimension** | *Nạp Dim_Competition (SCD1)* → *Nạp Dim_Club (SCD1 SCD2 SCD3)* → *Bổ sung CLB chỉ có trong Fact vào Dim_Club* → *Nạp Dim_Player (SCD1 SCD2)* → *Nạp Dim_Match (SCD1)* → *Nạp Dim_Manager* | Transform + Load |
+| **03 - Làm sạch tính toán và nạp Fact** | *Ghi cửa sổ nạp gia tăng* → *Nạp Fact_Team_Match* → *Nạp Fact_Player_Appearance* → *Nạp Fact_Player_Valuation* → *Nạp Fact_Transfer* | Transform + Load |
 
 ### Các Execute SQL Task
 
 | Task | Việc làm |
 |---|---|
-| `SQL_Truncate_Staging_Raw` | TRUNCATE 10 bảng `stg_raw_*`, để nạp lại không bị nhân đôi |
-| `SQL - Set Load Window` | Ghi `LoadFrom`/`LoadTo` vào `etl_load_window`; xóa reject cũ của các bảng fact; cập nhật `is_future_date` trong Dim_Date |
-| `SQL - Rebuild Season Summary` | Xóa và tính lại `fact_club_season_summary` (thắng/hòa/thua, điểm = 3 × thắng + hòa) và `fact_player_season_summary`, chỉ cho các mùa có sự kiện trong cửa sổ vừa nạp |
+| *Xóa dữ liệu cũ trong Staging* | TRUNCATE 10 bảng `stg_raw_*`, để nạp lại không bị nhân đôi |
+| *Ghi cửa sổ nạp gia tăng* | Ghi `LoadFrom`/`LoadTo` vào bảng điều khiển `etl_load_window`; xóa reject cũ của các bảng fact (không cập nhật bảng phân tích nào) |
 
 ---
 
 ## 4. Data Flow và component
 
-### Ký hiệu
+Mỗi Data Flow là một chuỗi component đặt tên theo việc nó làm. Chi tiết cấu hình từng component xem `docs/Dien_giai_chi_tiet_SSIS.md`.
 
-| Viết tắt | Component SSIS |
+| Data Flow | Luồng chính |
 |---|---|
-| **SRC** | OLE DB Source |
-| **DC** | Derived Column |
-| **CONV** | Data Conversion |
-| **SORT** | Sort (bật *Remove rows with duplicate sort values*) |
-| **UA** | Union All |
-| **LKP** | Lookup |
-| **CSPL** | Conditional Split |
-| **CMD** | OLE DB Command |
-| **DST** | OLE DB Destination |
+| *Chép file … vào Staging* (10) | Đọc file CSV → Thêm cột truy vết → Ghi vào bảng Staging |
+| *Nạp Dim_…* | Đọc … từ Staging → Làm sạch chuỗi → Ép kiểu dữ liệu → Loại trùng → Chuẩn hóa/tính band → Kiểm tra … đã có trong kho → (mới) Thêm … / (đã có) Phân loại thay đổi → Ghi đè SCD1 / Tạo phiên bản mới SCD2 / Lưu giải cũ SCD3 |
+| *Nạp Fact_…* (4) | Đọc … từ Staging → Làm sạch chuỗi → Ép kiểu dữ liệu → Kiểm tra hợp lệ và cửa sổ nạp → Loại trùng → Tính … (cờ, điểm, hiệu số, tuổi, phí chênh, khóa ngày) → Tra khóa … → Gán khóa Unknown → Bỏ qua dòng đã có trong Fact → Ghi vào Fact_… |
 
-### 4.1. Container 01 – Load Source to Stage
-
-10 Data Flow cùng một mẫu, tên `DFT_Load_stg_raw_<bảng>`:
-
-```
-Flat File Source ──► Derived Column ──► OLE DB Destination
- (đọc CSV, UTF-8)    (thêm batch_id,     (stg_raw_<bảng>)
-                      loaded_at, source_file)
-```
-
-### 4.2. Container 02 – Load Dimensions
-
-Mẫu chung: **SRC (stage) → làm sạch, ép kiểu, khử trùng → chuẩn hóa → LKP Dim**. Dòng chưa có thì **DST** (insert); dòng đã có mà thay đổi thì **CSPL** xác định loại thay đổi rồi **CMD** cập nhật theo SCD.
-
-#### DF - Load DimCompetition (9 khối – SCD1)
-
-```
-SRC - stg Competitions → DC - Clean Text → SORT - Remove Duplicates → LKP - stg Countries
-→ DC - Standardize → LKP - DimCompetition
-     ├─(No Match)→ DST - DimCompetition
-     └─(Match)───→ CSPL - Changed ─(Changed)→ CMD - Update DimCompetition (SCD1)
-```
-
-| Component | Việc làm |
-|---|---|
-| SRC - stg Competitions | 7/11 cột: `competition_id`, `name`, `type`, `sub_type`, `country_id`, `country_name`, `confederation` |
-| DC - Clean Text | TRIM, bỏ ký tự `\x00A0`, chuỗi rỗng → NULL |
-| SORT - Remove Duplicates | Khử trùng theo `competition_id` |
-| LKP - stg Countries | Lấy tên quốc gia từ `stg_raw_countries` khi giải thiếu tên quốc gia |
-| DC - Standardize | Giá trị mặc định "Không xác định"; giải quốc tế ghi "International"; chuẩn hóa liên đoàn `europa → UEFA`, `asien → AFC`, `afrika → CAF`, `amerika → Americas` |
-| LKP - DimCompetition | Tra `competition_id`, trả về `competition_key` và các giá trị đang lưu (`old_*`) |
-| DST - DimCompetition | Giải mới thì insert |
-| CSPL - Changed + CMD | So giá trị mới với giá trị cũ; khác thì `UPDATE` ghi đè (SCD1) |
-
-#### DF - Load DimClub (18 khối – SCD1 + SCD2 + SCD3)
-
-```
-SRC - stg Clubs ─────────► DC - Type Club ──────────┐
-SRC - stg National Teams ─► DC - Type National Team ─┴─► UA - Clubs and National Teams
-→ DC - Clean Text → CONV - Data Types ─(lỗi)→ DC - Reject Info → DST - etl_reject
-→ SORT - Remove Duplicates → LKP - DimCompetition (League) → DC - Standardize → LKP - DimClub
-     ├─(No Match)→ DST - DimClub
-     └─(Match)───→ CSPL - Change Type ─(SCD2 Stadium)→ CMD - SCD2 New Version
-                                      ─(SCD3 League)─→ CMD - SCD3 Update League
-                                      ─(SCD1)────────→ CMD - SCD1 Update
-```
-
-| Component | Việc làm |
-|---|---|
-| SRC - stg Clubs | 5/17 cột của clubs: `club_id`, `name`, `domestic_competition_id`, `stadium_name`, `stadium_seats` |
-| SRC - stg National Teams | 4/17 cột của national_teams: `national_team_id`, `name`, `country_name`, `confederation` |
-| DC - Type Club / Type National Team | Gán `club_type` = `Club` / `National Team` |
-| UA - Clubs and National Teams | Gộp 2 nguồn thành 1 luồng |
-| CONV - Data Types | `club_id`, `stadium_seats` → INT; dòng lỗi vào `etl_reject` |
-| LKP - DimCompetition (League) | Lấy tên giải VĐQG, quốc gia, liên đoàn của CLB từ Dim_Competition |
-| DC - Standardize | `stadium_capacity_band` (`< 20.000`, `20.000-39.999`, `40.000-59.999`, `>= 60.000`, Không xác định); quốc gia/liên đoàn (CLB lấy theo giải, đội tuyển lấy của chính đội; `CONCACAF`, `CONMEBOL → Americas`) |
-| LKP - DimClub | Tra phiên bản **hiện tại** (`is_current = 1`) theo `club_id` |
-| CMD - SCD2 New Version | Đổi sân hoặc sức chứa: gọi `usp_DimClub_NewVersion` để đóng phiên bản cũ và thêm phiên bản mới |
-| CMD - SCD3 Update League | Đổi giải: chuyển giải hiện tại sang `previous_league_name`, ghi giải mới |
-| CMD - SCD1 Update | Đổi tên, loại, quốc gia, liên đoàn: ghi đè |
-
-#### DF - Load DimClub (CLB chỉ có trong fact) (15 khối)
-
-Thêm vào Dim_Club các CLB chỉ xuất hiện trong dữ liệu sự kiện (đội hạng dưới, CLB nước ngoài) với `club_type = Other`, để fact không bị rơi về khóa -1.
-
-```
-SRC - stg Transfers (CLB đi) ──┐
-SRC - stg Transfers (CLB đến) ─┤
-SRC - stg Games (Đội nhà) ─────┼─► UA - Clubs In Facts → DC - Clean Text
-SRC - stg Games (Đội khách) ───┤   → CONV - Data Types ─(lỗi)→ DC - Reject Info → DST - etl_reject
-SRC - stg Valuations (CLB) ────┘   → CSPL - Has Club Id → SORT - Remove Duplicates → LKP - DimClub
-                                   ─(No Match)→ DC - Other Club Attributes → DST - DimClub (Other)
-```
-
-#### DF - Load DimPlayer (12 khối – SCD1 + SCD2)
-
-```
-SRC - stg Players → DC - Clean Text → CONV - Data Types ─(lỗi)→ DC - Reject Info → DST - etl_reject
-→ SORT - Remove Duplicates → DC - Standardize and Bands → LKP - DimPlayer
-     ├─(No Match)→ DST - DimPlayer
-     └─(Match)───→ CSPL - Change Type ─(SCD2 Position Agent)→ CMD - SCD2 New Version
-                                      ─(SCD1)───────────────→ CMD - SCD1 Update
-```
-
-| Component | Việc làm |
-|---|---|
-| SRC - stg Players | 12/26 cột: `player_id`, `name`, `date_of_birth`, `country_of_birth`, `country_of_citizenship`, `position`, `sub_position`, `foot`, `height_in_cm`, `agent_name`, `contract_expiration_date`, `international_caps` |
-| DC - Clean Text | Làm sạch; ngày `1989-02-06 00:00:00` → `1989-02-06` |
-| CONV - Data Types | ID → INT, ngày → DATE, chiều cao → SMALLINT, số trận đội tuyển → INT |
-| DC - Standardize and Bands | `height_band` (ngoài 150–220 cm → Không xác định); `international_caps_band` (trống → Không xác định, 0 → Chưa khoác áo); `contract_expiry_year`; giá trị mặc định |
-| CSPL - Change Type | **SCD2** khi đổi vị trí, vị trí chi tiết hoặc người đại diện; **SCD1** khi đổi các thuộc tính còn lại |
-| CMD - SCD2 New Version / SCD1 Update | Gọi `usp_DimPlayer_NewVersion` / `UPDATE` ghi đè |
-
-#### DF - Load DimMatch (11 khối – SCD1)
-
-```
-SRC - stg Games → DC - Clean Text → CONV - Data Types ─(lỗi)→ DC - Reject Info → DST - etl_reject
-→ SORT - Remove Duplicates → DC - Standardize and Bands → LKP - DimMatch
-     ├─(No Match)→ DST - DimMatch
-     └─(Match)───→ CSPL - Changed → CMD - Update DimMatch (SCD1)
-```
-
-- SRC lấy 7/23 cột của games: `game_id`, `round`, `stadium`, `referee`, 2 sơ đồ chiến thuật, `attendance`.
-- DC - Standardize and Bands:
-  - `round_type`: chứa "Matchday" → Matchday; chứa "Group" → Group stage; đúng bằng "Final" → Final; còn lại → Knockout.
-  - `attendance_band`: 5 nhóm số khán giả.
-
-#### DF - Load DimManager (8 khối)
-
-```
-SRC - stg Club Games (HLV đội) ─────┐
-SRC - stg Club Games (HLV đối thủ) ─┴─► UA - Managers → DC - Clean Text → CSPL - Has Name
-→ SORT - Remove Duplicates → LKP - DimManager ─(No Match)→ DST - DimManager
-```
-
-### 4.3. Container 03 – Load Facts
-
-Mẫu chung của 4 Data Flow:
-
-```
-SRC (stage) → [LKP stage] → DC - Clean Text → CONV - Data Types ─(lỗi)→ reject
-→ CSPL - Validate and Window ─(Reject)→ reject ; (Out Of Window) bỏ qua
-→ SORT - Remove Duplicates → DC tính measure, DateKey
-→ chuỗi LKP Dim → DC - Unknown Keys → LKP Fact (đã có chưa) ─(No Match)→ DST Fact
-```
-
-- **CSPL - Validate and Window**: loại dòng sai quy tắc và bỏ qua dòng có ngày nằm ngoài `[LoadFrom, LoadTo]`.
-- **DC - Unknown Keys**: khóa nào Lookup không tìm thấy thì gán -1, trỏ về dòng Unknown của dim.
-- **LKP Fact (đã có chưa)**: chỉ cho đi tiếp các dòng chưa có trong fact. Đây là bước đảm bảo nạp gia tăng không bị trùng.
-- Mỗi fact có 2 nhánh lỗi: **Conversion** (sai kiểu dữ liệu) và **Rule** (vi phạm quy tắc), đều qua `DC - Reject Info` rồi vào `DST - etl_reject`.
-
-#### DF - Load FactTeamMatch (21 khối)
-
-| # | Component | Việc làm |
-|---|---|---|
-| 1 | SRC - stg Club Games | 9/11 cột của club_games |
-| 2 | LKP - stg Games (ngày, mùa, giải) | Lấy ngày, mùa, giải của trận từ `stg_raw_games` |
-| 3 | DC - Clean Text | Làm sạch; vị trí xếp hạng `-1` hoặc trống → NULL |
-| 4 | CONV - Data Types | ID → INT; bàn thắng, vị trí, mùa → SMALLINT; ngày → DATE |
-| 5 | CSPL - Validate and Window | Thiếu khóa, tỉ số hoặc không tìm thấy trận → reject; ngoài cửa sổ → bỏ qua |
-| 6 | SORT - Remove Duplicates | Theo `(game_id, club_id)` |
-| 7 | DC - Calculate Measures and DateKey | `date_key` (YYYYMMDD), `is_home`, `is_win`, `is_draw`, `is_loss`, `is_clean_sheet` (**tính lại từ tỉ số**) |
-| 8–14 | LKP - DimSeason, DimCompetition, DimMatch, DimClub, DimClub Opponent, DimManager, DimManager Opponent | Lấy 7 surrogate key |
-| 15 | DC - Unknown Keys | Khóa không tìm thấy → -1 |
-| 16 | LKP - FactTeamMatch (đã có chưa) | Tra theo `(match_key, club_key)` |
-| 17 | DST - FactTeamMatch | Ghi `goals_for`, `goals_against`, các cờ, `league_position` |
-| + | DC - Reject Info / DST - etl_reject (Conversion, Rule) | 2 nhánh lỗi |
-
-#### DF - Load FactPlayerAppearance (19 khối)
-
-```
-SRC - stg Appearances → LKP - stg Games (mùa) → DC - Clean Text → CONV - Data Types
-→ CSPL - Validate and Window → SORT - Remove Duplicates → DC - DateKey and Count
-→ LKP - DimSeason → LKP - DimCompetition → LKP - DimMatch → LKP - DimPlayer → LKP - DimClub
-→ DC - Unknown Keys → LKP - FactPlayerAppearance (đã có chưa) → DST - FactPlayerAppearance
-```
-
-- SRC lấy 11/13 cột. Bỏ `player_name` (đã có ở Dim_Player) và `player_current_club_id` (CLB hiện tại, không phải CLB lúc thi đấu).
-- CSPL - Validate and Window: thiếu khóa, `minutes_played` ngoài 0–130, số bàn/kiến tạo/thẻ âm → reject. Dữ liệu hiện tại có 3 dòng 135, 135 và 148 phút.
-- DC - DateKey and Count: `date_key`, `appearance_count = 1`.
-- Ghi chú: SORT trên 1,9 triệu dòng tốn RAM và thời gian. Khi nạp theo đợt, số dòng qua Sort ít hơn.
-
-#### DF - Load FactPlayerValuation (16 khối)
-
-```
-SRC - stg Player Valuations → DC - Clean Text → CONV - Data Types → CSPL - Validate and Window
-→ SORT - Remove Duplicates → DC - DateKey and Count → LKP - DimPlayer (kèm ngày sinh)
-→ LKP - DimClub → LKP - DimCompetition → DC - Age and Unknown Keys
-→ LKP - FactPlayerValuation (đã có chưa) → DST - FactPlayerValuation
-```
-
-- SRC lấy 5/6 cột (bỏ `current_club_name`). Riêng `value_change_eur` = giá trị lần này − lần trước, tính bằng `LAG` trong câu nguồn.
-- DC - Age and Unknown Keys: `age_at_valuation` tính từ ngày sinh lấy qua `LKP - DimPlayer`.
-
-#### DF - Load FactTransfer (18 khối)
-
-```
-SRC - stg Transfers → DC - Clean Text → CONV - Data Types → CSPL - Validate and Window
-→ SORT - Remove Duplicates → DC - Fee Attributes and DateKey
-→ LKP - DimSeason → LKP - DimPlayer → LKP - DimClub From → LKP - DimClub To → LKP - DimTransferType
-→ DC - Age and Unknown Keys → LKP - FactTransfer (đã có chưa) → DST - FactTransfer
-```
-
-| Component | Việc làm |
-|---|---|
-| SRC - stg Transfers | 7/10 cột; bỏ 3 cột tên (cầu thủ, CLB đi, CLB đến) |
-| CONV - Data Types | Phí, giá trị thị trường dạng `'700000.000'` → DECIMAL(19,3) |
-| DC - Fee Attributes and DateKey | `transfer_fee_eur`, `market_value_eur` (BIGINT); `fee_status` (Có phí / Miễn phí hoặc cho mượn / **Không công bố** khi phí trống); `fee_band`; `fee_premium_eur` = phí − giá trị thị trường; `date_key` |
-| LKP - DimSeason | Tra theo mùa dạng `24/25` (`season_short`) |
-| LKP - DimTransferType | Tra theo `(fee_status, fee_band)` |
-| DC - Age and Unknown Keys | `age_at_transfer`; khóa không tìm thấy → -1 |
+Dòng lỗi ép kiểu và dòng vi phạm quy tắc được ghi vào `football_dwh_staging.dbo.etl_reject` qua các nhánh *Ghi lý do … → Lưu dòng … vào etl_reject*.
 
 ---
 
 ## 5. Kiểm tra kết quả
 
-Chạy trong SSMS sau mỗi lần chạy package:
+Bộ kiểm tra đầy đủ nằm trong **`sql/99_kiem_tra_ket_qua.sql`**: số dòng, cửa sổ nạp, reject, trùng khóa, công thức các cột tính trong ETL, miền tuổi, và BXH / vua phá lưới Premier League 2024/25 để đối chiếu nghiệp vụ. Bản rút gọn như sau. Chạy trong SSMS sau mỗi lần chạy package:
 
 ```sql
 USE football_dwh_dw;
@@ -394,9 +193,7 @@ UNION ALL SELECT 'dim_manager', COUNT(*) FROM dbo.dim_manager
 UNION ALL SELECT 'fact_team_match', COUNT(*) FROM dbo.fact_team_match
 UNION ALL SELECT 'fact_player_appearance', COUNT(*) FROM dbo.fact_player_appearance
 UNION ALL SELECT 'fact_player_valuation', COUNT(*) FROM dbo.fact_player_valuation
-UNION ALL SELECT 'fact_transfer', COUNT(*) FROM dbo.fact_transfer
-UNION ALL SELECT 'fact_club_season_summary', COUNT(*) FROM dbo.fact_club_season_summary
-UNION ALL SELECT 'fact_player_season_summary', COUNT(*) FROM dbo.fact_player_season_summary;
+UNION ALL SELECT 'fact_transfer', COUNT(*) FROM dbo.fact_transfer;
 
 -- Cửa sổ vừa nạp
 SELECT * FROM dbo.etl_load_window;
@@ -432,9 +229,10 @@ Kết quả dự kiến khi nạp đủ (`LoadTo = 12/31/9999`):
 | Hiện tượng | Nguyên nhân | Cách xử lý |
 |---|---|---|
 | Không kết nối được `localhost` | Dịch vụ SQL Server 2022 đang tắt | `net start MSSQLSERVER` (quyền Administrator) |
+| *Package Validation Error* … `OfflineMode property is TRUE` | VS đang ở chế độ **Work Offline** (thường tự bật khi mở package lúc SQL Server chưa chạy) | Menu **Extensions/SSIS → bỏ tick Work Offline**, chuột phải từng connection manager → bỏ tick **Work Offline**, rồi chạy lại |
 | Task của Container 01 lỗi đọc CSV | Đường dẫn `FFCM ...` sai hoặc file bị đổi ký tự xuống dòng (CRLF) | Sửa File name trong Connection Manager; dùng file CSV gốc tải từ Kaggle |
-| Số dòng stage gấp đôi | Chạy Container 01 không qua `SQL_Truncate_Staging_Raw` | Chạy cả container, không chạy lẻ từng `DFT_Load_stg_raw_*` |
+| Số dòng stage gấp đôi | Chạy Container 01 không qua *Xóa dữ liệu cũ trong Staging* | Chạy cả container, không chạy lẻ từng *Chép file … vào Staging* |
 | Lookup báo không tìm thấy bảng | Chưa chạy `sql/01_create_dw.sql` | Chạy script tạo DW (Bước 2) |
-| Fact không tăng dòng khi chạy lại | **Đúng thiết kế**: Lookup fact chặn dòng đã có | Muốn nạp lại từ đầu thì chạy lại `sql/01_create_dw.sql` |
-| `DF - Load FactPlayerAppearance` chạy rất lâu, tốn RAM | SORT trên 1,9 triệu dòng | Nạp theo đợt nhỏ (đặt `LoadTo`) hoặc tăng RAM cho máy |
+| Fact không tăng dòng khi chạy lại | **Đúng thiết kế**: bước *Bỏ qua … đã có trong Fact* chặn dòng đã có | Muốn nạp lại từ đầu thì chạy lại `sql/01_create_dw.sql` |
+| *Nạp Fact_Player_Appearance* chạy lâu, tốn RAM | Sort trên 1,9 triệu dòng | Nạp theo đợt nhỏ (đặt `LoadTo`) hoặc tăng RAM cho máy |
 | Khối báo ❌ | Lỗi lúc thực thi | Mở tab **Progress**, đọc dòng lỗi màu đỏ đầu tiên |

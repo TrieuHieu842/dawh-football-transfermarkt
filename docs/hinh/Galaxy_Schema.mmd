@@ -1,0 +1,162 @@
+erDiagram
+    Fact_Team_Match {
+        INT date_key FK
+        INT season_key FK
+        INT competition_key FK
+        INT match_key PK, FK
+        INT club_key PK, FK
+        INT opponent_club_key FK
+        INT manager_key FK
+        INT opponent_manager_key FK
+        TINYINT is_home
+        SMALLINT goals_for
+        SMALLINT goals_against
+        TINYINT is_win
+        TINYINT is_draw
+        TINYINT is_loss
+        TINYINT is_clean_sheet
+        SMALLINT league_position
+    }
+    Fact_Player_Appearance {
+        INT date_key FK
+        INT season_key FK
+        INT competition_key FK
+        INT match_key FK
+        INT player_key FK
+        INT club_key FK
+        NVARCHAR appearance_id PK
+        SMALLINT minutes_played
+        SMALLINT goals
+        SMALLINT assists
+        SMALLINT yellow_cards
+        SMALLINT red_cards
+        TINYINT appearance_count
+    }
+    Fact_Player_Valuation {
+        INT date_key PK, FK
+        INT player_key PK, FK
+        INT club_key FK
+        INT competition_key FK
+        BIGINT market_value_eur
+        BIGINT value_change_eur
+        TINYINT age_at_valuation
+        TINYINT valuation_count
+    }
+    Fact_Transfer {
+        INT date_key FK
+        INT season_key FK
+        INT player_key FK
+        INT from_club_key FK
+        INT to_club_key FK
+        INT transfer_type_key FK
+        BIGINT transfer_fee_eur
+        BIGINT market_value_eur
+        BIGINT fee_premium_eur
+        TINYINT age_at_transfer
+        TINYINT transfer_count
+    }
+    Dim_Date {
+        INT date_key PK
+        DATE full_date
+        TINYINT day_of_week
+        NVARCHAR day_name
+        BIT is_weekend
+        TINYINT month
+        NVARCHAR month_name
+        TINYINT quarter
+        SMALLINT year
+        BIT is_future_date
+    }
+    Dim_Season {
+        INT season_key PK
+        SMALLINT season_start_year
+        NVARCHAR season_label
+        NVARCHAR season_short
+    }
+    Dim_Competition {
+        INT competition_key PK
+        NVARCHAR competition_id
+        NVARCHAR competition_name
+        NVARCHAR competition_type
+        NVARCHAR competition_sub_type
+        NVARCHAR country_name
+        NVARCHAR confederation
+    }
+    Dim_Club {
+        INT club_key PK
+        INT club_id
+        NVARCHAR club_name
+        NVARCHAR club_type
+        NVARCHAR country_name
+        NVARCHAR confederation
+        NVARCHAR current_league_id
+        NVARCHAR current_league_name
+        NVARCHAR previous_league_name
+        NVARCHAR stadium_name
+        NVARCHAR stadium_capacity_band
+        DATE effective_date
+        DATE expiry_date
+        BIT is_current
+    }
+    Dim_Player {
+        INT player_key PK
+        INT player_id
+        NVARCHAR full_name
+        DATE date_of_birth
+        NVARCHAR country_of_birth
+        NVARCHAR citizenship
+        NVARCHAR position
+        NVARCHAR sub_position
+        NVARCHAR foot
+        NVARCHAR height_band
+        NVARCHAR agent_name
+        SMALLINT contract_expiry_year
+        NVARCHAR international_caps_band
+        DATE effective_date
+        DATE expiry_date
+        BIT is_current
+    }
+    Dim_Match {
+        INT match_key PK
+        INT game_id
+        NVARCHAR round
+        NVARCHAR round_type
+        NVARCHAR stadium
+        NVARCHAR referee
+        NVARCHAR home_formation
+        NVARCHAR away_formation
+        NVARCHAR attendance_band
+    }
+    Dim_Manager {
+        INT manager_key PK
+        NVARCHAR manager_name
+    }
+    Dim_Transfer_Type {
+        INT transfer_type_key PK
+        NVARCHAR fee_status
+        NVARCHAR fee_band
+    }
+    Dim_Date ||--o{ Fact_Team_Match : "date_key"
+    Dim_Season ||--o{ Fact_Team_Match : "season_key"
+    Dim_Competition ||--o{ Fact_Team_Match : "competition_key"
+    Dim_Match ||--o{ Fact_Team_Match : "match_key"
+    Dim_Club ||--o{ Fact_Team_Match : "club_key"
+    Dim_Club ||--o{ Fact_Team_Match : "opponent_club_key"
+    Dim_Manager ||--o{ Fact_Team_Match : "manager_key"
+    Dim_Manager ||--o{ Fact_Team_Match : "opponent_manager_key"
+    Dim_Date ||--o{ Fact_Player_Appearance : "date_key"
+    Dim_Season ||--o{ Fact_Player_Appearance : "season_key"
+    Dim_Competition ||--o{ Fact_Player_Appearance : "competition_key"
+    Dim_Match ||--o{ Fact_Player_Appearance : "match_key"
+    Dim_Player ||--o{ Fact_Player_Appearance : "player_key"
+    Dim_Club ||--o{ Fact_Player_Appearance : "club_key"
+    Dim_Date ||--o{ Fact_Player_Valuation : "date_key"
+    Dim_Player ||--o{ Fact_Player_Valuation : "player_key"
+    Dim_Club ||--o{ Fact_Player_Valuation : "club_key"
+    Dim_Competition ||--o{ Fact_Player_Valuation : "competition_key"
+    Dim_Date ||--o{ Fact_Transfer : "date_key"
+    Dim_Season ||--o{ Fact_Transfer : "season_key"
+    Dim_Player ||--o{ Fact_Transfer : "player_key"
+    Dim_Club ||--o{ Fact_Transfer : "from_club_key"
+    Dim_Club ||--o{ Fact_Transfer : "to_club_key"
+    Dim_Transfer_Type ||--o{ Fact_Transfer : "transfer_type_key"
