@@ -51,6 +51,10 @@
       <Name>Loai chuyen nhuong.dim</Name>
       <FullPath>Loai chuyen nhuong.dim</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Tuoi.dim</Name>
+      <FullPath>Tuoi.dim</FullPath>
+    </ProjectItem>
   </Dimensions>
   <Cubes>
     <ProjectItem>
@@ -60,6 +64,16 @@
         <ProjectItem>
           <Name>Football DWH.partitions</Name>
           <FullPath>Football DWH.partitions</FullPath>
+        </ProjectItem>
+      </Dependencies>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Thi truong cau thu.cube</Name>
+      <FullPath>Thi truong cau thu.cube</FullPath>
+      <Dependencies>
+        <ProjectItem>
+          <Name>Thi truong cau thu.partitions</Name>
+          <FullPath>Thi truong cau thu.partitions</FullPath>
         </ProjectItem>
       </Dependencies>
     </ProjectItem>
