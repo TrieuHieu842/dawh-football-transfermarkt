@@ -6,18 +6,38 @@
     <Name>Football_DAWH_SSAS.database</Name>
     <FullPath>Football_DAWH_SSAS.database</FullPath>
   </Database>
-  <DataSources>
+  <Cubes>
     <ProjectItem>
-      <Name>Football DWH.ds</Name>
-      <FullPath>Football DWH.ds</FullPath>
+      <Name>Football DWH.cube</Name>
+      <FullPath>Football DWH.cube</FullPath>
+      <Dependencies>
+        <ProjectItem>
+          <Name>Football DWH.partitions</Name>
+          <FullPath>Football DWH.partitions</FullPath>
+        </ProjectItem>
+      </Dependencies>
     </ProjectItem>
-  </DataSources>
-  <DataSourceViews>
     <ProjectItem>
-      <Name>Football DWH.dsv</Name>
-      <FullPath>Football DWH.dsv</FullPath>
+      <Name>Thi truong cau thu.cube</Name>
+      <FullPath>Thi truong cau thu.cube</FullPath>
+      <Dependencies>
+        <ProjectItem>
+          <Name>Thi truong cau thu.partitions</Name>
+          <FullPath>Thi truong cau thu.partitions</FullPath>
+        </ProjectItem>
+      </Dependencies>
     </ProjectItem>
-  </DataSourceViews>
+    <ProjectItem>
+      <Name>Hieu suat doi bong.cube</Name>
+      <FullPath>Hieu suat doi bong.cube</FullPath>
+      <Dependencies>
+        <ProjectItem>
+          <Name>Hieu suat doi bong.partitions</Name>
+          <FullPath>Hieu suat doi bong.partitions</FullPath>
+        </ProjectItem>
+      </Dependencies>
+    </ProjectItem>
+  </Cubes>
   <Dimensions>
     <ProjectItem>
       <Name>Ngay.dim</Name>
@@ -55,33 +75,42 @@
       <Name>Tuoi.dim</Name>
       <FullPath>Tuoi.dim</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Fact Team Match.dim</Name>
+      <FullPath>Fact Team Match.dim</FullPath>
+    </ProjectItem>
   </Dimensions>
-  <Cubes>
+  <DataSources>
     <ProjectItem>
-      <Name>Football DWH.cube</Name>
-      <FullPath>Football DWH.cube</FullPath>
-      <Dependencies>
-        <ProjectItem>
-          <Name>Football DWH.partitions</Name>
-          <FullPath>Football DWH.partitions</FullPath>
-        </ProjectItem>
-      </Dependencies>
+      <Name>Football DWH.ds</Name>
+      <FullPath>Football DWH.ds</FullPath>
     </ProjectItem>
+  </DataSources>
+  <DataSourceViews>
     <ProjectItem>
-      <Name>Thi truong cau thu.cube</Name>
-      <FullPath>Thi truong cau thu.cube</FullPath>
-      <Dependencies>
-        <ProjectItem>
-          <Name>Thi truong cau thu.partitions</Name>
-          <FullPath>Thi truong cau thu.partitions</FullPath>
-        </ProjectItem>
-      </Dependencies>
+      <Name>Football DWH.dsv</Name>
+      <FullPath>Football DWH.dsv</FullPath>
     </ProjectItem>
-  </Cubes>
+  </DataSourceViews>
   <Configurations>
     <Configuration>
       <Name>Development</Name>
-      <Options />
+      <Options>
+        <ConnectionMappings>
+          <ConfigurationSetting>
+            <Id>Football DWH</Id>
+            <Name>Football DWH</Name>
+            <Value xsi:type="xsd:string">Provider=MSOLEDBSQL.1;Data Source=MSI\TRIEUHIEU;Integrated Security=SSPI;Initial Catalog=football_dwh_dw</Value>
+          </ConfigurationSetting>
+        </ConnectionMappings>
+        <ConnectionSecurityMappings>
+          <ConfigurationSetting>
+            <Id>Football DWH</Id>
+            <Name>Football DWH</Name>
+            <Value xsi:type="xsd:int">0</Value>
+          </ConfigurationSetting>
+        </ConnectionSecurityMappings>
+      </Options>
     </Configuration>
   </Configurations>
 </Project>

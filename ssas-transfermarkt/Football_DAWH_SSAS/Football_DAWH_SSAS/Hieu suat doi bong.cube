@@ -1,0 +1,912 @@
+﻿<Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="de27bce4-507d-4913-abaf-8b653f8cf89d" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Hieu suat doi bong</ID>
+  <Name>Hieu suat doi bong</Name>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <Annotations>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramLayout</Name>
+      <Value>
+        <dds xmlns="">
+          <diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="MSDDS.Rectilinear" defaultlineroute="MSDDS.Rectilinear" version="7" nextobject="32" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-1488" scrolltop="1762" gridx="150" gridy="150" marginx="5000" marginy="5000" zoom="65" x="11695" y="12612" backcolor="2039583" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="0" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="1" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}">
+            <font>
+              <ddsxmlobjectstreamwrapper binary="01a30000900180380100065461686f6d61" />
+            </font>
+            <mouseicon>
+              <ddsxmlobjectstreamwrapper binary="6c74000000000000" />
+            </mouseicon>
+          </diagram>
+          <layoutmanager>
+            <ddsxmlobj />
+          </layoutmanager>
+          <ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge" tooltip="dim_manager" left="12176" top="3171" logicalid="16" controlid="1" masterid="0" hint1="0" hint2="0" width="3034" height="1887" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobjectstreaminitwrapper binary="000e0000da0b00005f070000" />
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dbo_dim_manager" vartype="8" />
+              </ddsxmlobj>
+            </layoutobject>
+            <shape groupshapeid="0" groupnode="0" />
+          </ddscontrol>
+          <ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge" tooltip="dim_date" left="9467" top="13509" logicalid="17" controlid="2" masterid="0" hint1="0" hint2="0" width="3869" height="7144" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobjectstreaminitwrapper binary="000e00001d0f0000e81b0000" />
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dbo_dim_date" vartype="8" />
+              </ddsxmlobj>
+            </layoutobject>
+            <shape groupshapeid="0" groupnode="0" />
+          </ddscontrol>
+          <ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge" tooltip="dim_competition" left="12176" top="7458" logicalid="18" controlid="3" masterid="0" hint1="0" hint2="0" width="3863" height="3651" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobjectstreaminitwrapper binary="000e0000170f0000430e0000" />
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dbo_dim_competition" vartype="8" />
+              </ddsxmlobj>
+            </layoutobject>
+            <shape groupshapeid="0" groupnode="0" />
+          </ddscontrol>
+          <ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge" tooltip="fact_team_match" left="5666" top="4640" logicalid="19" controlid="4" masterid="0" hint1="0" hint2="0" width="4110" height="5000" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobjectstreaminitwrapper binary="000e00000e10000088130000" />
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dbo_fact_team_match" vartype="8" />
+              </ddsxmlobj>
+            </layoutobject>
+            <shape groupshapeid="0" groupnode="0" />
+          </ddscontrol>
+          <ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge" tooltip="dim_match" left="20" top="4785" logicalid="20" controlid="5" masterid="0" hint1="0" hint2="0" width="3246" height="4710" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobjectstreaminitwrapper binary="000e0000ae0c000066120000" />
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dbo_dim_match" vartype="8" />
+              </ddsxmlobj>
+            </layoutobject>
+            <shape groupshapeid="0" groupnode="0" />
+          </ddscontrol>
+          <ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge" tooltip="dim_club" left="261" top="12478" logicalid="21" controlid="6" masterid="0" hint1="0" hint2="0" width="5557" height="8392" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobjectstreaminitwrapper binary="000e0000b5150000c8200000" />
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dbo_dim_club" vartype="8" />
+              </ddsxmlobj>
+            </layoutobject>
+            <shape groupshapeid="0" groupnode="0" />
+          </ddscontrol>
+          <ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge" tooltip="dim_season" left="6001" top="0" logicalid="22" controlid="7" masterid="0" hint1="0" hint2="0" width="3440" height="2240" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobjectstreaminitwrapper binary="000e0000700d0000c0080000" />
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dbo_dim_season" vartype="8" />
+              </ddsxmlobj>
+            </layoutobject>
+            <shape groupshapeid="0" groupnode="0" />
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="9476" top="3715" logicalid="23" controlid="8" masterid="0" hint1="0" hint2="0" width="3000" height="3725" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__oppon__5812160E]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="1" destid="4" sourceattachpoint="12" destattachpoint="23" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="12176" y="4114" />
+              <point x="10976" y="4114" />
+              <point x="10976" y="7140" />
+              <point x="9776" y="7140" />
+            </connector>
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="9476" top="3165" logicalid="24" controlid="9" masterid="0" hint1="0" hint2="0" width="3000" height="2625" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__manag__571DF1D5]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="1" destid="4" sourceattachpoint="10" destattachpoint="17" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="12176" y="3564" />
+              <point x="10976" y="3564" />
+              <point x="10976" y="5490" />
+              <point x="9776" y="5490" />
+            </connector>
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="9071" top="9340" logicalid="25" controlid="10" masterid="0" hint1="0" hint2="0" width="2180" height="4669" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__date___5165187F]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="2" destid="4" sourceattachpoint="4" destattachpoint="13" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="10851" y="13509" />
+              <point x="10851" y="11575" />
+              <point x="9371" y="11575" />
+              <point x="9371" y="9640" />
+            </connector>
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="9476" top="8490" logicalid="26" controlid="11" masterid="0" hint1="0" hint2="0" width="3000" height="1193" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__compe__534D60F1]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="3" destid="4" sourceattachpoint="20" destattachpoint="29" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="12176" y="9283" />
+              <point x="10976" y="9283" />
+              <point x="10976" y="8790" />
+              <point x="9776" y="8790" />
+            </connector>
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="3190" top="9340" logicalid="27" controlid="12" masterid="0" hint1="0" hint2="0" width="3731" height="3638" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__oppon__5629CD9C]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="6" destid="4" sourceattachpoint="10" destattachpoint="3" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="3589" y="12478" />
+              <point x="3589" y="11059" />
+              <point x="6621" y="11059" />
+              <point x="6621" y="9640" />
+            </connector>
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="7322" top="1741" logicalid="28" controlid="13" masterid="0" hint1="0" hint2="0" width="799" height="3199" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__seaso__52593CB8]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="7" destid="4" sourceattachpoint="5" destattachpoint="6" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="7721" y="2240" />
+              <point x="7721" y="4640" />
+            </connector>
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="3656" top="9040" logicalid="29" controlid="14" masterid="0" hint1="0" hint2="0" width="2310" height="3938" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__club___5535A963]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="6" destid="4" sourceattachpoint="12" destattachpoint="30" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="4139" y="12478" />
+              <point x="4139" y="11059" />
+              <point x="3956" y="11059" />
+              <point x="3956" y="9340" />
+              <point x="5666" y="9340" />
+            </connector>
+          </ddscontrol>
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="2966" top="6741" logicalid="30" controlid="15" masterid="0" hint1="0" hint2="0" width="3000" height="799" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+            <control>
+              <ddsxmlobj>
+                <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
+              </ddsxmlobj>
+            </control>
+            <layoutobject>
+              <ddsxmlobj>
+                <property name="LogicalObject" value="dataSet.Relations[FK__fact_team__match__5441852A]" vartype="8" />
+                <property name="Virtual" value="0" vartype="11" />
+                <property name="VisibleAP" value="0" vartype="3" />
+              </ddsxmlobj>
+            </layoutobject>
+            <connector lineroutestyle="MSDDS.Rectilinear" sourceid="5" destid="4" sourceattachpoint="19" destattachpoint="22" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
+              <point x="3266" y="7140" />
+              <point x="5666" y="7140" />
+            </connector>
+          </ddscontrol>
+        </dds>
+      </Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ShowFriendlyNames</Name>
+      <Value>true</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ShowRelationshipNames</Name>
+      <Value>false</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:UseDiagramDefaultLayout</Name>
+      <Value>true</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortLeft</Name>
+      <Value>-1488</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortTop</Name>
+      <Value>1762</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingLeft</Name>
+      <Value>20</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingTop</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramZoom</Name>
+      <Value>65</Value>
+    </Annotation>
+  </Annotations>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Dimensions>
+    <Dimension dwd:design-time-name="c7c3f999-5189-4886-b3d4-c9b48e96a36a">
+      <ID>Fact Team Match</ID>
+      <Name>Fact Team Match</Name>
+      <DimensionID>Fact Team Match</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="cd7d21e1-1854-4165-9a50-be46c59d1736">
+          <AttributeID>Match Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="92a501e5-4c69-4edc-9bcd-ec30d22f73f5">
+          <AttributeID>Competition Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="5aab46b2-7ac8-44c7-8a22-ce04292fd228">
+          <AttributeID>Opponent Manager Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="7f45fdd3-39fc-4f5c-8df7-04c2343474b8">
+          <AttributeID>Opponent Club Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="bac7a3d5-d6c7-4b47-8fec-278907f5208a">
+          <AttributeID>Season Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="865f54f7-e34e-41b4-8b97-d273e397056f">
+          <AttributeID>Manager Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="b83243ab-e1db-4330-931b-702e12076fdb">
+          <AttributeID>Date Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="04b58891-a1d0-436e-916f-d6812695db2f">
+          <AttributeID>Club Key</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="000cbb49-dcc6-47cd-bfb3-da97a4c40566">
+          <AttributeID>Fact Team Match - Match Key</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+    <Dimension dwd:design-time-name="266634ae-81bb-4ec5-8294-0ce40eb674f5">
+      <ID>Giải đấu</ID>
+      <Name>Giải đấu</Name>
+      <DimensionID>Giai dau</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="083d4854-1b88-4435-b08b-d5766ce6e28d">
+          <AttributeID>Giai dau</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="96577cd8-2b74-47da-aaea-b42997af737a">
+          <AttributeID>Competition Id</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="bd763586-3484-4e86-af2b-6fda83b4908d">
+          <AttributeID>Competition Type</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="d12e2386-80ee-405d-948a-41767372be61">
+          <AttributeID>Country Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="96bcba26-3cd7-4fb3-bc3b-e7f3c8ed5bd0">
+          <AttributeID>Confederation</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="c65cc776-9440-401e-a2da-3b1c40b79781">
+          <AttributeID>Competition Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="29086e77-ad1d-4c1d-8b0b-152e32c82479">
+          <AttributeID>Competition Sub Type</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy dwd:design-time-name="58100c15-9bf8-4db4-9428-3cffd1e47987">
+          <HierarchyID>Hierarchy</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension dwd:design-time-name="76347c7b-d6c3-4327-82f7-15a18ac631ec">
+      <ID>Opponent Manager</ID>
+      <Name>Opponent Manager</Name>
+      <DimensionID>HLV</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="cee19c74-b420-4d6f-9df6-5320d4ffe96b">
+          <AttributeID>HLV</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="d26b755d-6f61-4417-9a51-5a42502ff847">
+          <AttributeID>Manager Name</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+    <Dimension dwd:design-time-name="c998107a-6ea8-4fab-8111-24d8ec8b6188">
+      <ID>Opponent Club</ID>
+      <Name>Opponent Club</Name>
+      <DimensionID>CLB</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="cad31304-87f5-4e5b-8873-0876d6b96ca6">
+          <AttributeID>CLB</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="584054f0-7f0a-4a31-adf1-c09ccb3b1c9e">
+          <AttributeID>Club Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="bef1c625-b217-49ac-a462-fdb3ac7a28be">
+          <AttributeID>Club Type</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="43fcf27e-f2a8-4f9a-98ea-bc8d18edd0ee">
+          <AttributeID>Country Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="1706e0f2-5637-4444-bd7c-13254514b9bf">
+          <AttributeID>Confederation</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="718d4932-38ec-45f4-8403-702cacb0c7fd">
+          <AttributeID>Current League Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="8de27d99-8e66-4316-98ac-c316e377cc31">
+          <AttributeID>Previous League Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="eb92ad52-5a05-40ce-b331-2baf318fb6b0">
+          <AttributeID>Stadium Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="09a8aef0-03bf-4db5-8a53-9b4bbda86bcf">
+          <AttributeID>Stadium Capacity Band</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="2df4fd3c-c8ee-4954-b259-e98ad7780580">
+          <AttributeID>Is Current</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="0a6ce880-b16e-4823-8dc9-debacd763ad1">
+          <AttributeID>Club Key</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy dwd:design-time-name="e32e2408-b3d6-4930-9bf1-5814956fd60c">
+          <HierarchyID>Hierarchy</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension dwd:design-time-name="92095dd1-b659-496e-9560-6ec5e5afc928">
+      <ID>Mùa giải</ID>
+      <Name>Mùa giải</Name>
+      <DimensionID>Mua giai</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="66e83a5a-1326-4df4-b15f-4661e76c29ff">
+          <AttributeID>Mua giai</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="7cc493ad-2f55-4e45-b355-434af07cc274">
+          <AttributeID>Nam bat dau</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+    <Dimension dwd:design-time-name="4dbb07dc-cfae-40d7-95bc-428240e2f0f9">
+      <ID>HLV</ID>
+      <Name>HLV</Name>
+      <DimensionID>HLV</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="00d786ad-8dd1-4532-9102-5d6fb7fc7538">
+          <AttributeID>HLV</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="898b7420-69e4-4708-8d57-7fbdd5f31858">
+          <AttributeID>Manager Name</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+    <Dimension dwd:design-time-name="96305050-40c3-45f4-9a0e-e4657d7ab090">
+      <ID>Ngày</ID>
+      <Name>Ngày</Name>
+      <DimensionID>Ngay</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="cfc23ded-6864-469b-9a0c-156335717e42">
+          <AttributeID>Ngay</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="ec849043-736b-4272-8361-3b961256899f">
+          <AttributeID>Thang</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="81fa2feb-f0ba-4595-8f08-43afd72c99fd">
+          <AttributeID>Quy</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="c1f7537a-3cc8-4e94-b54c-61850481927d">
+          <AttributeID>Nam</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="60b006b7-94ec-4897-a25b-211aace85702">
+          <AttributeID>Thu</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="af72121d-1920-4dc5-8587-c464f1c0617a">
+          <AttributeID>Cuoi tuan</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy dwd:design-time-name="63ae3867-9876-44f9-893f-d79800ca4538">
+          <HierarchyID>Lich</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension dwd:design-time-name="dfd72447-65fc-4991-b620-33ecc14c8cf8">
+      <ID>CLB</ID>
+      <Name>CLB</Name>
+      <DimensionID>CLB</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="96e867b1-3f50-48ab-94e0-3a08243407d4">
+          <AttributeID>CLB</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="f21fe4f1-139f-4905-8c75-693dd10c5208">
+          <AttributeID>Club Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="44dfd195-422a-4f83-be8f-716f9798336c">
+          <AttributeID>Club Type</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="1823784a-7e20-4257-a2eb-0ba020132704">
+          <AttributeID>Country Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="5f2531d4-7fe1-4809-9886-f99a2cbe0b1c">
+          <AttributeID>Confederation</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="93cb8f2a-142b-4f7e-bae0-1099bebd8c64">
+          <AttributeID>Current League Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="e5c44f80-1409-45e4-b896-cc0afa47ebec">
+          <AttributeID>Previous League Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="e344b844-495d-44b1-b325-f5fc640ba055">
+          <AttributeID>Stadium Name</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="072ad7fa-bed2-47e3-9fc2-0f229642b36b">
+          <AttributeID>Stadium Capacity Band</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="55f29af8-ba73-49cb-b2eb-d3bd2bfe619a">
+          <AttributeID>Is Current</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="cafa5bee-208f-4fc4-aee5-0dc1d9ea6be8">
+          <AttributeID>Club Key</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy dwd:design-time-name="d3415c2b-f5da-43b0-8c36-466377c4f6b7">
+          <HierarchyID>Hierarchy</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension dwd:design-time-name="b9de074e-ccac-482c-9f32-0d07f00eaad1">
+      <ID>Trận đấu</ID>
+      <Name>Trận đấu</Name>
+      <DimensionID>Tran dau</DimensionID>
+      <Attributes>
+        <Attribute dwd:design-time-name="7e551a2b-14d4-4810-b5ae-4f04247f0d58">
+          <AttributeID>Tran dau</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="095e9574-75b1-480a-b461-f0f3006c59b4">
+          <AttributeID>Game Id</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="82be4025-1e22-4407-9f95-19bb196cd083">
+          <AttributeID>Round</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="b6a77ef9-d051-49de-9f06-9a9d3943a84a">
+          <AttributeID>Round Type</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="130945fb-13d6-4bdb-91ba-530ca86e6702">
+          <AttributeID>Referee</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="9151a1cc-6561-49a2-b3f9-4bf8ccc07668">
+          <AttributeID>Stadium</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="9632791b-82fb-45e7-82b1-effb5414564e">
+          <AttributeID>Home Formation</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="68127c6f-4be6-4ee5-8f23-993f7e879871">
+          <AttributeID>Away Formation</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="577b7bed-d07a-4cf4-88c6-62b97fd3b2d1">
+          <AttributeID>Attendance Band</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy dwd:design-time-name="b4379419-031e-4453-b957-28806b9d5d38">
+          <HierarchyID>Hierarchy</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+  </Dimensions>
+  <MeasureGroups>
+    <MeasureGroup dwd:design-time-name="80dba886-4b59-49d7-b5d8-4551f822f832">
+      <ID>Fact Team Match</ID>
+      <Name>Trận đấu</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Measures>
+        <Measure dwd:design-time-name="638b9ea0-e6b4-4f54-830e-404f3ff5cbd5">
+          <ID>Goals For</ID>
+          <Name>Bàn thắng</Name>
+          <DataType>Integer</DataType>
+          <Source dwd:design-time-name="e6a85aa5-d869-4776-89a7-97f48c7ec479">
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="eaae614b-47e7-4c7a-ab0f-299a3a3d38fd">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>goals_for</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="499ec21b-33c3-4d15-9c7e-f71deeb759c0">
+          <ID>Goals Against</ID>
+          <Name>Kiến tạo</Name>
+          <DataType>Integer</DataType>
+          <Source dwd:design-time-name="9922d5a8-949a-42c3-8455-9413f7cbc303">
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="482cb449-769d-48f0-9dbb-c76b5013a185">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>goals_against</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="4b8d8f41-f289-41a5-a075-0dfd105147aa">
+          <ID>Is Win</ID>
+          <Name>Thắng</Name>
+          <Source dwd:design-time-name="8b1498fb-3f3b-461d-b7db-ab7c45ac2ee4">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="23dc95e7-88c9-4122-91fd-208e69950e8d">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>is_win</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="859d01fb-041b-4b53-88b4-f634cf1593ab">
+          <ID>Is Draw</ID>
+          <Name>Hòa</Name>
+          <Source dwd:design-time-name="9ee518c9-0699-40b6-8c9d-52eeefbb0e3a">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="c183a877-566f-4c80-81d6-7bdb72358244">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>is_draw</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="49df03c4-034b-4682-bf9f-c402b13b9641">
+          <ID>Is Loss</ID>
+          <Name>Thua</Name>
+          <Source dwd:design-time-name="e41213e4-1011-4d79-9b3c-b69fb66fa5e9">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="167ebadb-8349-489d-a692-965bb6529cda">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>is_loss</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="04090d29-cc68-4d17-b576-47822fde8f45">
+          <ID>Is Clean Sheet</ID>
+          <Name>Sạch lưới</Name>
+          <Source dwd:design-time-name="341ce704-2128-4fea-9166-c19e9a909dc7">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="c71d0eb5-2bde-4e3b-b631-fb3e8004a14a">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>is_clean_sheet</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="1f048b1d-b577-489f-8e1c-3295fc25af2d">
+          <ID>Points</ID>
+          <Name>Điểm số</Name>
+          <Source dwd:design-time-name="6002aa6f-9235-4499-a5cc-576a7916e8aa">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="095af2e0-bd22-4569-a433-b728afd2b63e">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>points</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="c9eb4d88-0089-4b6e-a3f7-758eee574813">
+          <ID>Goal Difference</ID>
+          <Name>Hiệu số bàn thắng</Name>
+          <Source dwd:design-time-name="5156978f-3b82-4861-a004-287c7f585dd0">
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="5b07aead-1dac-4c52-9b06-f7a301842169">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>goal_difference</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="3c6911de-e8d3-45ec-8703-30d88d3938f3">
+          <ID>Home Match</ID>
+          <Name>Sân nhà</Name>
+          <Source dwd:design-time-name="fc3a0aac-df99-4811-89e3-f560b78f9b0b">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="0398df62-9c36-4fca-8367-f68a96b03fb5">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>home_match</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="70d5af2f-8469-466f-a989-466dfe6807d1">
+          <ID>Home Win</ID>
+          <Name>Chiến thắng sân nhà</Name>
+          <Source dwd:design-time-name="1f3903b6-d2f5-475b-ab22-e4bf18d3887c">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="86650c02-6334-407c-afae-0348f81c201f">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>home_win</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <ProcessingMode>Regular</ProcessingMode>
+      <Dimensions>
+        <Dimension xsi:type="DegenerateMeasureGroupDimension" dwd:design-time-name="239264ea-db80-41e0-9196-ed42b360c39f">
+          <CubeDimensionID>Fact Team Match</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="aed194f2-5161-4a8a-aaf3-d3861376bf80">
+              <AttributeID>Match Key</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="32fd63c2-29cf-4da7-bd44-8a935adf3228">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="ed9533fb-51a4-4fe9-8b11-ca1b5a59581a">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>match_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+                <KeyColumn dwd:design-time-name="fad13a6d-5df2-4ce0-be5b-6ff4fce649b0">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="9ca06685-0302-4333-a3f0-8016e6febd49">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>club_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="6398a25e-c4e0-4e65-849b-10fb216a7480">
+          <CubeDimensionID>Giải đấu</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="1f0db373-490b-476e-893c-eac82ace4556">
+              <AttributeID>Giai dau</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="612ab35c-e10c-4c8e-ad96-db043a708487">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="04e6d275-cb34-4a0c-baec-45db195b32a7">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>competition_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="bd8e5ab9-53e7-4ab2-b770-95244d21bc7d">
+          <CubeDimensionID>Opponent Manager</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="2d4b89c9-fa75-4f53-8c90-c0bb30a972ea">
+              <AttributeID>HLV</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="75a568c9-66f6-451c-b2aa-1ea0849e15c6">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="64e8fbb7-3e3e-4636-ae73-30981fb348b4">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>opponent_manager_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="3f77e51f-5064-48e2-9c0d-7841a6784353">
+          <CubeDimensionID>Opponent Club</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="f4d32800-9949-4173-8077-f7f5f6d5d29c">
+              <AttributeID>CLB</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="07bea1ad-38be-4563-abec-30abb510644a">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="bff50401-527e-4198-a923-ad218f0cebb1">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>opponent_club_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="aacde9cb-8a92-4bcd-badb-e9af95a05497">
+          <CubeDimensionID>Mùa giải</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="b31745cf-14c9-404f-afa5-550cedf2f094">
+              <AttributeID>Mua giai</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="50ffdaf0-091a-49ac-b22c-d91dfefc040e">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="57eb229e-2e71-496d-97c8-3f710aa42181">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>season_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="2b414ec2-5104-4645-b0e2-59b2c65616c7">
+          <CubeDimensionID>HLV</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="8c89baf9-631b-46e8-b294-5104dc37bb08">
+              <AttributeID>HLV</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="05529fee-ddd9-4793-b296-99ffc8a61265">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="f8b7fea8-3791-4000-b903-9934d1dd8a4b">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>manager_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="5e00fa13-278e-4d55-9450-f423b162ca2b">
+          <CubeDimensionID>Ngày</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="4a21d4e4-29c4-4c81-840c-847c8e999d95">
+              <AttributeID>Ngay</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="6968c142-7dc5-47be-b1e7-a03fc9467575">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="ba980037-9fef-4f6c-8346-a12402f0aee9">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>date_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="ec9691cf-932d-459a-b82d-8534fa9497df">
+          <CubeDimensionID>CLB</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="45db246d-bc44-48db-8873-de3579c7d91b">
+              <AttributeID>CLB</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="3f505d0a-e3e5-463a-977b-aa8d59ff1395">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="43eb03d5-f244-4bfd-b4b1-4025162daa4d">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>club_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="cf2bd40e-f9d3-44c5-b2f5-b528c4f60122">
+          <CubeDimensionID>Trận đấu</CubeDimensionID>
+          <Attributes>
+            <Attribute dwd:design-time-name="eb9bfcdb-de2f-414a-9d9f-34fdd4d7e1ba">
+              <AttributeID>Tran dau</AttributeID>
+              <KeyColumns>
+                <KeyColumn dwd:design-time-name="83918275-1c6a-4be8-b3ee-75918b53ceea">
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="070eded8-f2ab-4b87-83ac-312a59f36ce7">
+                    <TableID>dbo_fact_team_match</TableID>
+                    <ColumnID>match_key</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <Partitions />
+    </MeasureGroup>
+  </MeasureGroups>
+  <Source dwd:design-time-name="ae562d62-cba7-4080-99fa-9f62387ddc4f">
+    <DataSourceViewID>Football DWH</DataSourceViewID>
+  </Source>
+  <MdxScripts>
+    <MdxScript dwd:design-time-name="b0330b68-c477-4383-ae6c-118894314343">
+      <ID>MdxScript</ID>
+      <Name>MdxScript</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <Commands>
+        <Command>
+          <Text>/*
+The CALCULATE command controls the aggregation of leaf cells in the cube.
+If the CALCULATE command is deleted or modified, the data within the cube is affected.
+You should edit this command only if you manually specify how the cube is aggregated.
+*/
+CALCULATE; 
+CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng]
+ AS [Measures].[Thắng] / [Measures].[Số trận], 
+FORMAT_STRING = "Percent", 
+VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ; 
+CREATE MEMBER CURRENTCUBE.[Measures].[Bàn thắng mỗi trận]
+ AS [Measures].[Bàn thắng] / [Measures].[Số trận], 
+VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ; 
+CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng sân nhà]
+ AS [Measures].[Thắng sân nhà] / [Measures].[Số trận sân nhà], 
+FORMAT_STRING = "Percent", 
+VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ; </Text>
+        </Command>
+      </Commands>
+    </MdxScript>
+  </MdxScripts>
+  <Kpis>
+    <Kpi dwd:design-time-name="2ae1e53d-59fe-457e-9d1f-35c47cb61984">
+      <ID>KPI</ID>
+      <Name>KPI Tỉ lệ thắng HLV</Name>
+      <AssociatedMeasureGroupID>Fact Team Match</AssociatedMeasureGroupID>
+      <Value>[Measures].[Tỉ lệ thắng]</Value>
+      <Goal>0.5</Goal>
+      <Status>Case
+  When [Measures].[Tỉ lệ thắng] &gt;= 0.5 Then 1
+  When [Measures].[Tỉ lệ thắng] &gt;= 0.4 Then 0
+  Else -1
+End</Status>
+      <Trend>Case
+  When [Measures].[Tỉ lệ thắng] &gt; ([Measures].[Tỉ lệ thắng], [Mùa giải].[Mùa giải].PrevMember) Then 1
+  When [Measures].[Tỉ lệ thắng] = ([Measures].[Tỉ lệ thắng], [Mùa giải].[Mùa giải].PrevMember) Then 0
+  Else -1
+End</Trend>
+      <TrendGraphic>Standard Arrow</TrendGraphic>
+      <StatusGraphic>Shapes</StatusGraphic>
+    </Kpi>
+  </Kpis>
+</Cube>
