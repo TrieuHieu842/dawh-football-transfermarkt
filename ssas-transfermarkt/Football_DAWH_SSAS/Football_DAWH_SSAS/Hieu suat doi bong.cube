@@ -1,4 +1,4 @@
-﻿<Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="de27bce4-507d-4913-abaf-8b653f8cf89d" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+﻿<Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="07bede77-011c-4133-ac48-5221998f54f2" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
   <ID>Hieu suat doi bong</ID>
   <Name>Hieu suat doi bong</Name>
   <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
@@ -8,7 +8,7 @@
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramLayout</Name>
       <Value>
         <dds xmlns="">
-          <diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="MSDDS.Rectilinear" defaultlineroute="MSDDS.Rectilinear" version="7" nextobject="32" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-1488" scrolltop="1762" gridx="150" gridy="150" marginx="5000" marginy="5000" zoom="65" x="11695" y="12612" backcolor="2039583" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="0" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="1" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}">
+          <diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="MSDDS.Rectilinear" defaultlineroute="MSDDS.Rectilinear" version="7" nextobject="32" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-1488" scrolltop="7173" gridx="150" gridy="150" marginx="5000" marginy="5000" zoom="65" x="11695" y="12612" backcolor="2039583" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="0" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="1" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}">
             <font>
               <ddsxmlobjectstreamwrapper binary="01a30000900180380100065461686f6d61" />
             </font>
@@ -214,7 +214,7 @@
               <point x="7721" y="4640" />
             </connector>
           </ddscontrol>
-          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="3656" top="9040" logicalid="29" controlid="14" masterid="0" hint1="0" hint2="0" width="2310" height="3938" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
+          <ddscontrol controlprogid="MSDDS.Polyline.080.1" left="3740" top="9040" logicalid="29" controlid="14" masterid="0" hint1="0" hint2="0" width="2226" height="3938" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0">
             <control>
               <ddsxmlobj>
                 <polyline endtypedst="6" endtypesrc="3" usercolor="16448250" linestyle="0" linerender="1" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" />
@@ -229,9 +229,7 @@
             </layoutobject>
             <connector lineroutestyle="MSDDS.Rectilinear" sourceid="6" destid="4" sourceattachpoint="12" destattachpoint="30" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="0" relatedid="0" virtual="0">
               <point x="4139" y="12478" />
-              <point x="4139" y="11059" />
-              <point x="3956" y="11059" />
-              <point x="3956" y="9340" />
+              <point x="4139" y="9340" />
               <point x="5666" y="9340" />
             </connector>
           </ddscontrol>
@@ -274,7 +272,7 @@
     </Annotation>
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortTop</Name>
-      <Value>1762</Value>
+      <Value>7173</Value>
     </Annotation>
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingLeft</Name>
@@ -292,274 +290,274 @@
   <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
   <State>Unprocessed</State>
   <Dimensions>
-    <Dimension dwd:design-time-name="c7c3f999-5189-4886-b3d4-c9b48e96a36a">
+    <Dimension dwd:design-time-name="3667380a-90ab-475b-9dd7-4343ae7f94ba">
       <ID>Fact Team Match</ID>
       <Name>Fact Team Match</Name>
       <DimensionID>Fact Team Match</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="cd7d21e1-1854-4165-9a50-be46c59d1736">
+        <Attribute dwd:design-time-name="af1b829d-ddc9-4aa2-8d20-33b3be054da0">
           <AttributeID>Match Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="92a501e5-4c69-4edc-9bcd-ec30d22f73f5">
+        <Attribute dwd:design-time-name="dc5a975d-d2ee-4dbe-a1f2-003f1ed025ae">
           <AttributeID>Competition Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="5aab46b2-7ac8-44c7-8a22-ce04292fd228">
+        <Attribute dwd:design-time-name="7950cf71-80be-4c80-aea5-6cff9b5f4bd1">
           <AttributeID>Opponent Manager Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="7f45fdd3-39fc-4f5c-8df7-04c2343474b8">
+        <Attribute dwd:design-time-name="7476ac6e-288c-49e4-a979-862dc14a745e">
           <AttributeID>Opponent Club Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="bac7a3d5-d6c7-4b47-8fec-278907f5208a">
+        <Attribute dwd:design-time-name="c92ff917-b326-411e-9af4-a607a6d32a53">
           <AttributeID>Season Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="865f54f7-e34e-41b4-8b97-d273e397056f">
+        <Attribute dwd:design-time-name="43404fcc-51c8-4e2b-b6d2-f3ee15a38b19">
           <AttributeID>Manager Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="b83243ab-e1db-4330-931b-702e12076fdb">
+        <Attribute dwd:design-time-name="4a57b9c1-9127-4408-871d-d64f4d8b8c7b">
           <AttributeID>Date Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="04b58891-a1d0-436e-916f-d6812695db2f">
+        <Attribute dwd:design-time-name="3847dfe1-c856-4a5f-8f9c-e85e96d78bb1">
           <AttributeID>Club Key</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="000cbb49-dcc6-47cd-bfb3-da97a4c40566">
+        <Attribute dwd:design-time-name="8f122520-7317-4bfb-af55-63176395dff1">
           <AttributeID>Fact Team Match - Match Key</AttributeID>
         </Attribute>
       </Attributes>
     </Dimension>
-    <Dimension dwd:design-time-name="266634ae-81bb-4ec5-8294-0ce40eb674f5">
+    <Dimension dwd:design-time-name="a86a770e-7866-46e3-93c8-7cde25276abe">
       <ID>Giải đấu</ID>
       <Name>Giải đấu</Name>
       <DimensionID>Giai dau</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="083d4854-1b88-4435-b08b-d5766ce6e28d">
+        <Attribute dwd:design-time-name="939ae3cb-e50a-4cf1-bc82-b229e89fbc28">
           <AttributeID>Giai dau</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="96577cd8-2b74-47da-aaea-b42997af737a">
+        <Attribute dwd:design-time-name="11dcc37c-de4a-4052-9a84-2313f74d27bb">
           <AttributeID>Competition Id</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="bd763586-3484-4e86-af2b-6fda83b4908d">
+        <Attribute dwd:design-time-name="309ae683-3ebb-4c32-a0aa-183d7e4224ec">
           <AttributeID>Competition Type</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="d12e2386-80ee-405d-948a-41767372be61">
+        <Attribute dwd:design-time-name="b4a47bf9-272c-4432-a200-2a52a226b66f">
           <AttributeID>Country Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="96bcba26-3cd7-4fb3-bc3b-e7f3c8ed5bd0">
+        <Attribute dwd:design-time-name="31a2d510-dd81-4f2b-bd53-34c49a37f941">
           <AttributeID>Confederation</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="c65cc776-9440-401e-a2da-3b1c40b79781">
+        <Attribute dwd:design-time-name="7b12562d-733a-45d7-bc53-ebd775973b13">
           <AttributeID>Competition Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="29086e77-ad1d-4c1d-8b0b-152e32c82479">
+        <Attribute dwd:design-time-name="963d0411-4712-43d2-ae6b-6b91415b2648">
           <AttributeID>Competition Sub Type</AttributeID>
         </Attribute>
       </Attributes>
       <Hierarchies>
-        <Hierarchy dwd:design-time-name="58100c15-9bf8-4db4-9428-3cffd1e47987">
+        <Hierarchy dwd:design-time-name="9a45a87f-ba65-4252-a160-e2a64e9b4669">
           <HierarchyID>Hierarchy</HierarchyID>
         </Hierarchy>
       </Hierarchies>
     </Dimension>
-    <Dimension dwd:design-time-name="76347c7b-d6c3-4327-82f7-15a18ac631ec">
+    <Dimension dwd:design-time-name="1a7069e4-9e46-440b-9b6e-0662ab9404c5">
       <ID>Opponent Manager</ID>
       <Name>Opponent Manager</Name>
       <DimensionID>HLV</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="cee19c74-b420-4d6f-9df6-5320d4ffe96b">
+        <Attribute dwd:design-time-name="de8d4958-eb64-42ca-b796-ccce49ed4cfd">
           <AttributeID>HLV</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="d26b755d-6f61-4417-9a51-5a42502ff847">
+        <Attribute dwd:design-time-name="cc8d3a90-b2ed-46dd-83ea-350508cb0d35">
           <AttributeID>Manager Name</AttributeID>
         </Attribute>
       </Attributes>
     </Dimension>
-    <Dimension dwd:design-time-name="c998107a-6ea8-4fab-8111-24d8ec8b6188">
+    <Dimension dwd:design-time-name="5e087808-061e-4384-967a-fccc63c32ad7">
       <ID>Opponent Club</ID>
       <Name>Opponent Club</Name>
       <DimensionID>CLB</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="cad31304-87f5-4e5b-8873-0876d6b96ca6">
+        <Attribute dwd:design-time-name="d86bdedd-b841-4e30-bde9-87116e6063b6">
           <AttributeID>CLB</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="584054f0-7f0a-4a31-adf1-c09ccb3b1c9e">
+        <Attribute dwd:design-time-name="f3c7cc39-984c-4889-be7f-aca856f7999a">
           <AttributeID>Club Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="bef1c625-b217-49ac-a462-fdb3ac7a28be">
+        <Attribute dwd:design-time-name="65e4bcfc-bdb7-49f3-aa09-48080e51fc07">
           <AttributeID>Club Type</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="43fcf27e-f2a8-4f9a-98ea-bc8d18edd0ee">
+        <Attribute dwd:design-time-name="94f54e3f-6e90-4161-b376-257845973020">
           <AttributeID>Country Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="1706e0f2-5637-4444-bd7c-13254514b9bf">
+        <Attribute dwd:design-time-name="a6d527c1-9669-4b2c-82a6-cf3b9e57ceb0">
           <AttributeID>Confederation</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="718d4932-38ec-45f4-8403-702cacb0c7fd">
+        <Attribute dwd:design-time-name="b7ad7756-8bb9-4f2f-b448-59f86608bd69">
           <AttributeID>Current League Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="8de27d99-8e66-4316-98ac-c316e377cc31">
+        <Attribute dwd:design-time-name="bad1f4b2-e48a-42cb-8e30-a049ca515680">
           <AttributeID>Previous League Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="eb92ad52-5a05-40ce-b331-2baf318fb6b0">
+        <Attribute dwd:design-time-name="33c2c107-d809-4e72-839d-255677c7cf85">
           <AttributeID>Stadium Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="09a8aef0-03bf-4db5-8a53-9b4bbda86bcf">
+        <Attribute dwd:design-time-name="c9f84791-c9ca-44cc-b985-eb86c20627a4">
           <AttributeID>Stadium Capacity Band</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="2df4fd3c-c8ee-4954-b259-e98ad7780580">
+        <Attribute dwd:design-time-name="0d01c153-d66c-4ecd-ae57-d769e87b7ec5">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="0a6ce880-b16e-4823-8dc9-debacd763ad1">
+        <Attribute dwd:design-time-name="a490e9ff-15db-4349-8c5a-b7bd391b6dc9">
           <AttributeID>Club Key</AttributeID>
         </Attribute>
       </Attributes>
       <Hierarchies>
-        <Hierarchy dwd:design-time-name="e32e2408-b3d6-4930-9bf1-5814956fd60c">
+        <Hierarchy dwd:design-time-name="ae8d0ef0-60fc-4a06-b1c8-d535a7b924f2">
           <HierarchyID>Hierarchy</HierarchyID>
         </Hierarchy>
       </Hierarchies>
     </Dimension>
-    <Dimension dwd:design-time-name="92095dd1-b659-496e-9560-6ec5e5afc928">
+    <Dimension dwd:design-time-name="e06d6f8b-ae2e-4b4a-9934-8631f898ea62">
       <ID>Mùa giải</ID>
       <Name>Mùa giải</Name>
       <DimensionID>Mua giai</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="66e83a5a-1326-4df4-b15f-4661e76c29ff">
+        <Attribute dwd:design-time-name="51daaa1b-36bd-4b68-88d0-d0a7c4b48097">
           <AttributeID>Mua giai</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="7cc493ad-2f55-4e45-b355-434af07cc274">
+        <Attribute dwd:design-time-name="470198a8-c13d-4254-a856-0507cda08b88">
           <AttributeID>Nam bat dau</AttributeID>
         </Attribute>
       </Attributes>
     </Dimension>
-    <Dimension dwd:design-time-name="4dbb07dc-cfae-40d7-95bc-428240e2f0f9">
+    <Dimension dwd:design-time-name="4f745817-98ec-47f0-9fba-7dfb196f350d">
       <ID>HLV</ID>
       <Name>HLV</Name>
       <DimensionID>HLV</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="00d786ad-8dd1-4532-9102-5d6fb7fc7538">
+        <Attribute dwd:design-time-name="171d9e81-75b5-4ba3-b2b7-525e932b2097">
           <AttributeID>HLV</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="898b7420-69e4-4708-8d57-7fbdd5f31858">
+        <Attribute dwd:design-time-name="799e267d-004b-42bd-9054-25e1e0fd3122">
           <AttributeID>Manager Name</AttributeID>
         </Attribute>
       </Attributes>
     </Dimension>
-    <Dimension dwd:design-time-name="96305050-40c3-45f4-9a0e-e4657d7ab090">
+    <Dimension dwd:design-time-name="a1fa5d93-47c1-4149-a559-06342374f1c8">
       <ID>Ngày</ID>
       <Name>Ngày</Name>
       <DimensionID>Ngay</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="cfc23ded-6864-469b-9a0c-156335717e42">
+        <Attribute dwd:design-time-name="7eee2667-523b-4b92-8411-34d92b86fb91">
           <AttributeID>Ngay</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="ec849043-736b-4272-8361-3b961256899f">
+        <Attribute dwd:design-time-name="184a4d40-1d98-4a27-a386-87f21c94a836">
           <AttributeID>Thang</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="81fa2feb-f0ba-4595-8f08-43afd72c99fd">
+        <Attribute dwd:design-time-name="d0a2adb6-9ff0-417a-9ec5-7722728dcd63">
           <AttributeID>Quy</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="c1f7537a-3cc8-4e94-b54c-61850481927d">
+        <Attribute dwd:design-time-name="4ab5b1ac-bc65-45d9-8bbd-17c5c996b2a5">
           <AttributeID>Nam</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="60b006b7-94ec-4897-a25b-211aace85702">
+        <Attribute dwd:design-time-name="d768c626-4e8d-4b98-a4ac-580221084e0b">
           <AttributeID>Thu</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="af72121d-1920-4dc5-8587-c464f1c0617a">
+        <Attribute dwd:design-time-name="12c32449-547c-4e0c-980e-d2c2827dc40d">
           <AttributeID>Cuoi tuan</AttributeID>
         </Attribute>
       </Attributes>
       <Hierarchies>
-        <Hierarchy dwd:design-time-name="63ae3867-9876-44f9-893f-d79800ca4538">
+        <Hierarchy dwd:design-time-name="24f36254-54de-42dc-b17a-c6c9de0c4223">
           <HierarchyID>Lich</HierarchyID>
         </Hierarchy>
       </Hierarchies>
     </Dimension>
-    <Dimension dwd:design-time-name="dfd72447-65fc-4991-b620-33ecc14c8cf8">
+    <Dimension dwd:design-time-name="48726799-8d5a-4d0e-9265-5f5934595083">
       <ID>CLB</ID>
       <Name>CLB</Name>
       <DimensionID>CLB</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="96e867b1-3f50-48ab-94e0-3a08243407d4">
+        <Attribute dwd:design-time-name="75477140-7e9f-428c-8114-635db38442e0">
           <AttributeID>CLB</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="f21fe4f1-139f-4905-8c75-693dd10c5208">
+        <Attribute dwd:design-time-name="c2edcdaa-058e-4fc1-a4c1-0f7470a8b445">
           <AttributeID>Club Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="44dfd195-422a-4f83-be8f-716f9798336c">
+        <Attribute dwd:design-time-name="4fe84e39-7bca-4a70-a6b6-30a23d0a26ae">
           <AttributeID>Club Type</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="1823784a-7e20-4257-a2eb-0ba020132704">
+        <Attribute dwd:design-time-name="ce08ac98-3c13-4870-b670-e993d4dd1f1c">
           <AttributeID>Country Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="5f2531d4-7fe1-4809-9886-f99a2cbe0b1c">
+        <Attribute dwd:design-time-name="fe0acea2-e571-43fc-b161-65c4b3353912">
           <AttributeID>Confederation</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="93cb8f2a-142b-4f7e-bae0-1099bebd8c64">
+        <Attribute dwd:design-time-name="7a179ef6-c982-4814-a1df-f906f061a411">
           <AttributeID>Current League Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="e5c44f80-1409-45e4-b896-cc0afa47ebec">
+        <Attribute dwd:design-time-name="84e5f509-9289-425c-ab74-ebf39f928cff">
           <AttributeID>Previous League Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="e344b844-495d-44b1-b325-f5fc640ba055">
+        <Attribute dwd:design-time-name="6f1f1637-dba1-48ba-b652-0b158095fecd">
           <AttributeID>Stadium Name</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="072ad7fa-bed2-47e3-9fc2-0f229642b36b">
+        <Attribute dwd:design-time-name="bf041bfa-7f95-4259-9278-19154ddc1fa1">
           <AttributeID>Stadium Capacity Band</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="55f29af8-ba73-49cb-b2eb-d3bd2bfe619a">
+        <Attribute dwd:design-time-name="0f9a9e2f-c4e8-47c9-bcd1-6acf5e6dabf3">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="cafa5bee-208f-4fc4-aee5-0dc1d9ea6be8">
+        <Attribute dwd:design-time-name="801803da-fa48-4d5f-97aa-8e2e7a7aa16b">
           <AttributeID>Club Key</AttributeID>
         </Attribute>
       </Attributes>
       <Hierarchies>
-        <Hierarchy dwd:design-time-name="d3415c2b-f5da-43b0-8c36-466377c4f6b7">
+        <Hierarchy dwd:design-time-name="e7527a25-87d5-47f9-bb1f-cc908da0e295">
           <HierarchyID>Hierarchy</HierarchyID>
         </Hierarchy>
       </Hierarchies>
     </Dimension>
-    <Dimension dwd:design-time-name="b9de074e-ccac-482c-9f32-0d07f00eaad1">
+    <Dimension dwd:design-time-name="ac73fb09-6547-44df-9c74-c8d8d4294456">
       <ID>Trận đấu</ID>
       <Name>Trận đấu</Name>
       <DimensionID>Tran dau</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="7e551a2b-14d4-4810-b5ae-4f04247f0d58">
+        <Attribute dwd:design-time-name="e83196f7-f03c-466c-8a75-85d8897b0c8e">
           <AttributeID>Tran dau</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="095e9574-75b1-480a-b461-f0f3006c59b4">
+        <Attribute dwd:design-time-name="9808d2b0-7652-466e-883e-73285fe13f76">
           <AttributeID>Game Id</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="82be4025-1e22-4407-9f95-19bb196cd083">
+        <Attribute dwd:design-time-name="a69573ae-0c93-4d40-9ee7-44ef41cade6d">
           <AttributeID>Round</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="b6a77ef9-d051-49de-9f06-9a9d3943a84a">
+        <Attribute dwd:design-time-name="63e72b74-36a5-4235-80c7-06847ee265b0">
           <AttributeID>Round Type</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="130945fb-13d6-4bdb-91ba-530ca86e6702">
+        <Attribute dwd:design-time-name="7cf4cf52-7d51-4704-8151-672c607cbc88">
           <AttributeID>Referee</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="9151a1cc-6561-49a2-b3f9-4bf8ccc07668">
+        <Attribute dwd:design-time-name="8486665e-5a8b-4da2-9c12-b1f02cb96d66">
           <AttributeID>Stadium</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="9632791b-82fb-45e7-82b1-effb5414564e">
+        <Attribute dwd:design-time-name="f6484b1d-1772-4764-87e9-ec1f2ce33583">
           <AttributeID>Home Formation</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="68127c6f-4be6-4ee5-8f23-993f7e879871">
+        <Attribute dwd:design-time-name="0961bd25-791c-44a0-beb3-1bbe49f605d7">
           <AttributeID>Away Formation</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="577b7bed-d07a-4cf4-88c6-62b97fd3b2d1">
+        <Attribute dwd:design-time-name="dd2558cb-4544-4972-993d-5cbc58f32c91">
           <AttributeID>Attendance Band</AttributeID>
         </Attribute>
       </Attributes>
       <Hierarchies>
-        <Hierarchy dwd:design-time-name="b4379419-031e-4453-b957-28806b9d5d38">
+        <Hierarchy dwd:design-time-name="f573cdfb-a494-42eb-abc6-54e279d9f0f3">
           <HierarchyID>Hierarchy</HierarchyID>
         </Hierarchy>
       </Hierarchies>
     </Dimension>
   </Dimensions>
   <MeasureGroups>
-    <MeasureGroup dwd:design-time-name="80dba886-4b59-49d7-b5d8-4551f822f832">
+    <MeasureGroup dwd:design-time-name="681c5c4b-e82b-4137-9272-b41299bbe9ca">
       <ID>Fact Team Match</ID>
       <Name>Trận đấu</Name>
       <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
@@ -567,115 +565,137 @@
       <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
       <State>Unprocessed</State>
       <Measures>
-        <Measure dwd:design-time-name="638b9ea0-e6b4-4f54-830e-404f3ff5cbd5">
+        <Measure dwd:design-time-name="4604163d-3d8c-4c23-a53c-246474980dc1">
           <ID>Goals For</ID>
           <Name>Bàn thắng</Name>
           <DataType>Integer</DataType>
-          <Source dwd:design-time-name="e6a85aa5-d869-4776-89a7-97f48c7ec479">
+          <Source dwd:design-time-name="9ac5880d-ba71-49d7-94be-bebdb3273605">
             <DataType>Integer</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="eaae614b-47e7-4c7a-ab0f-299a3a3d38fd">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="ce155da0-b1fa-45fc-8982-b8016e9f8b5b">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>goals_for</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="499ec21b-33c3-4d15-9c7e-f71deeb759c0">
-          <ID>Goals Against</ID>
-          <Name>Kiến tạo</Name>
-          <DataType>Integer</DataType>
-          <Source dwd:design-time-name="9922d5a8-949a-42c3-8455-9413f7cbc303">
-            <DataType>Integer</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="482cb449-769d-48f0-9dbb-c76b5013a185">
-              <TableID>dbo_fact_team_match</TableID>
-              <ColumnID>goals_against</ColumnID>
-            </Source>
-          </Source>
-        </Measure>
-        <Measure dwd:design-time-name="4b8d8f41-f289-41a5-a075-0dfd105147aa">
+        <Measure dwd:design-time-name="49dfe563-2f5b-44f9-84b5-35f1b0b9180c">
           <ID>Is Win</ID>
           <Name>Thắng</Name>
-          <Source dwd:design-time-name="8b1498fb-3f3b-461d-b7db-ab7c45ac2ee4">
+          <Source dwd:design-time-name="b6b1bda5-618e-4783-a685-f132227da1ad">
             <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="23dc95e7-88c9-4122-91fd-208e69950e8d">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="1be972a8-6389-4e42-b01b-94651e7f0cf8">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>is_win</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="859d01fb-041b-4b53-88b4-f634cf1593ab">
+        <Measure dwd:design-time-name="e7ef187f-1250-40e5-b3ef-d4f626f72b70">
           <ID>Is Draw</ID>
           <Name>Hòa</Name>
-          <Source dwd:design-time-name="9ee518c9-0699-40b6-8c9d-52eeefbb0e3a">
+          <Source dwd:design-time-name="438f3f8c-5864-4d4f-a40d-661c091f6b8a">
             <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="c183a877-566f-4c80-81d6-7bdb72358244">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="3ac5375e-00b8-49d7-9a09-8bc9625b7ff0">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>is_draw</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="49df03c4-034b-4682-bf9f-c402b13b9641">
+        <Measure dwd:design-time-name="945f103e-f69e-432d-a6b2-21779b9882c1">
           <ID>Is Loss</ID>
           <Name>Thua</Name>
-          <Source dwd:design-time-name="e41213e4-1011-4d79-9b3c-b69fb66fa5e9">
+          <Source dwd:design-time-name="92a56de1-bcb4-42f5-94c5-de20acb26350">
             <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="167ebadb-8349-489d-a692-965bb6529cda">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="a68f7f07-100b-4d04-91ae-c62d7ec440ca">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>is_loss</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="04090d29-cc68-4d17-b576-47822fde8f45">
+        <Measure dwd:design-time-name="d94115e1-6b88-4e74-bbde-7b60024efa91">
           <ID>Is Clean Sheet</ID>
           <Name>Sạch lưới</Name>
-          <Source dwd:design-time-name="341ce704-2128-4fea-9166-c19e9a909dc7">
+          <Source dwd:design-time-name="6608a47b-b306-420a-b708-136215cae2f3">
             <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="c71d0eb5-2bde-4e3b-b631-fb3e8004a14a">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="d75eeda4-b7ef-462b-a6ad-5c5548bd1b11">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>is_clean_sheet</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="1f048b1d-b577-489f-8e1c-3295fc25af2d">
+        <Measure dwd:design-time-name="c399803c-3a95-4cfa-8ad1-27732c5924da">
           <ID>Points</ID>
           <Name>Điểm số</Name>
-          <Source dwd:design-time-name="6002aa6f-9235-4499-a5cc-576a7916e8aa">
+          <Source dwd:design-time-name="1108ac32-65de-4b91-9848-cf2d83dabe5a">
             <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="095af2e0-bd22-4569-a433-b728afd2b63e">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="f1f8d9d5-97f1-4b46-9c40-51084730ab3a">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>points</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="c9eb4d88-0089-4b6e-a3f7-758eee574813">
+        <Measure dwd:design-time-name="a40b3b4d-c807-419a-a881-8b6830bea92f">
           <ID>Goal Difference</ID>
           <Name>Hiệu số bàn thắng</Name>
-          <Source dwd:design-time-name="5156978f-3b82-4861-a004-287c7f585dd0">
+          <Source dwd:design-time-name="75f3ba31-734c-4ca1-af86-f03d9958015b">
             <DataType>Integer</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="5b07aead-1dac-4c52-9b06-f7a301842169">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="091fde11-f0df-4086-8424-4dd4b9259fb3">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>goal_difference</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="3c6911de-e8d3-45ec-8703-30d88d3938f3">
+        <Measure dwd:design-time-name="9d26c3ef-54f1-4888-85b0-f82afcb3d276">
           <ID>Home Match</ID>
           <Name>Sân nhà</Name>
-          <Source dwd:design-time-name="fc3a0aac-df99-4811-89e3-f560b78f9b0b">
+          <Source dwd:design-time-name="0cfb5349-6dd0-445b-b42b-4f706146dd87">
             <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="0398df62-9c36-4fca-8367-f68a96b03fb5">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="62115248-2218-4a2d-a7d8-f33bca22c83a">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>home_match</ColumnID>
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="70d5af2f-8469-466f-a989-466dfe6807d1">
+        <Measure dwd:design-time-name="0e2fccd4-11b2-4fa0-8282-ef0a8fcf84c3">
           <ID>Home Win</ID>
           <Name>Chiến thắng sân nhà</Name>
-          <Source dwd:design-time-name="1f3903b6-d2f5-475b-ab22-e4bf18d3887c">
+          <Source dwd:design-time-name="9ba68bcb-37d8-4522-b811-3b70a046639b">
             <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="86650c02-6334-407c-afae-0348f81c201f">
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="5a5623e4-eab2-4b02-a6df-73ae5976d268">
               <TableID>dbo_fact_team_match</TableID>
               <ColumnID>home_win</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="bc7cfd04-1ae9-4749-97f1-852cd83a920b">
+          <ID>Trận đấu Count</ID>
+          <Name>Số trận</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <Source dwd:design-time-name="dc84f6ff-4ea2-4424-80ac-fa65c94492f0">
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding" dwd:design-time-name="c9c04e12-ab19-496e-9384-c9b556f1142b">
+              <TableID>dbo_fact_team_match</TableID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="8fe828a9-522f-426c-bf4b-386e6a9b39f8">
+          <ID>Trận đấu Count 1</ID>
+          <Name>Số trận sân nhà</Name>
+          <Source dwd:design-time-name="5204b2ec-b8d5-44e4-aa8d-ca4ec2d94b50">
+            <DataType>UnsignedInt</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="9b73453d-1be3-4ffc-8e2e-c102dd41cc86">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>is_home</ColumnID>
+            </Source>
+          </Source>
+        </Measure>
+        <Measure dwd:design-time-name="59e229d6-e3b1-4ef7-811d-6dbf01b2010b">
+          <ID>Goals For 1</ID>
+          <Name>Bàn thua</Name>
+          <Source dwd:design-time-name="7e2c4ca7-35a0-4444-a843-cfccda229345">
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding" dwd:design-time-name="2befea3e-c586-498e-a709-9e3caf4c0e40">
+              <TableID>dbo_fact_team_match</TableID>
+              <ColumnID>goals_against</ColumnID>
             </Source>
           </Source>
         </Measure>
@@ -683,22 +703,22 @@
       <StorageMode>Molap</StorageMode>
       <ProcessingMode>Regular</ProcessingMode>
       <Dimensions>
-        <Dimension xsi:type="DegenerateMeasureGroupDimension" dwd:design-time-name="239264ea-db80-41e0-9196-ed42b360c39f">
+        <Dimension xsi:type="DegenerateMeasureGroupDimension" dwd:design-time-name="fff813f2-f625-4769-9782-394af0bdddf5">
           <CubeDimensionID>Fact Team Match</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="aed194f2-5161-4a8a-aaf3-d3861376bf80">
+            <Attribute dwd:design-time-name="a9686959-53a8-4b47-863e-d1f84dc4c07c">
               <AttributeID>Match Key</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="32fd63c2-29cf-4da7-bd44-8a935adf3228">
+                <KeyColumn dwd:design-time-name="7d7b7af0-36e2-41df-95c2-f6974bdab5b3">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="ed9533fb-51a4-4fe9-8b11-ca1b5a59581a">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="6ce25269-84e2-4180-ac32-b0b1ae4f3bd1">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>match_key</ColumnID>
                   </Source>
                 </KeyColumn>
-                <KeyColumn dwd:design-time-name="fad13a6d-5df2-4ce0-be5b-6ff4fce649b0">
+                <KeyColumn dwd:design-time-name="997ceaaf-6708-4066-be9b-07d10b8631b8">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="9ca06685-0302-4333-a3f0-8016e6febd49">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="23d7627f-8574-4924-9c4f-d767bb843b0f">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>club_key</ColumnID>
                   </Source>
@@ -708,15 +728,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="6398a25e-c4e0-4e65-849b-10fb216a7480">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="4a56f027-a59c-4031-9080-409c202d0185">
           <CubeDimensionID>Giải đấu</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="1f0db373-490b-476e-893c-eac82ace4556">
+            <Attribute dwd:design-time-name="fcdd067d-06f4-419f-9cfc-82d15b5d64a7">
               <AttributeID>Giai dau</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="612ab35c-e10c-4c8e-ad96-db043a708487">
+                <KeyColumn dwd:design-time-name="1b2b6925-af1d-4660-ac9c-2d87f5ff6cba">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="04e6d275-cb34-4a0c-baec-45db195b32a7">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="5e1cf4e8-e527-445e-8dbb-f9667cdc0ab4">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>competition_key</ColumnID>
                   </Source>
@@ -726,15 +746,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="bd8e5ab9-53e7-4ab2-b770-95244d21bc7d">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="beb937a6-5395-450c-8a3d-6d9911b9d98d">
           <CubeDimensionID>Opponent Manager</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="2d4b89c9-fa75-4f53-8c90-c0bb30a972ea">
+            <Attribute dwd:design-time-name="c1400332-742c-4a87-9741-f2e145266c4e">
               <AttributeID>HLV</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="75a568c9-66f6-451c-b2aa-1ea0849e15c6">
+                <KeyColumn dwd:design-time-name="4015a231-10fc-4e6c-9207-e03ce22f77b9">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="64e8fbb7-3e3e-4636-ae73-30981fb348b4">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="48d2c264-675a-4c51-b1aa-b29b5cd3f2e6">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>opponent_manager_key</ColumnID>
                   </Source>
@@ -744,15 +764,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="3f77e51f-5064-48e2-9c0d-7841a6784353">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="c70146f7-a2d5-460a-b3f8-0fd4f451a999">
           <CubeDimensionID>Opponent Club</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="f4d32800-9949-4173-8077-f7f5f6d5d29c">
+            <Attribute dwd:design-time-name="ce97b66e-dce4-4958-9a95-9dc309e1207f">
               <AttributeID>CLB</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="07bea1ad-38be-4563-abec-30abb510644a">
+                <KeyColumn dwd:design-time-name="cb33f205-b5a9-457d-b9c8-917c8d3a9cc0">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="bff50401-527e-4198-a923-ad218f0cebb1">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="2b4a2398-4364-492d-9a87-2358bcfc87e7">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>opponent_club_key</ColumnID>
                   </Source>
@@ -762,15 +782,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="aacde9cb-8a92-4bcd-badb-e9af95a05497">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="7edfdde8-f734-4f2e-9010-9713b5850f3b">
           <CubeDimensionID>Mùa giải</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="b31745cf-14c9-404f-afa5-550cedf2f094">
+            <Attribute dwd:design-time-name="16ce47e9-146c-4833-b648-ecaa2c006875">
               <AttributeID>Mua giai</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="50ffdaf0-091a-49ac-b22c-d91dfefc040e">
+                <KeyColumn dwd:design-time-name="3d0ca225-1ec3-4782-a8b5-607a8355cb7d">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="57eb229e-2e71-496d-97c8-3f710aa42181">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="6e302f0f-b46d-479b-bf36-b464722423b0">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>season_key</ColumnID>
                   </Source>
@@ -780,15 +800,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="2b414ec2-5104-4645-b0e2-59b2c65616c7">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="f2b3ac72-9336-4b56-bca3-3ffbd90fcc87">
           <CubeDimensionID>HLV</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="8c89baf9-631b-46e8-b294-5104dc37bb08">
+            <Attribute dwd:design-time-name="8e9e0de9-6fed-4393-b764-2e0152cc1054">
               <AttributeID>HLV</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="05529fee-ddd9-4793-b296-99ffc8a61265">
+                <KeyColumn dwd:design-time-name="05cd7a13-8e31-4a4a-b1f8-80e97f86a23a">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="f8b7fea8-3791-4000-b903-9934d1dd8a4b">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="fe5d1107-2191-4fb4-8863-7845cdc74031">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>manager_key</ColumnID>
                   </Source>
@@ -798,15 +818,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="5e00fa13-278e-4d55-9450-f423b162ca2b">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="8dba03c3-ee7b-4b24-b3e5-9d889befe475">
           <CubeDimensionID>Ngày</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="4a21d4e4-29c4-4c81-840c-847c8e999d95">
+            <Attribute dwd:design-time-name="18e48bbd-17c3-4669-bb0d-e41ca897823e">
               <AttributeID>Ngay</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="6968c142-7dc5-47be-b1e7-a03fc9467575">
+                <KeyColumn dwd:design-time-name="e4d6a988-f73e-475a-951f-e4605e9359df">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="ba980037-9fef-4f6c-8346-a12402f0aee9">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="b85be5f8-1a0d-4c46-ad4c-d2f5868085e2">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>date_key</ColumnID>
                   </Source>
@@ -816,15 +836,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="ec9691cf-932d-459a-b82d-8534fa9497df">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="11f737f5-3276-4bbd-9779-dfd789ddc845">
           <CubeDimensionID>CLB</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="45db246d-bc44-48db-8873-de3579c7d91b">
+            <Attribute dwd:design-time-name="a51dde7d-f0a6-4d75-800a-3d3232ac045c">
               <AttributeID>CLB</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="3f505d0a-e3e5-463a-977b-aa8d59ff1395">
+                <KeyColumn dwd:design-time-name="80e8e645-581d-493a-8525-11e78ee12a65">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="43eb03d5-f244-4bfd-b4b1-4025162daa4d">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="4a82a0fa-5d64-4994-87f6-da5698976892">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>club_key</ColumnID>
                   </Source>
@@ -834,15 +854,15 @@
             </Attribute>
           </Attributes>
         </Dimension>
-        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="cf2bd40e-f9d3-44c5-b2f5-b528c4f60122">
+        <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="8b786569-bc68-43cc-8fc5-e7d4687a7f82">
           <CubeDimensionID>Trận đấu</CubeDimensionID>
           <Attributes>
-            <Attribute dwd:design-time-name="eb9bfcdb-de2f-414a-9d9f-34fdd4d7e1ba">
+            <Attribute dwd:design-time-name="01ef71ca-7cd3-4415-afa0-bf8e4567fd60">
               <AttributeID>Tran dau</AttributeID>
               <KeyColumns>
-                <KeyColumn dwd:design-time-name="83918275-1c6a-4be8-b3ee-75918b53ceea">
+                <KeyColumn dwd:design-time-name="3b816729-6346-48ba-b45d-91f430ab3334">
                   <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="070eded8-f2ab-4b87-83ac-312a59f36ce7">
+                  <Source xsi:type="ColumnBinding" dwd:design-time-name="58eb752d-dd97-4f01-b001-dacc0bc57cb4">
                     <TableID>dbo_fact_team_match</TableID>
                     <ColumnID>match_key</ColumnID>
                   </Source>
@@ -856,11 +876,11 @@
       <Partitions />
     </MeasureGroup>
   </MeasureGroups>
-  <Source dwd:design-time-name="ae562d62-cba7-4080-99fa-9f62387ddc4f">
+  <Source dwd:design-time-name="5a8ba120-37b3-4b00-81b8-6c8538980c38">
     <DataSourceViewID>Football DWH</DataSourceViewID>
   </Source>
   <MdxScripts>
-    <MdxScript dwd:design-time-name="b0330b68-c477-4383-ae6c-118894314343">
+    <MdxScript dwd:design-time-name="98e4d9e9-86ba-4d79-8291-95333e4ac7ee">
       <ID>MdxScript</ID>
       <Name>MdxScript</Name>
       <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
@@ -872,24 +892,25 @@ The CALCULATE command controls the aggregation of leaf cells in the cube.
 If the CALCULATE command is deleted or modified, the data within the cube is affected.
 You should edit this command only if you manually specify how the cube is aggregated.
 */
-CALCULATE; 
+CALCULATE;   
 CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng]
  AS [Measures].[Thắng] / [Measures].[Số trận], 
 FORMAT_STRING = "Percent", 
-VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ; 
+VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ;   
 CREATE MEMBER CURRENTCUBE.[Measures].[Bàn thắng mỗi trận]
  AS [Measures].[Bàn thắng] / [Measures].[Số trận], 
-VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ; 
+FORMAT_STRING = "0.00", 
+VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu';   
 CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng sân nhà]
  AS [Measures].[Thắng sân nhà] / [Measures].[Số trận sân nhà], 
 FORMAT_STRING = "Percent", 
-VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ; </Text>
+VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'; </Text>
         </Command>
       </Commands>
     </MdxScript>
   </MdxScripts>
   <Kpis>
-    <Kpi dwd:design-time-name="2ae1e53d-59fe-457e-9d1f-35c47cb61984">
+    <Kpi dwd:design-time-name="fa1de93f-b288-484d-82ff-51ffe876e525">
       <ID>KPI</ID>
       <Name>KPI Tỉ lệ thắng HLV</Name>
       <AssociatedMeasureGroupID>Fact Team Match</AssociatedMeasureGroupID>
