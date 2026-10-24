@@ -1,4 +1,4 @@
--- Kiểm tra kết quả sau mỗi lần chạy package Main_ETL_Master
+﻿-- Kiểm tra kết quả sau mỗi lần chạy package Main_ETL_Master
 -- Chạy trong SSMS (F5). Các cột tên "..._loi" / "..._sai" mong đợi = 0.
 USE football_dwh_dw;
 GO

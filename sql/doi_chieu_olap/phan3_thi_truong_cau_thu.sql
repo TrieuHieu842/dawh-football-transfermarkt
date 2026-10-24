@@ -1,4 +1,4 @@
--- Phần 3 – Cube "Thị trường cầu thủ": SQL đối chiếu cho 6 câu hỏi nghiệp vụ và KPI.
+﻿-- Phần 3 – Cube "Thị trường cầu thủ": SQL đối chiếu cho 6 câu hỏi nghiệp vụ và KPI.
 -- Mỗi khối: câu SQL trên kho (đáp án) + câu MDX tương ứng trên cube (chạy trong SSMS → Analysis Services → New MDX Query).
 -- Kết quả cube phải bằng kết quả SQL.
 USE football_dwh_dw;

@@ -68,7 +68,7 @@
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ARDiagramLayout</Name>
       <Value>
-        <DiagramLayout ZoomPercent="100" ViewPortX="0" ViewPortY="0" xmlns="">
+        <DiagramLayout xmlns="" ZoomPercent="100" ViewPortX="0" ViewPortY="0">
           <Shapes NodeWidth="176">
             <Shape Id="Tran dau" Expanded="false">
               <Attributes>
@@ -163,7 +163,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="8266ec21-edec-41f1-afbe-aa6bc4f0a9b9">
       <ID>Game Id</ID>
-      <Name>Game Id</Name>
+      <Name>Mã trận</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="a8434c45-faf7-4e5e-a1d8-5a2a60b9b7b2">
           <DataType>Integer</DataType>
@@ -178,7 +178,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="f75c0920-08d6-46ee-92d2-7d1e2e734e4e">
       <ID>Round</ID>
-      <Name>Round</Name>
+      <Name>Vòng đấu</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="ae410355-2c90-4359-a50a-e475890ebb78">
           <DataType>WChar</DataType>
@@ -194,7 +194,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="19ffa977-9946-410f-a64a-30547b23356c">
       <ID>Round Type</ID>
-      <Name>Round Type</Name>
+      <Name>Loại vòng</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="2fa21f70-262e-4005-b99b-b7fe3d492dce">
           <DataType>WChar</DataType>
@@ -216,7 +216,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="09171399-f079-46ed-8a97-966a4766c52f">
       <ID>Referee</ID>
-      <Name>Referee</Name>
+      <Name>Trọng tài</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="b6d4096c-39ef-44c7-8395-7c236ebba8c3">
           <DataType>WChar</DataType>
@@ -232,7 +232,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="ce9855dc-0c5d-4002-a9b4-68fb1cb1d1ef">
       <ID>Stadium</ID>
-      <Name>Stadium</Name>
+      <Name>Sân vận động</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="b466f082-82e1-4193-b7bd-44829b317d6a">
           <DataType>WChar</DataType>
@@ -248,7 +248,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="63b67970-c6b9-473c-8b88-cd159a3b8e7b">
       <ID>Home Formation</ID>
-      <Name>Home Formation</Name>
+      <Name>Sơ đồ đội nhà</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="1bb38fe5-51bc-475a-8e60-926276be1e41">
           <DataType>WChar</DataType>
@@ -264,7 +264,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="2abbaf96-574b-46ca-bd6f-fa15b89f2107">
       <ID>Away Formation</ID>
-      <Name>Away Formation</Name>
+      <Name>Sơ đồ đội khách</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="c8130cb7-0f21-4133-9ccd-ffe080b9e045">
           <DataType>WChar</DataType>
@@ -280,7 +280,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="de301e1b-06e9-40bd-b279-238262332f05">
       <ID>Attendance Band</ID>
-      <Name>Attendance Band</Name>
+      <Name>Nhóm khán giả</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="0847dcc3-de57-412f-ad3e-908809af1ad0">
           <DataType>WChar</DataType>
@@ -298,16 +298,16 @@
   <Hierarchies>
     <Hierarchy dwd:design-time-name="43c7acaf-4a1e-402f-b946-2bb14ae3813e">
       <ID>Hierarchy</ID>
-      <Name>Phan cap tran dau</Name>
+      <Name>Loại vòng - Vòng đấu</Name>
       <Levels>
         <Level dwd:design-time-name="cd8967cb-76b9-484b-85e7-7de059d8da9f">
           <ID>Round Type</ID>
-          <Name>Round Type</Name>
+          <Name>Loại vòng</Name>
           <SourceAttributeID>Round Type</SourceAttributeID>
         </Level>
         <Level dwd:design-time-name="d5c53b6e-3829-4419-a76b-d5a2f1f801ce">
           <ID>Round</ID>
-          <Name>Round</Name>
+          <Name>Vòng đấu</Name>
           <SourceAttributeID>Round</SourceAttributeID>
         </Level>
       </Levels>

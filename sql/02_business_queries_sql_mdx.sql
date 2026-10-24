@@ -1,4 +1,4 @@
-/* ==============================================================================================
+﻿/* ==============================================================================================
    TẬP TRUY VẤN PHÂN TÍCH KINH DOANH NÂNG CAO (ADVANCED BUSINESS ANALYTICS: T-SQL & MDX)
    DỰ ÁN: KHO DỮ LIỆU BÓNG ĐÁ QUỐC TẾ (FOOTBALL TRANSFERMARKT DWH)
    CƠ SỞ DỮ LIỆU: football_dwh_dw
@@ -70,31 +70,33 @@ WHERE rank_home_supremacy <= 3
 ORDER BY competition_name, rank_home_supremacy;
 GO
 
-/* [1.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG (OLAP CUBE QUERY)
-   Cú pháp chuẩn truy vấn trên Cube [Football_DWH] qua SSAS:
+/* [1.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG
+   Cube [Hiệu suất đội bóng]. Top 3 CLB có tỉ lệ thắng sân nhà cao nhất mỗi giải (CLB tối thiểu 20 trận trong giải).
+   Chạy trong SSMS: kết nối Analysis Services localhost → database Football_DAWH_SSAS → New MDX Query.
 -------------------------------------------------------------------------------------------------
-WITH 
-  MEMBER [Measures].[Home Match Count] AS 
-    ([Measures].[Fact Team Match Count], [Dim Match].[Is Home].[1])
-  MEMBER [Measures].[Home Wins] AS 
-    ([Measures].[Is Win], [Dim Match].[Is Home].[1])
-  MEMBER [Measures].[Home Win Rate] AS 
-    IIF([Measures].[Home Match Count] = 0, NULL, [Measures].[Home Wins] / [Measures].[Home Match Count]),
+WITH
+  MEMBER [Measures].[Số trận sân khách] AS
+    [Measures].[Số trận] - [Measures].[Số trận sân nhà]
+  MEMBER [Measures].[Tỉ lệ thắng sân khách] AS
+    IIF([Measures].[Số trận sân khách] = 0, NULL,
+        ([Measures].[Thắng] - [Measures].[Thắng sân nhà]) / [Measures].[Số trận sân khách]),
     FORMAT_STRING = "0.00%"
-SELECT 
-  {[Measures].[Home Match Count], [Measures].[Home Wins], [Measures].[Home Win Rate]} ON COLUMNS,
+  MEMBER [Measures].[Chênh lệch sân nhà] AS
+    [Measures].[Tỉ lệ thắng sân nhà] - [Measures].[Tỉ lệ thắng sân khách],
+    FORMAT_STRING = "0.00%"
+SELECT
+  {[Measures].[Số trận sân nhà], [Measures].[Thắng sân nhà], [Measures].[Tỉ lệ thắng sân nhà],
+   [Measures].[Tỉ lệ thắng sân khách], [Measures].[Chênh lệch sân nhà], [Measures].[Sạch lưới]} ON COLUMNS,
   NON EMPTY GENERATE(
-    [Dim Competition].[Competition Name].[Competition Name].MEMBERS,
+    [Giải đấu].[Giải đấu].[Giải đấu].MEMBERS,
     TOPCOUNT(
-      CROSSJOIN(
-        {[Dim Competition].[Competition Name].CURRENTMEMBER},
-        [Dim Club].[Club Name].[Club Name].MEMBERS
-      ), 
-      3, 
-      [Measures].[Home Win Rate]
+      {[Giải đấu].[Giải đấu].CURRENTMEMBER} *
+        FILTER(NONEMPTY([CLB].[CLB].[CLB].MEMBERS, [Measures].[Số trận]), [Measures].[Số trận] >= 20),
+      3,
+      [Measures].[Tỉ lệ thắng sân nhà]
     )
   ) ON ROWS
-FROM [Football_DWH];
+FROM [Hiệu suất đội bóng];
 ------------------------------------------------------------------------------------------------- */
 
 
@@ -152,26 +154,31 @@ WHERE rank_top_scorer <= 3
 ORDER BY season_label DESC, competition_name, rank_top_scorer;
 GO
 
-/* [2.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG:
+/* [2.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG
+   Cube [Hiệu suất cầu thủ]. Mùa 2013/14: top 3 cầu thủ ghi bàn mỗi giải (tối thiểu 900 phút và 10 bàn).
+   Chạy trong SSMS: kết nối Analysis Services localhost → database Football_DAWH_SSAS → New MDX Query.
 -------------------------------------------------------------------------------------------------
-WITH 
-  MEMBER [Measures].[Total Contributions] AS 
-    ([Measures].[Goals] + [Measures].[Assists])
-  MEMBER [Measures].[Mins Per Goal] AS 
-    IIF([Measures].[Goals] = 0, NULL, [Measures].[Minutes Played] / [Measures].[Goals]),
+WITH
+  MEMBER [Measures].[Bàn + kiến tạo] AS
+    [Measures].[Bàn thắng cầu thủ] + [Measures].[Kiến tạo]
+  MEMBER [Measures].[Số phút mỗi bàn] AS
+    IIF([Measures].[Bàn thắng cầu thủ] = 0, NULL, [Measures].[Số phút] / [Measures].[Bàn thắng cầu thủ]),
     FORMAT_STRING = "#,##0.0"
-SELECT 
-  {[Measures].[Minutes Played], [Measures].[Goals], [Measures].[Assists], [Measures].[Total Contributions], [Measures].[Mins Per Goal]} ON COLUMNS,
-  NON EMPTY TOPCOUNT(
-    FILTER(
-      [Dim Player].[Full Name].[Full Name].MEMBERS,
-      [Measures].[Minutes Played] >= 900 AND [Measures].[Goals] >= 10
-    ), 
-    10, 
-    [Measures].[Goals]
+SELECT
+  {[Measures].[Số trận ra sân], [Measures].[Số phút], [Measures].[Bàn thắng cầu thủ], [Measures].[Kiến tạo],
+   [Measures].[Bàn + kiến tạo], [Measures].[Số phút mỗi bàn], [Measures].[Bàn và kiến tạo mỗi 90 phút]} ON COLUMNS,
+  NON EMPTY GENERATE(
+    [Giải đấu].[Giải đấu].[Giải đấu].MEMBERS,
+    TOPCOUNT(
+      {[Giải đấu].[Giải đấu].CURRENTMEMBER} *
+        FILTER(NONEMPTY([Cầu thủ].[Cầu thủ].[Cầu thủ].MEMBERS, [Measures].[Số phút]),
+               [Measures].[Số phút] >= 900 AND [Measures].[Bàn thắng cầu thủ] >= 10),
+      3,
+      [Measures].[Bàn thắng cầu thủ] * 1000 + [Measures].[Kiến tạo]   /* bằng bàn thì xếp theo kiến tạo, như SQL */
+    )
   ) ON ROWS
-FROM [Football_DWH]
-WHERE ([Dim Season].[Season Label].[2013/14]);
+FROM [Hiệu suất cầu thủ]
+WHERE ([Mùa giải].[Mùa giải].[2013/14]);
 ------------------------------------------------------------------------------------------------- */
 
 
@@ -226,22 +233,32 @@ FROM ValuationByAgeGroup
 ORDER BY valuation_year DESC, avg_market_value_mil_eur DESC;
 GO
 
-/* [3.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG:
+/* [3.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG
+   Cube [Thị trường cầu thủ]. Năm 2011–2014 × nhóm tuổi (U21, 21-25, 26-29, 30+, tạo bằng calculated member trên dim Tuổi): số lần định giá, giá trị trung bình, mức tăng giá ròng (triệu €).
+   Chạy trong SSMS: kết nối Analysis Services localhost → database Football_DAWH_SSAS → New MDX Query.
 -------------------------------------------------------------------------------------------------
-WITH 
-  MEMBER [Measures].[Avg Market Value Mil] AS 
-    ([Measures].[Market Value Eur] / [Measures].[Fact Player Valuation Count]) / 1000000,
-    FORMAT_STRING = "#,##0.00 M€"
-  MEMBER [Measures].[Net Growth Mil] AS 
-    [Measures].[Value Change Eur] / 1000000,
-    FORMAT_STRING = "#,##0.00 M€"
-SELECT 
-  {[Measures].[Fact Player Valuation Count], [Measures].[Avg Market Value Mil], [Measures].[Net Growth Mil]} ON COLUMNS,
-  NON EMPTY CROSSJOIN(
-    [Dim Date].[Year].[Year].MEMBERS,
-    [Dim Player].[Position].[Position].MEMBERS
-  ) ON ROWS
-FROM [Football_DWH];
+WITH
+  MEMBER [Tuổi].[Tuổi].[U21 (Tài năng trẻ)] AS
+    AGGREGATE(FILTER([Tuổi].[Tuổi].[Tuổi].MEMBERS, VAL([Tuổi].[Tuổi].CURRENTMEMBER.PROPERTIES("KEY")) >= 1 AND VAL([Tuổi].[Tuổi].CURRENTMEMBER.PROPERTIES("KEY")) <= 20))
+  MEMBER [Tuổi].[Tuổi].[21 - 25 tuổi] AS
+    AGGREGATE(FILTER([Tuổi].[Tuổi].[Tuổi].MEMBERS, VAL([Tuổi].[Tuổi].CURRENTMEMBER.PROPERTIES("KEY")) >= 21 AND VAL([Tuổi].[Tuổi].CURRENTMEMBER.PROPERTIES("KEY")) <= 25))
+  MEMBER [Tuổi].[Tuổi].[26 - 29 tuổi] AS
+    AGGREGATE(FILTER([Tuổi].[Tuổi].[Tuổi].MEMBERS, VAL([Tuổi].[Tuổi].CURRENTMEMBER.PROPERTIES("KEY")) >= 26 AND VAL([Tuổi].[Tuổi].CURRENTMEMBER.PROPERTIES("KEY")) <= 29))
+  MEMBER [Tuổi].[Tuổi].[30+ tuổi] AS
+    AGGREGATE(FILTER([Tuổi].[Tuổi].[Tuổi].MEMBERS, VAL([Tuổi].[Tuổi].CURRENTMEMBER.PROPERTIES("KEY")) >= 30))
+  MEMBER [Measures].[Giá trị TB (triệu €)] AS
+    IIF([Measures].[Số lần định giá] = 0, NULL, [Measures].[Tổng giá trị định giá] / [Measures].[Số lần định giá] / 1000000),
+    FORMAT_STRING = "#,##0.00", SOLVE_ORDER = 20
+  MEMBER [Measures].[Tăng giá ròng (triệu €)] AS
+    [Measures].[Mức tăng giá] / 1000000,
+    FORMAT_STRING = "#,##0.00", SOLVE_ORDER = 20
+SELECT
+  {[Measures].[Số lần định giá], [Measures].[Giá trị TB (triệu €)], [Measures].[Tăng giá ròng (triệu €)]} ON COLUMNS,
+  NON EMPTY
+    {[Ngày].[Năm - Quý - Tháng - Ngày].[Năm].&[2014], [Ngày].[Năm - Quý - Tháng - Ngày].[Năm].&[2013],
+     [Ngày].[Năm - Quý - Tháng - Ngày].[Năm].&[2012], [Ngày].[Năm - Quý - Tháng - Ngày].[Năm].&[2011]} *
+    {[Tuổi].[Tuổi].[U21 (Tài năng trẻ)], [Tuổi].[Tuổi].[21 - 25 tuổi], [Tuổi].[Tuổi].[26 - 29 tuổi], [Tuổi].[Tuổi].[30+ tuổi]} ON ROWS
+FROM [Thị trường cầu thủ];
 ------------------------------------------------------------------------------------------------- */
 
 
@@ -296,22 +313,25 @@ WHERE s.season_label IN ('2013/14', '2012/13', '2011/12')
 ORDER BY net_spend_mil_eur DESC;
 GO
 
-/* [4.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG:
+/* [4.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG
+   Cube [Thị trường cầu thủ]. Mùa 2011/12–2013/14: top 15 (mùa, CLB) chi tiêu ròng cao nhất; Chi mua / Thu bán / Chi tiêu ròng là calculated member của cube (Thu bán dùng LINKMEMBER từ CLB đến sang CLB đi), xem theo [CLB đến].
+   Chạy trong SSMS: kết nối Analysis Services localhost → database Football_DAWH_SSAS → New MDX Query.
 -------------------------------------------------------------------------------------------------
-WITH 
-  MEMBER [Measures].[Spent Mil] AS 
-    ([Measures].[Transfer Fee Eur] / 1000000), FORMAT_STRING = "#,##0.00 M€"
-  MEMBER [Measures].[Premium Paid Mil] AS 
-    ([Measures].[Fee Premium Eur] / 1000000), FORMAT_STRING = "#,##0.00 M€"
-SELECT 
-  {[Measures].[Transfer Count], [Measures].[Spent Mil], [Measures].[Premium Paid Mil]} ON COLUMNS,
-  NON EMPTY TOPCOUNT(
-    [Dim Club To].[Club Name].[Club Name].MEMBERS,
-    10,
-    [Measures].[Spent Mil]
+WITH
+  MEMBER [Measures].[Chi mua (triệu €)] AS [Measures].[Chi mua] / 1000000, FORMAT_STRING = "#,##0.00"
+  MEMBER [Measures].[Thu bán (triệu €)] AS [Measures].[Thu bán] / 1000000, FORMAT_STRING = "#,##0.00"
+  MEMBER [Measures].[Chi tiêu ròng (triệu €)] AS [Measures].[Chi tiêu ròng] / 1000000, FORMAT_STRING = "#,##0.00"
+  MEMBER [Measures].[Phí chênh đã trả (triệu €)] AS [Measures].[Phí chênh] / 1000000, FORMAT_STRING = "#,##0.00"
+SELECT
+  {[Measures].[Số thương vụ công bố phí], [Measures].[Chi mua (triệu €)], [Measures].[Thu bán (triệu €)],
+   [Measures].[Chi tiêu ròng (triệu €)], [Measures].[Phí chênh đã trả (triệu €)]} ON COLUMNS,
+  TOPCOUNT(
+    {[Mùa giải].[Mùa giải].[2013/14], [Mùa giải].[Mùa giải].[2012/13], [Mùa giải].[Mùa giải].[2011/12]} *
+      EXCEPT(NONEMPTY([CLB đến].[CLB].[CLB].MEMBERS, [Measures].[Phí chuyển nhượng]), {[CLB đến].[CLB].&[-1]}),
+    15,
+    [Measures].[Chi tiêu ròng]
   ) ON ROWS
-FROM [Football_DWH]
-WHERE ([Dim Season].[Season Label].[2013/14]);
+FROM [Thị trường cầu thủ];
 ------------------------------------------------------------------------------------------------- */
 
 
@@ -345,16 +365,25 @@ ORDER BY
     total_fee_volume_mil_eur DESC;
 GO
 
-/* [5.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG:
+/* [5.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG
+   Cube [Thị trường cầu thủ]. Ma trận mùa 2012/13, 2013/14 × Trạng thái phí × Khoảng phí, kèm dòng tổng (All) như GROUP BY CUBE.
+   Chạy trong SSMS: kết nối Analysis Services localhost → database Football_DAWH_SSAS → New MDX Query.
 -------------------------------------------------------------------------------------------------
-SELECT 
-  {[Measures].[Transfer Count], [Measures].[Transfer Fee Eur]} ON COLUMNS,
-  NON EMPTY CROSSJOIN(
-    [Dim Season].[Season Label].[Season Label].MEMBERS,
-    [Dim Transfer Type].[Fee Status].[Fee Status].MEMBERS,
-    [Dim Transfer Type].[Fee Band].[Fee Band].MEMBERS
-  ) ON ROWS
-FROM [Football_DWH];
+WITH
+  MEMBER [Measures].[Tổng phí (triệu €)] AS [Measures].[Phí chuyển nhượng] / 1000000, FORMAT_STRING = "#,##0.00"
+  MEMBER [Measures].[Phí TB mỗi thương vụ (triệu €)] AS
+    IIF([Measures].[Số thương vụ] = 0, NULL, [Measures].[Phí chuyển nhượng] / [Measures].[Số thương vụ] / 1000000),
+    FORMAT_STRING = "#,##0.00"
+  MEMBER [Measures].[Tỉ trọng trong mùa] AS
+    [Measures].[Số thương vụ] / ([Measures].[Số thương vụ], [Loại chuyển nhượng].[Trạng thái phí - Khoảng phí].[All]),
+    FORMAT_STRING = "0.00%"
+SELECT
+  {[Measures].[Số thương vụ], [Measures].[Tổng phí (triệu €)], [Measures].[Phí TB mỗi thương vụ (triệu €)],
+   [Measures].[Tỉ trọng trong mùa]} ON COLUMNS,
+  NON EMPTY
+    {[Mùa giải].[Mùa giải].[2012/13], [Mùa giải].[Mùa giải].[2013/14]} *
+    [Loại chuyển nhượng].[Trạng thái phí - Khoảng phí].MEMBERS ON ROWS
+FROM [Thị trường cầu thủ];
 ------------------------------------------------------------------------------------------------- */
 
 
@@ -404,24 +433,22 @@ FROM ManagerAnalytics
 ORDER BY rank_manager;
 GO
 
-/* [6.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG:
+/* [6.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG
+   Cube [Hiệu suất đội bóng]. Top 15 HLV (tối thiểu 25 trận) theo điểm trung bình mỗi trận.
+   Chạy trong SSMS: kết nối Analysis Services localhost → database Football_DAWH_SSAS → New MDX Query.
 -------------------------------------------------------------------------------------------------
-WITH 
-  MEMBER [Measures].[Win Rate] AS 
-    ([Measures].[Is Win] / [Measures].[Fact Team Match Count]), FORMAT_STRING = "0.00%"
-  MEMBER [Measures].[Points Earned] AS 
-    ([Measures].[Is Win] * 3) + ([Measures].[Is Draw] * 1)
-  MEMBER [Measures].[Points Per Match] AS 
-    [Measures].[Points Earned] / [Measures].[Fact Team Match Count], FORMAT_STRING = "0.00"
-SELECT 
-  {[Measures].[Fact Team Match Count], [Measures].[Win Rate], [Measures].[Points Per Match], [Measures].[Goals For]} ON COLUMNS,
-  NON EMPTY TOPCOUNT(
-    FILTER(
-      [Dim Manager].[Manager Name].[Manager Name].MEMBERS,
-      [Measures].[Fact Team Match Count] >= 25
-    ), 
-    15, 
-    [Measures].[Points Per Match]
+WITH
+  MEMBER [Measures].[Điểm mỗi trận] AS
+    IIF([Measures].[Số trận] = 0, NULL, [Measures].[Điểm] / [Measures].[Số trận]),
+    FORMAT_STRING = "0.00"
+SELECT
+  {[Measures].[Số trận], [Measures].[Thắng], [Measures].[Hòa], [Measures].[Thua], [Measures].[Tỉ lệ thắng],
+   [Measures].[Điểm mỗi trận], [Measures].[Bàn thắng], [Measures].[Bàn thua], [Measures].[Hiệu số],
+   [Measures].[Sạch lưới]} ON COLUMNS,
+  TOPCOUNT(
+    FILTER(EXCEPT([HLV].[HLV].[HLV].MEMBERS, {[HLV].[HLV].&[-1]}), [Measures].[Số trận] >= 25),
+    15,
+    [Measures].[Điểm mỗi trận]
   ) ON ROWS
-FROM [Football_DWH];
+FROM [Hiệu suất đội bóng];
 ------------------------------------------------------------------------------------------------- */

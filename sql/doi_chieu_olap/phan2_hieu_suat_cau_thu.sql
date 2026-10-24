@@ -1,4 +1,4 @@
--- Phần 2 – Cube "Hiệu suất cầu thủ": SQL đối chiếu cho 6 câu hỏi nghiệp vụ và KPI.
+﻿-- Phần 2 – Cube "Hiệu suất cầu thủ": SQL đối chiếu cho 6 câu hỏi nghiệp vụ và KPI.
 -- Mỗi khối: câu SQL trên kho (đáp án) + câu MDX tương ứng trên cube (chạy trong SSMS → Analysis Services → New MDX Query).
 -- Kết quả cube phải bằng kết quả SQL.
 USE football_dwh_dw;
@@ -28,11 +28,11 @@ GROUP BY p.player_key, p.full_name
 ORDER BY ban_thang DESC, kien_tao DESC;
 
 /* MDX Q1 (2012/13):
-SELECT {[Measures].[Bàn thắng], [Measures].[Kiến tạo], [Measures].[Số phút], [Measures].[Bàn mỗi 90 phút]} ON 0,
+SELECT {[Measures].[Bàn thắng cầu thủ], [Measures].[Kiến tạo], [Measures].[Số phút], [Measures].[Bàn mỗi 90 phút]} ON 0,
        TOPCOUNT(
-           NONEMPTY([Cầu thủ].[Cầu thủ].[Cầu thủ].MEMBERS, [Measures].[Bàn thắng]),
+           NONEMPTY([Cầu thủ].[Cầu thủ].[Cầu thủ].MEMBERS, [Measures].[Bàn thắng cầu thủ]),
            5,
-           [Measures].[Bàn thắng]
+           [Measures].[Bàn thắng cầu thủ]
        ) ON 1
 FROM [Hiệu suất cầu thủ]
 WHERE ([Giải đấu].[Giải đấu].[premier-league], [Mùa giải].[Mùa giải].[2012/13])
@@ -53,8 +53,8 @@ WHERE k.competition_id = 'GB1' AND s.season_label = '2024/25' AND p.player_key >
 GROUP BY p.player_key, p.full_name
 ORDER BY ban_thang DESC, kien_tao DESC;
 /* MDX Q1 (2024/25):
-SELECT {[Measures].[Bàn thắng], [Measures].[Kiến tạo], [Measures].[Số phút], [Measures].[Bàn mỗi 90 phút]} ON 0,
-       TOPCOUNT([Cầu thủ].[Cầu thủ].[Cầu thủ].MEMBERS, 10, [Measures].[Bàn thắng]) ON 1
+SELECT {[Measures].[Bàn thắng cầu thủ], [Measures].[Kiến tạo], [Measures].[Số phút], [Measures].[Bàn mỗi 90 phút]} ON 0,
+       TOPCOUNT([Cầu thủ].[Cầu thủ].[Cầu thủ].MEMBERS, 10, [Measures].[Bàn thắng cầu thủ]) ON 1
 FROM [Hiệu suất cầu thủ]
 WHERE ([Giải đấu].[Giải đấu].[premier-league], [Mùa giải].[Mùa giải].[2024/25])
 */
@@ -80,7 +80,7 @@ HAVING SUM(a.minutes_played) >= 900
 ORDER BY ban_moi_90 DESC;
 
 /* MDX Q2 (2012/13):
-SELECT {[Measures].[Bàn thắng], [Measures].[Số phút], [Measures].[Bàn mỗi 90 phút]} ON 0,
+SELECT {[Measures].[Bàn thắng cầu thủ], [Measures].[Số phút], [Measures].[Bàn mỗi 90 phút]} ON 0,
        TOPCOUNT(
            FILTER([Cầu thủ].[Vị trí - Vị trí chi tiết - Cầu thủ].[Cầu thủ].MEMBERS, [Measures].[Số phút] >= 900),
            5,
@@ -142,7 +142,7 @@ SELECT [Cầu thủ].[Vị trí].[Vị trí].MEMBERS ON 0,
        {[Giải đấu].[Giải đấu].[premier-league], [Giải đấu].[Giải đấu].[laliga],
         [Giải đấu].[Giải đấu].[bundesliga], [Giải đấu].[Giải đấu].[serie-a], [Giải đấu].[Giải đấu].[ligue-1]} ON 1
 FROM [Hiệu suất cầu thủ]
-WHERE ([Measures].[Bàn thắng], [Mùa giải].[Mùa giải].[2012/13])
+WHERE ([Measures].[Bàn thắng cầu thủ], [Mùa giải].[Mùa giải].[2012/13])
 */
 
 
@@ -171,11 +171,11 @@ HAVING COUNT(DISTINCT a.match_key) >= 10
 ORDER BY the_phat_moi_tran DESC;
 
 /* MDX Q5:
-SELECT {[Measures].[Số trận distinct], [Measures].[Thẻ vàng], [Measures].[Thẻ đỏ], [Measures].[Thẻ phạt mỗi trận]} ON 0,
+SELECT {[Measures].[Số trận có ra sân], [Measures].[Thẻ vàng], [Measures].[Thẻ đỏ], [Measures].[Thẻ phạt mỗi trận]} ON 0,
        TOPCOUNT(
            FILTER(
                EXCEPT([Trận đấu].[Trọng tài].[Trọng tài].MEMBERS, {[Trận đấu].[Trọng tài].&[Không xác định]}),
-               [Measures].[Số trận distinct] >= 10
+               [Measures].[Số trận có ra sân] >= 10
            ),
            5,
            [Measures].[Thẻ phạt mỗi trận]
@@ -204,7 +204,7 @@ GROUP BY p.player_key, p.full_name, (s.season_start_year - YEAR(p.date_of_birth)
 ORDER BY so_phut DESC;
 
 /* MDX Q6:
-SELECT {[Measures].[Số phút], [Measures].[Số trận ra sân], [Measures].[Bàn thắng]} ON 0,
+SELECT {[Measures].[Số phút], [Measures].[Số trận ra sân], [Measures].[Bàn thắng cầu thủ]} ON 0,
        TOPCOUNT(
            NONEMPTY([Cầu thủ].[Cầu thủ].[Cầu thủ].MEMBERS, [Measures].[Số phút]),
            5,

@@ -566,10 +566,7 @@
         <Attribute dwd:design-time-name="b73fbecb-d5b7-44ef-b71b-7505372a7886">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="8bac2608-b564-49ae-9b02-501a925bdf58">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="6cc8ee9e-93e2-4164-b0f9-2f7f12fa24dc">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -611,10 +608,7 @@
         <Attribute dwd:design-time-name="79228ecc-1946-46e5-b87a-70faeafa68f4">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="96e4f746-25a9-4e6f-927c-fa8a8e2535c8">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="6a58bce4-8d2a-4b44-93d2-57ab7ef91bdb">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -656,10 +650,7 @@
         <Attribute dwd:design-time-name="6c79aff5-6203-4adb-b4e4-1aff7cbf84c0">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="391970e2-907b-456e-86a9-4bb1187487ef">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="be6e1dda-8a38-4e58-8718-3dd54f5fb141">
           <HierarchyID>Hierarchy</HierarchyID>

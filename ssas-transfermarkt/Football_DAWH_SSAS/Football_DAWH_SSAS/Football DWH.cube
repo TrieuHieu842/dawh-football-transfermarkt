@@ -1,6 +1,7 @@
 <Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="6c1d7551-5d8e-4d30-be68-e9a18b35f48c" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
   <ID>Football DWH</ID>
   <Name>Football DWH</Name>
+  <Description>Cube tổng Football DWH – chứa cả 4 fact với measure gốc (chưa có công thức), dùng để kiểm tra số liệu và cho trang Tổng quan / phân tích liên quy trình. Phân tích chi tiết theo từng nghiệp vụ dùng 3 cube riêng: Hiệu suất đội bóng, Hiệu suất cầu thủ, Thị trường cầu thủ.</Description>
   <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
   <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
   <Annotations>
@@ -818,10 +819,7 @@
         <Attribute dwd:design-time-name="efeb2ae3-74e0-4853-b7d0-c940808f5a8d">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="b1c3e863-d2fb-4393-84b6-27906c853e12">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="711ea251-d542-4bb0-8586-d4ab5c0c79a3">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -863,10 +861,7 @@
         <Attribute dwd:design-time-name="4fa11c7d-e5fa-4e6e-98f1-de915f1704ec">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="aaaede09-aeac-4fa7-bcb7-62fd3709394f">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="f164b436-1e24-4290-ad1e-6cdfc6977305">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -908,10 +903,7 @@
         <Attribute dwd:design-time-name="026330a0-1c22-49cf-8e6f-d8989f843786">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="0f7c311d-809c-40dc-b793-fea03182d533">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="5438ae48-3fe6-42e5-b3ec-153b5ff8aa22">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -953,10 +945,7 @@
         <Attribute dwd:design-time-name="0742637e-06db-43a3-940a-31e6c9015762">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="6dbddc44-a4ba-47e5-a009-5228c7e5b490">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="6a4514d8-a5f9-40e9-80ed-b61d118b707f">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -971,10 +960,7 @@
         <Attribute dwd:design-time-name="104be5b3-e077-45bc-9d50-b452e87d6a69">
           <AttributeID>HLV</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="4b0ff902-a4c8-4528-a9e8-5bcaa95e89ae">
-          <AttributeID>Manager Name</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
     </Dimension>
     <Dimension dwd:design-time-name="e3971983-ba46-4fa1-84d8-14ec20d8179d">
       <ID>HLV doi thu</ID>
@@ -984,10 +970,7 @@
         <Attribute dwd:design-time-name="a07ef049-4972-41e6-b792-cdfb219b83bd">
           <AttributeID>HLV</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="3c08c5f9-e0d9-41f8-8c02-159540d60f3c">
-          <AttributeID>Manager Name</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
     </Dimension>
     <Dimension dwd:design-time-name="c3815e2b-c54d-4640-8299-fc599330c19b">
       <ID>Cau thu</ID>
@@ -2117,15 +2100,9 @@
       <Commands>
         <Command>
           <Text>/*
-Tab Calculations của cube Football DWH. Mỗi phần chỉ viết vào khối của mình; sửa cube thì giữ lượt.
+Cube tổng Football DWH – chứa cả 4 fact với measure gốc (chưa có công thức), dùng để kiểm tra số liệu và cho trang Tổng quan / phân tích liên quy trình. Phân tích chi tiết theo từng nghiệp vụ dùng 3 cube riêng: Hiệu suất đội bóng, Hiệu suất cầu thủ, Thị trường cầu thủ.
 */
 CALCULATE;
-
-/* ===== Phần 1: Hiệu suất đội bóng và HLV ===== */
-
-/* ===== Phần 2: Hiệu suất cầu thủ ===== */
-
-/* ===== Phần 3: Giá trị và chuyển nhượng ===== */
 </Text>
         </Command>
       </Commands>

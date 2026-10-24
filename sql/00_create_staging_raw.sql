@@ -1,4 +1,4 @@
--- Tao 2 database va cac bang stg_raw_* ma Main_ETL_Master.dtsx can (cot lay tu metadata cua OLE DB Destination).
+﻿-- Tao 2 database va cac bang stg_raw_* ma Main_ETL_Master.dtsx can (cot lay tu metadata cua OLE DB Destination).
 -- Chay 1 lan truoc khi mo/chay package SSIS. Chay lai se xoa va tao lai bang stg_raw_*.
 
 IF DB_ID(N'football_dwh_staging') IS NULL CREATE DATABASE football_dwh_staging;

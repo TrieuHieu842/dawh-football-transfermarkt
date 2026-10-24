@@ -134,6 +134,7 @@
       </AttributeRelationships>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
+      <OrderBy>Name</OrderBy>
     </Attribute>
     <Attribute dwd:design-time-name="13e80962-6cba-477a-9a62-34decf407254">
       <ID>Vi tri chi tiet</ID>
@@ -172,6 +173,7 @@
       </AttributeRelationships>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
+      <OrderBy>Name</OrderBy>
     </Attribute>
     <Attribute dwd:design-time-name="f7cc2aff-90cf-45cc-a8cd-4c9ff7c942da">
       <ID>Vi tri</ID>

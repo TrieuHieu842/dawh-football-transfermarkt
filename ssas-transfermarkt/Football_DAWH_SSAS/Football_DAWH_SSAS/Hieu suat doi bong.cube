@@ -1,6 +1,7 @@
 ﻿<Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="07bede77-011c-4133-ac48-5221998f54f2" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
   <ID>Hieu suat doi bong</ID>
-  <Name>Hieu suat doi bong</Name>
+  <Name>Hiệu suất đội bóng</Name>
+  <Description>Cube Hiệu suất đội bóng (Phần 1) – fact Trận đấu theo đội (fact_team_match). Trả lời: bảng xếp hạng cuối mùa, CLB thắng nhiều nhất, hiệu suất tấn công / phòng ngự, lợi thế sân nhà theo giải, phong độ qua các mùa, HLV có tỉ lệ thắng cao nhất, thành tích trước đối thủ. Hỗ trợ đánh giá thành tích đội bóng, quyết định giữ hay thay HLV và đặt mục tiêu điểm số.</Description>
   <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
   <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
   <Annotations>
@@ -290,40 +291,6 @@
   <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
   <State>Unprocessed</State>
   <Dimensions>
-    <Dimension dwd:design-time-name="3667380a-90ab-475b-9dd7-4343ae7f94ba">
-      <ID>Fact Team Match</ID>
-      <Name>Fact Team Match</Name>
-      <DimensionID>Fact Team Match</DimensionID>
-      <Attributes>
-        <Attribute dwd:design-time-name="af1b829d-ddc9-4aa2-8d20-33b3be054da0">
-          <AttributeID>Match Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="dc5a975d-d2ee-4dbe-a1f2-003f1ed025ae">
-          <AttributeID>Competition Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="7950cf71-80be-4c80-aea5-6cff9b5f4bd1">
-          <AttributeID>Opponent Manager Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="7476ac6e-288c-49e4-a979-862dc14a745e">
-          <AttributeID>Opponent Club Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="c92ff917-b326-411e-9af4-a607a6d32a53">
-          <AttributeID>Season Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="43404fcc-51c8-4e2b-b6d2-f3ee15a38b19">
-          <AttributeID>Manager Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="4a57b9c1-9127-4408-871d-d64f4d8b8c7b">
-          <AttributeID>Date Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="3847dfe1-c856-4a5f-8f9c-e85e96d78bb1">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-        <Attribute dwd:design-time-name="8f122520-7317-4bfb-af55-63176395dff1">
-          <AttributeID>Fact Team Match - Match Key</AttributeID>
-        </Attribute>
-      </Attributes>
-    </Dimension>
     <Dimension dwd:design-time-name="a86a770e-7866-46e3-93c8-7cde25276abe">
       <ID>Giải đấu</ID>
       <Name>Giải đấu</Name>
@@ -359,20 +326,17 @@
     </Dimension>
     <Dimension dwd:design-time-name="1a7069e4-9e46-440b-9b6e-0662ab9404c5">
       <ID>Opponent Manager</ID>
-      <Name>Opponent Manager</Name>
+      <Name>HLV đối thủ</Name>
       <DimensionID>HLV</DimensionID>
       <Attributes>
         <Attribute dwd:design-time-name="de8d4958-eb64-42ca-b796-ccce49ed4cfd">
           <AttributeID>HLV</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="cc8d3a90-b2ed-46dd-83ea-350508cb0d35">
-          <AttributeID>Manager Name</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
     </Dimension>
     <Dimension dwd:design-time-name="5e087808-061e-4384-967a-fccc63c32ad7">
       <ID>Opponent Club</ID>
-      <Name>Opponent Club</Name>
+      <Name>CLB đối thủ</Name>
       <DimensionID>CLB</DimensionID>
       <Attributes>
         <Attribute dwd:design-time-name="d86bdedd-b841-4e30-bde9-87116e6063b6">
@@ -405,10 +369,7 @@
         <Attribute dwd:design-time-name="0d01c153-d66c-4ecd-ae57-d769e87b7ec5">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="a490e9ff-15db-4349-8c5a-b7bd391b6dc9">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="ae8d0ef0-60fc-4a06-b1c8-d535a7b924f2">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -436,10 +397,7 @@
         <Attribute dwd:design-time-name="171d9e81-75b5-4ba3-b2b7-525e932b2097">
           <AttributeID>HLV</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="799e267d-004b-42bd-9054-25e1e0fd3122">
-          <AttributeID>Manager Name</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
     </Dimension>
     <Dimension dwd:design-time-name="a1fa5d93-47c1-4149-a559-06342374f1c8">
       <ID>Ngày</ID>
@@ -506,10 +464,7 @@
         <Attribute dwd:design-time-name="0f9a9e2f-c4e8-47c9-bcd1-6acf5e6dabf3">
           <AttributeID>Is Current</AttributeID>
         </Attribute>
-        <Attribute dwd:design-time-name="801803da-fa48-4d5f-97aa-8e2e7a7aa16b">
-          <AttributeID>Club Key</AttributeID>
-        </Attribute>
-      </Attributes>
+        </Attributes>
       <Hierarchies>
         <Hierarchy dwd:design-time-name="e7527a25-87d5-47f9-bb1f-cc908da0e295">
           <HierarchyID>Hierarchy</HierarchyID>
@@ -559,7 +514,7 @@
   <MeasureGroups>
     <MeasureGroup dwd:design-time-name="681c5c4b-e82b-4137-9272-b41299bbe9ca">
       <ID>Fact Team Match</ID>
-      <Name>Trận đấu</Name>
+      <Name>Trận đấu đội</Name>
       <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
       <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
       <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
@@ -623,7 +578,7 @@
         </Measure>
         <Measure dwd:design-time-name="c399803c-3a95-4cfa-8ad1-27732c5924da">
           <ID>Points</ID>
-          <Name>Điểm số</Name>
+          <Name>Điểm</Name>
           <Source dwd:design-time-name="1108ac32-65de-4b91-9848-cf2d83dabe5a">
             <DataType>UnsignedInt</DataType>
             <Source xsi:type="ColumnBinding" dwd:design-time-name="f1f8d9d5-97f1-4b46-9c40-51084730ab3a">
@@ -634,7 +589,7 @@
         </Measure>
         <Measure dwd:design-time-name="a40b3b4d-c807-419a-a881-8b6830bea92f">
           <ID>Goal Difference</ID>
-          <Name>Hiệu số bàn thắng</Name>
+          <Name>Hiệu số</Name>
           <Source dwd:design-time-name="75f3ba31-734c-4ca1-af86-f03d9958015b">
             <DataType>Integer</DataType>
             <Source xsi:type="ColumnBinding" dwd:design-time-name="091fde11-f0df-4086-8424-4dd4b9259fb3">
@@ -643,20 +598,9 @@
             </Source>
           </Source>
         </Measure>
-        <Measure dwd:design-time-name="9d26c3ef-54f1-4888-85b0-f82afcb3d276">
-          <ID>Home Match</ID>
-          <Name>Sân nhà</Name>
-          <Source dwd:design-time-name="0cfb5349-6dd0-445b-b42b-4f706146dd87">
-            <DataType>UnsignedInt</DataType>
-            <Source xsi:type="ColumnBinding" dwd:design-time-name="62115248-2218-4a2d-a7d8-f33bca22c83a">
-              <TableID>dbo_fact_team_match</TableID>
-              <ColumnID>home_match</ColumnID>
-            </Source>
-          </Source>
-        </Measure>
         <Measure dwd:design-time-name="0e2fccd4-11b2-4fa0-8282-ef0a8fcf84c3">
           <ID>Home Win</ID>
-          <Name>Chiến thắng sân nhà</Name>
+          <Name>Thắng sân nhà</Name>
           <Source dwd:design-time-name="9ba68bcb-37d8-4522-b811-3b70a046639b">
             <DataType>UnsignedInt</DataType>
             <Source xsi:type="ColumnBinding" dwd:design-time-name="5a5623e4-eab2-4b02-a6df-73ae5976d268">
@@ -703,31 +647,6 @@
       <StorageMode>Molap</StorageMode>
       <ProcessingMode>Regular</ProcessingMode>
       <Dimensions>
-        <Dimension xsi:type="DegenerateMeasureGroupDimension" dwd:design-time-name="fff813f2-f625-4769-9782-394af0bdddf5">
-          <CubeDimensionID>Fact Team Match</CubeDimensionID>
-          <Attributes>
-            <Attribute dwd:design-time-name="a9686959-53a8-4b47-863e-d1f84dc4c07c">
-              <AttributeID>Match Key</AttributeID>
-              <KeyColumns>
-                <KeyColumn dwd:design-time-name="7d7b7af0-36e2-41df-95c2-f6974bdab5b3">
-                  <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="6ce25269-84e2-4180-ac32-b0b1ae4f3bd1">
-                    <TableID>dbo_fact_team_match</TableID>
-                    <ColumnID>match_key</ColumnID>
-                  </Source>
-                </KeyColumn>
-                <KeyColumn dwd:design-time-name="997ceaaf-6708-4066-be9b-07d10b8631b8">
-                  <DataType>Integer</DataType>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="23d7627f-8574-4924-9c4f-d767bb843b0f">
-                    <TableID>dbo_fact_team_match</TableID>
-                    <ColumnID>club_key</ColumnID>
-                  </Source>
-                </KeyColumn>
-              </KeyColumns>
-              <Type>Granularity</Type>
-            </Attribute>
-          </Attributes>
-        </Dimension>
         <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="4a56f027-a59c-4031-9080-409c202d0185">
           <CubeDimensionID>Giải đấu</CubeDimensionID>
           <Attributes>
@@ -888,23 +807,27 @@
       <Commands>
         <Command>
           <Text>/*
-The CALCULATE command controls the aggregation of leaf cells in the cube.
-If the CALCULATE command is deleted or modified, the data within the cube is affected.
-You should edit this command only if you manually specify how the cube is aggregated.
+Cube Hiệu suất đội bóng (Phần 1) – fact Trận đấu theo đội (fact_team_match). Trả lời: bảng xếp hạng cuối mùa, CLB thắng nhiều nhất, hiệu suất tấn công / phòng ngự, lợi thế sân nhà theo giải, phong độ qua các mùa, HLV có tỉ lệ thắng cao nhất, thành tích trước đối thủ. Hỗ trợ đánh giá thành tích đội bóng, quyết định giữ hay thay HLV và đặt mục tiêu điểm số.
 */
-CALCULATE;   
-CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng]
- AS [Measures].[Thắng] / [Measures].[Số trận], 
-FORMAT_STRING = "Percent", 
-VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'  ;   
-CREATE MEMBER CURRENTCUBE.[Measures].[Bàn thắng mỗi trận]
- AS [Measures].[Bàn thắng] / [Measures].[Số trận], 
-FORMAT_STRING = "0.00", 
-VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu';   
-CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng sân nhà]
- AS [Measures].[Thắng sân nhà] / [Measures].[Số trận sân nhà], 
-FORMAT_STRING = "Percent", 
-VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'; </Text>
+CALCULATE;
+
+/* ===== Phần 1: Hiệu suất đội bóng và HLV ===== */
+
+/* Tỉ lệ thắng = Thắng / Số trận */
+CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng] AS
+    IIF([Measures].[Số trận] = 0, NULL, [Measures].[Thắng] / [Measures].[Số trận]),
+    FORMAT_STRING = "0.0%", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trận đấu đội';
+
+/* Bàn thắng mỗi trận = Bàn thắng / Số trận */
+CREATE MEMBER CURRENTCUBE.[Measures].[Bàn thắng mỗi trận] AS
+    IIF([Measures].[Số trận] = 0, NULL, [Measures].[Bàn thắng] / [Measures].[Số trận]),
+    FORMAT_STRING = "0.00", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trận đấu đội';
+
+/* Tỉ lệ thắng sân nhà = Thắng sân nhà / Số trận sân nhà */
+CREATE MEMBER CURRENTCUBE.[Measures].[Tỉ lệ thắng sân nhà] AS
+    IIF([Measures].[Số trận sân nhà] = 0, NULL, [Measures].[Thắng sân nhà] / [Measures].[Số trận sân nhà]),
+    FORMAT_STRING = "0.0%", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trận đấu đội';
+</Text>
         </Command>
       </Commands>
     </MdxScript>
@@ -912,7 +835,8 @@ VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'; </Text>
   <Kpis>
     <Kpi dwd:design-time-name="fa1de93f-b288-484d-82ff-51ffe876e525">
       <ID>KPI</ID>
-      <Name>KPI Tỉ lệ thắng HLV</Name>
+      <Name>Tỉ lệ thắng của HLV</Name>
+      <Description>Tỉ lệ thắng của HLV, mục tiêu ≥ 50% (vàng từ 40%), mũi tên so với mùa trước</Description>
       <AssociatedMeasureGroupID>Fact Team Match</AssociatedMeasureGroupID>
       <Value>[Measures].[Tỉ lệ thắng]</Value>
       <Goal>0.5</Goal>
@@ -921,11 +845,7 @@ VISIBLE = 1 ,  ASSOCIATED_MEASURE_GROUP = 'Trận đấu'; </Text>
   When [Measures].[Tỉ lệ thắng] &gt;= 0.4 Then 0
   Else -1
 End</Status>
-      <Trend>Case
-  When [Measures].[Tỉ lệ thắng] &gt; ([Measures].[Tỉ lệ thắng], [Mùa giải].[Mùa giải].PrevMember) Then 1
-  When [Measures].[Tỉ lệ thắng] = ([Measures].[Tỉ lệ thắng], [Mùa giải].[Mùa giải].PrevMember) Then 0
-  Else -1
-End</Trend>
+      <Trend>CASE WHEN [Mùa giải].[Mùa giải].CurrentMember.Level.Ordinal = 0 THEN 0 WHEN ISEMPTY(([Measures].[Tỉ lệ thắng], [Mùa giải].[Mùa giải].CurrentMember.PrevMember)) THEN 0 WHEN [Measures].[Tỉ lệ thắng] &gt; ([Measures].[Tỉ lệ thắng], [Mùa giải].[Mùa giải].CurrentMember.PrevMember) THEN 1 WHEN [Measures].[Tỉ lệ thắng] &lt; ([Measures].[Tỉ lệ thắng], [Mùa giải].[Mùa giải].CurrentMember.PrevMember) THEN -1 ELSE 0 END</Trend>
       <TrendGraphic>Standard Arrow</TrendGraphic>
       <StatusGraphic>Shapes</StatusGraphic>
     </Kpi>

@@ -68,7 +68,7 @@
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ARDiagramLayout</Name>
       <Value>
-        <DiagramLayout ZoomPercent="100" ViewPortX="0" ViewPortY="0" xmlns="">
+        <DiagramLayout xmlns="" ZoomPercent="100" ViewPortX="0" ViewPortY="0">
           <Shapes NodeWidth="215">
             <Shape Id="Giai dau" Expanded="false">
               <Attributes>
@@ -147,14 +147,14 @@
           <AttributeID>Competition Sub Type</AttributeID>
           <Name>Competition Sub Type</Name>
         </AttributeRelationship>
-      </AttributeRelationships>
+      <AttributeRelationship dwd:design-time-name="9aeed87a-45fc-4e75-a17d-3f10375f36d8"><AttributeID>Country Name</AttributeID><Name>Quốc gia</Name></AttributeRelationship></AttributeRelationships>
       <OrderBy>Key</OrderBy>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
     </Attribute>
     <Attribute dwd:design-time-name="bf33877e-796d-4480-adb6-4f012263f7e7">
       <ID>Competition Id</ID>
-      <Name>Competition Id</Name>
+      <Name>Mã giải</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="120d5de3-87f3-4bc0-9671-afa6977482c7">
           <DataType>WChar</DataType>
@@ -170,7 +170,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="a6c70fbd-f74e-41d5-b4f8-e6a5c3657dbc">
       <ID>Competition Type</ID>
-      <Name>Competition Type</Name>
+      <Name>Loại giải</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="45adb0a1-20be-4bbe-9f40-a788089b4f46">
           <DataType>WChar</DataType>
@@ -186,9 +186,17 @@
     </Attribute>
     <Attribute dwd:design-time-name="359d5e3c-3e71-4ccc-a931-f56345a04c0c">
       <ID>Country Name</ID>
-      <Name>Country Name</Name>
+      <Name>Quốc gia</Name>
       <KeyColumns>
-        <KeyColumn dwd:design-time-name="a0761870-efcc-4cc7-97d6-2ca934aeefb4">
+        <KeyColumn dwd:design-time-name="9d9023d8-3b08-4655-bf50-8799806a27ee">
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="6a48d6aa-3167-46b6-9c0a-65a19f9ad2ef">
+            <TableID>dbo_dim_competition</TableID>
+            <ColumnID>confederation</ColumnID>
+          </Source>
+        </KeyColumn>
+      <KeyColumn dwd:design-time-name="a0761870-efcc-4cc7-97d6-2ca934aeefb4">
           <DataType>WChar</DataType>
           <DataSize>100</DataSize>
           <Source xsi:type="ColumnBinding" dwd:design-time-name="e091a318-2a43-482d-8d97-8e0376a0aab7">
@@ -197,6 +205,14 @@
           </Source>
         </KeyColumn>
       </KeyColumns>
+      <NameColumn dwd:design-time-name="a9dfae85-8089-41e9-88cc-19575ffa0954">
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="f36ec2e1-b81a-4a6b-afed-8acc467e198a">
+            <TableID>dbo_dim_competition</TableID>
+            <ColumnID>country_name</ColumnID>
+          </Source>
+        </NameColumn>
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="5e0a6acf-90f0-42d9-a528-efe39941b95e">
           <AttributeID>Confederation</AttributeID>
@@ -208,7 +224,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="918fa874-6018-4996-99ce-d67bbeaaeb6e">
       <ID>Confederation</ID>
-      <Name>Confederation</Name>
+      <Name>Liên đoàn</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="bc3a1c26-721a-4978-9ff2-e7ba80f46257">
           <DataType>WChar</DataType>
@@ -224,7 +240,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="d4693c91-8ffe-4bb7-975e-47cc8f6807e1">
       <ID>Competition Name</ID>
-      <Name>Competition Name</Name>
+      <Name>Tên giải</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="e99fef12-541b-482a-a9fd-4bd48c2cb7c2">
           <DataType>WChar</DataType>
@@ -236,17 +252,13 @@
         </KeyColumn>
       </KeyColumns>
       <AttributeRelationships>
-        <AttributeRelationship dwd:design-time-name="4a971f21-e329-4772-aa0d-99030e48e7a9">
-          <AttributeID>Country Name</AttributeID>
-          <Name>Country Name</Name>
-        </AttributeRelationship>
-      </AttributeRelationships>
+        </AttributeRelationships>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
     </Attribute>
     <Attribute dwd:design-time-name="2b7f8342-2168-4f32-bce7-b23e5c1bde20">
       <ID>Competition Sub Type</ID>
-      <Name>Competition Sub Type</Name>
+      <Name>Loại giải chi tiết</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="f26253ee-9e16-4696-9551-ecb541326310">
           <DataType>WChar</DataType>
@@ -264,22 +276,22 @@
   <Hierarchies>
     <Hierarchy dwd:design-time-name="2d8d6aea-a7dc-4836-9e9a-839920f9b205">
       <ID>Hierarchy</ID>
-      <Name>Phan Cap Giai Dau</Name>
+      <Name>Liên đoàn - Quốc gia - Giải đấu</Name>
       <Levels>
         <Level dwd:design-time-name="b973d266-bafc-4701-a22c-6f2dfb9dd7fb">
           <ID>Confederation</ID>
-          <Name>Confederation</Name>
+          <Name>Liên đoàn</Name>
           <SourceAttributeID>Confederation</SourceAttributeID>
         </Level>
         <Level dwd:design-time-name="4c22bc93-0cec-4395-bc70-3f606d050b42">
           <ID>Country Name</ID>
-          <Name>Country Name</Name>
+          <Name>Quốc gia</Name>
           <SourceAttributeID>Country Name</SourceAttributeID>
         </Level>
         <Level dwd:design-time-name="2f16304a-bfd8-4ac6-b7dd-57d871e7bf4c">
           <ID>Competition Name</ID>
-          <Name>Competition Name</Name>
-          <SourceAttributeID>Competition Name</SourceAttributeID>
+          <Name>Giải đấu</Name>
+          <SourceAttributeID>Giai dau</SourceAttributeID>
         </Level>
       </Levels>
     </Hierarchy>

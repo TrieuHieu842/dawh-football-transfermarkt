@@ -85,10 +85,6 @@
       <Name>Tuoi.dim</Name>
       <FullPath>Tuoi.dim</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Fact Team Match.dim</Name>
-      <FullPath>Fact Team Match.dim</FullPath>
-    </ProjectItem>
   </Dimensions>
   <DataSources>
     <ProjectItem>

@@ -764,16 +764,6 @@ CALCULATE;
 
 /* ===== Phần 2: Hiệu suất cầu thủ ===== */
 
-/* Alias để tiện dùng cả hai tên: Bàn thắng và Bàn thắng cầu thủ */
-CREATE MEMBER CURRENTCUBE.[Measures].[Bàn thắng] AS
-    [Measures].[Bàn thắng cầu thủ],
-    FORMAT_STRING = "#,##0", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Lượt ra sân';
-
-/* Alias cho Số trận distinct */
-CREATE MEMBER CURRENTCUBE.[Measures].[Số trận distinct] AS
-    [Measures].[Số trận có ra sân],
-    FORMAT_STRING = "#,##0", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Trận có ra sân';
-
 /* Q1 &amp; Q2. Bàn mỗi 90 phút = (Bàn thắng * 90) / Số phút */
 CREATE MEMBER CURRENTCUBE.[Measures].[Bàn mỗi 90 phút] AS
     IIF([Measures].[Số phút] = 0, NULL, ([Measures].[Bàn thắng cầu thủ] * 90) / [Measures].[Số phút]),
@@ -784,7 +774,7 @@ CREATE MEMBER CURRENTCUBE.[Measures].[Bàn và kiến tạo mỗi 90 phút] AS
     IIF([Measures].[Số phút] = 0, NULL, (([Measures].[Bàn thắng cầu thủ] + [Measures].[Kiến tạo]) * 90) / [Measures].[Số phút]),
     FORMAT_STRING = "0.00", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Lượt ra sân';
 
-/* Q5. Thẻ phạt mỗi trận = (Thẻ vàng + Thẻ đỏ) / Số trận distinct */
+/* Q5. Thẻ phạt mỗi trận = (Thẻ vàng + Thẻ đỏ) / Số trận có ra sân */
 CREATE MEMBER CURRENTCUBE.[Measures].[Thẻ phạt mỗi trận] AS
     IIF([Measures].[Số trận có ra sân] = 0, NULL, ([Measures].[Thẻ vàng] + [Measures].[Thẻ đỏ]) / [Measures].[Số trận có ra sân]),
     FORMAT_STRING = "0.00", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Lượt ra sân';

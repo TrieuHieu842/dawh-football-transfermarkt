@@ -95,32 +95,12 @@
         </Source>
       </NameColumn>
       <AttributeRelationships>
-        <AttributeRelationship dwd:design-time-name="33e8a36e-67a5-4cd9-821e-ff1b0c6ee5ee">
-          <AttributeID>Manager Name</AttributeID>
-          <Name>Manager Name</Name>
-        </AttributeRelationship>
-      </AttributeRelationships>
+        </AttributeRelationships>
       <OrderBy>Key</OrderBy>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
     </Attribute>
-    <Attribute dwd:design-time-name="d50cdd1d-2237-4b48-aeab-170925d0adaf">
-      <ID>Manager Name</ID>
-      <Name>Manager Name</Name>
-      <KeyColumns>
-        <KeyColumn dwd:design-time-name="ed9b89fc-13c0-443f-8675-13504ce0cb15">
-          <DataType>WChar</DataType>
-          <DataSize>200</DataSize>
-          <Source xsi:type="ColumnBinding" dwd:design-time-name="01aff9ac-5f36-402d-9cff-fc47438962ae">
-            <TableID>dbo_dim_manager</TableID>
-            <ColumnID>manager_name</ColumnID>
-          </Source>
-        </KeyColumn>
-      </KeyColumns>
-      <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
-      <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
-    </Attribute>
-  </Attributes>
+    </Attributes>
   <ProactiveCaching dwd:design-time-name="34a5cf27-bea2-473e-a083-80b8b54e9e9c">
     <SilenceInterval>-PT1S</SilenceInterval>
     <Latency>-PT1S</Latency>

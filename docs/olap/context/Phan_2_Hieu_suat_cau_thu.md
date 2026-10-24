@@ -174,9 +174,9 @@ Project `Football_DAWH_SSAS` đã có sẵn: Data Source, DSV (12 bảng + Named
 | Số trận ra sân | Gốc | Sum appearance_count | Additive |
 | Thẻ vàng, Thẻ đỏ | Gốc | Sum yellow_cards / red_cards | Additive |
 | Số trận (distinct) | Gốc | DistinctCount match_key (measure group riêng) | Non-additive |
-| Bàn mỗi 90 phút | Calculated | [Bàn thắng] × 90 / [Số phút] | Non-additive |
-| Bàn + kiến tạo mỗi 90 phút | Calculated | ([Bàn thắng] + [Kiến tạo]) × 90 / [Số phút] | Non-additive |
-| Thẻ phạt mỗi trận | Calculated | ([Thẻ vàng] + [Thẻ đỏ]) / [Số trận distinct] | Non-additive |
+| Bàn mỗi 90 phút | Calculated | [Bàn thắng cầu thủ] × 90 / [Số phút] | Non-additive |
+| Bàn + kiến tạo mỗi 90 phút | Calculated | ([Bàn thắng cầu thủ] + [Kiến tạo]) × 90 / [Số phút] | Non-additive |
+| Thẻ phạt mỗi trận | Calculated | ([Thẻ vàng] + [Thẻ đỏ]) / [Số trận có ra sân] | Non-additive |
 
 **KPI:** Bàn mỗi 90 phút của tiền đạo, mục tiêu ≥ 0,5.
 

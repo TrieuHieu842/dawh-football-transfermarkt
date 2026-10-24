@@ -68,7 +68,7 @@
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ARDiagramLayout</Name>
       <Value>
-        <DiagramLayout ZoomPercent="100" ViewPortX="0" ViewPortY="0" xmlns="">
+        <DiagramLayout xmlns="" ZoomPercent="100" ViewPortX="0" ViewPortY="0">
           <Shapes NodeWidth="219">
             <Shape Id="CLB" Expanded="false">
               <Attributes>
@@ -163,18 +163,14 @@
           <AttributeID>Is Current</AttributeID>
           <Name>Is Current</Name>
         </AttributeRelationship>
-        <AttributeRelationship dwd:design-time-name="3c923bcf-1c09-420f-a1b3-1d4134bc1319">
-          <AttributeID>Confederation</AttributeID>
-          <Name>Confederation</Name>
-        </AttributeRelationship>
-      </AttributeRelationships>
+        <AttributeRelationship dwd:design-time-name="1e38dde3-c5c7-432f-81fc-a57bca23755a"><AttributeID>Country Name</AttributeID><Name>Quốc gia</Name></AttributeRelationship></AttributeRelationships>
       <OrderBy>Key</OrderBy>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
     </Attribute>
     <Attribute dwd:design-time-name="639edb9f-6577-477e-8b81-b1c111493363">
       <ID>Club Name</ID>
-      <Name>Club Name</Name>
+      <Name>Tên CLB</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="ccd6524f-f4e2-4e86-8dc3-df8b699ef948">
           <DataType>WChar</DataType>
@@ -190,7 +186,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="4a5033c7-02d8-4eef-89d4-60befa804131">
       <ID>Club Type</ID>
-      <Name>Club Type</Name>
+      <Name>Loại CLB</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="a87af701-b5ec-46d1-826e-26b9e1469dfa">
           <DataType>WChar</DataType>
@@ -206,7 +202,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="dadda63a-9fd5-46c8-a092-c6a9c05b3222">
       <ID>Country Name</ID>
-      <Name>Country Name</Name>
+      <Name>Quốc gia</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="fab583fd-fc97-4204-b882-123c60572679">
           <DataType>WChar</DataType>
@@ -218,17 +214,13 @@
         </KeyColumn>
       </KeyColumns>
       <AttributeRelationships>
-        <AttributeRelationship dwd:design-time-name="7c70a965-164c-4e2e-a046-57858a90dd8b">
-          <AttributeID>Club Key</AttributeID>
-          <Name>Club Key</Name>
-        </AttributeRelationship>
-      </AttributeRelationships>
+        <AttributeRelationship dwd:design-time-name="788cf928-6a52-4c14-a3c5-68a7cdc91491"><AttributeID>Confederation</AttributeID><Name>Liên đoàn</Name></AttributeRelationship></AttributeRelationships>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
     </Attribute>
     <Attribute dwd:design-time-name="3ded793e-a517-4ed3-be5a-967a8a3e559e">
       <ID>Confederation</ID>
-      <Name>Confederation</Name>
+      <Name>Liên đoàn</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="0e891401-fcc1-4d06-8676-dd34c3ef13eb">
           <DataType>WChar</DataType>
@@ -240,17 +232,13 @@
         </KeyColumn>
       </KeyColumns>
       <AttributeRelationships>
-        <AttributeRelationship dwd:design-time-name="9b9969d0-74ea-43eb-9dad-236c2030de87">
-          <AttributeID>Country Name</AttributeID>
-          <Name>Country Name</Name>
-        </AttributeRelationship>
-      </AttributeRelationships>
+        </AttributeRelationships>
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
     </Attribute>
     <Attribute dwd:design-time-name="b5cc41c0-dc58-4bb3-adaa-4e3c3d9771b6">
       <ID>Current League Name</ID>
-      <Name>Current League Name</Name>
+      <Name>Giải hiện tại</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="3613e46f-ef93-419a-85cd-72d5e4f89462">
           <DataType>WChar</DataType>
@@ -266,7 +254,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="82d10c33-1642-4f01-ae85-d0a88d4c855b">
       <ID>Previous League Name</ID>
-      <Name>Previous League Name</Name>
+      <Name>Giải mùa trước</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="9e776084-e142-4dd2-bf5b-3f5b72e992db">
           <DataType>WChar</DataType>
@@ -282,7 +270,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="bcc4a289-e697-4036-a217-bc61872f600e">
       <ID>Stadium Name</ID>
-      <Name>Stadium Name</Name>
+      <Name>Sân nhà</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="04472d46-10bb-4c06-b7be-f364cc896c20">
           <DataType>WChar</DataType>
@@ -298,7 +286,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="55705f1d-2fa3-4a39-8ed8-827ffea1c2cf">
       <ID>Stadium Capacity Band</ID>
-      <Name>Stadium Capacity Band</Name>
+      <Name>Sức chứa sân</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="16665c91-a318-445c-bc98-26b2c6158e9e">
           <DataType>WChar</DataType>
@@ -314,7 +302,7 @@
     </Attribute>
     <Attribute dwd:design-time-name="ca7645c7-8678-4a64-b195-ee194e16add1">
       <ID>Is Current</ID>
-      <Name>Is Current</Name>
+      <Name>Phiên bản hiện tại</Name>
       <KeyColumns>
         <KeyColumn dwd:design-time-name="7f55d783-0544-428d-9e39-a0fabc3a8fea">
           <DataType>Boolean</DataType>
@@ -327,49 +315,26 @@
       <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
       <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
     </Attribute>
-    <Attribute dwd:design-time-name="a056e1f9-4bd7-4a03-8ae4-7e984d471abc">
-      <ID>Club Key</ID>
-      <Name>Club Key</Name>
-      <KeyColumns>
-        <KeyColumn dwd:design-time-name="b9c8bdba-77d0-40c6-a635-1f6f480c7fbf">
-          <DataType>Integer</DataType>
-          <Source xsi:type="ColumnBinding" dwd:design-time-name="6de380c1-52d0-4772-8556-b6e3e9fe6d48">
-            <TableID>dbo_dim_club</TableID>
-            <ColumnID>club_key</ColumnID>
-          </Source>
-        </KeyColumn>
-      </KeyColumns>
-      <NameColumn dwd:design-time-name="43266ab1-e787-430d-ae7b-3d9f72ee163b">
-        <DataType>WChar</DataType>
-        <DataSize>200</DataSize>
-        <Source xsi:type="ColumnBinding" dwd:design-time-name="efe9145d-8313-421e-9ccd-ef9725384d8a">
-          <TableID>dbo_dim_club</TableID>
-          <ColumnID>club_name</ColumnID>
-        </Source>
-      </NameColumn>
-      <ddl200:ProcessingState>Unprocessed</ddl200:ProcessingState>
-      <ddl300:AttributeHierarchyProcessingState>Unprocessed</ddl300:AttributeHierarchyProcessingState>
-    </Attribute>
-  </Attributes>
+    </Attributes>
   <Hierarchies>
     <Hierarchy dwd:design-time-name="72135897-4d8b-44bc-96df-ee51af7ff89c">
       <ID>Hierarchy</ID>
-      <Name>Phan cap CLB</Name>
+      <Name>Liên đoàn - Quốc gia - CLB</Name>
       <Levels>
         <Level dwd:design-time-name="e453cef6-1e50-432d-ae45-f9c377d780a7">
           <ID>Confederation</ID>
-          <Name>Confederation</Name>
+          <Name>Liên đoàn</Name>
           <SourceAttributeID>Confederation</SourceAttributeID>
         </Level>
         <Level dwd:design-time-name="a0f87d5a-6007-47ff-9179-bec510e67bd5">
           <ID>Country Name</ID>
-          <Name>Country Name</Name>
+          <Name>Quốc gia</Name>
           <SourceAttributeID>Country Name</SourceAttributeID>
         </Level>
         <Level dwd:design-time-name="43e3dba4-4425-4819-8909-2046e3a15693">
           <ID>Club Key</ID>
-          <Name>Club Key</Name>
-          <SourceAttributeID>Club Key</SourceAttributeID>
+          <Name>CLB</Name>
+          <SourceAttributeID>CLB</SourceAttributeID>
         </Level>
       </Levels>
     </Hierarchy>
