@@ -12055,7 +12055,7 @@
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT CAST(current_club_id AS NVARCHAR(20)) AS club_id, CAST(current_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DISTINCT CAST(current_club_id AS NVARCHAR(20)) AS club_id, CAST(current_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_player_valuations</property>
                     <property
                       dataType="System.String"
@@ -12207,7 +12207,7 @@ FROM dbo.stg_raw_player_valuations</property>
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT CAST(from_club_id AS NVARCHAR(20)) AS club_id, CAST(from_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DISTINCT CAST(from_club_id AS NVARCHAR(20)) AS club_id, CAST(from_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_transfers</property>
                     <property
                       dataType="System.String"
@@ -12359,7 +12359,7 @@ FROM dbo.stg_raw_transfers</property>
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT CAST(to_club_id AS NVARCHAR(20)) AS club_id, CAST(to_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DISTINCT CAST(to_club_id AS NVARCHAR(20)) AS club_id, CAST(to_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_transfers</property>
                     <property
                       dataType="System.String"
@@ -12511,7 +12511,7 @@ FROM dbo.stg_raw_transfers</property>
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT CAST(away_club_id AS NVARCHAR(20)) AS club_id, CAST(away_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DISTINCT CAST(away_club_id AS NVARCHAR(20)) AS club_id, CAST(away_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_games</property>
                     <property
                       dataType="System.String"
@@ -12663,7 +12663,7 @@ FROM dbo.stg_raw_games</property>
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT CAST(home_club_id AS NVARCHAR(20)) AS club_id, CAST(home_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DISTINCT CAST(home_club_id AS NVARCHAR(20)) AS club_id, CAST(home_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_games</property>
                     <property
                       dataType="System.String"
