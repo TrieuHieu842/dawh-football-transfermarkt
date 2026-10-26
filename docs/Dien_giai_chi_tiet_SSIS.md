@@ -36,9 +36,9 @@ Ràng buộc thứ tự (Precedence Constraint, *Success*): `01 - Trích xuất 
 
 | Biến | Kiểu | Giá trị hiện tại | Dùng ở đâu |
 |---|---|---|---|
-| `BatchID` | String | BATCH_20261018_224515 | Mã lần chạy `BATCH_yyyyMMdd_HHmmss`, tính từ `System::StartTime` nên cố định suốt một lần chạy và khác nhau giữa các lần chạy; ghi vào cột `batch_id` của Staging, dimension, fact và `etl_batch` |
-| `LoadedAt` | DateTime | 10/18/2026 10:45:19 PM | Thời điểm nạp, ghi vào cột `loaded_at` của Staging |
-| `LoadFrom` | DateTime | 1/1/1900 | Ngày bắt đầu cửa sổ nạp: *Kiểm tra hợp lệ và cửa sổ nạp* của 4 Data Flow fact chi tiết; *Ghi cửa sổ nạp gia tăng* |
+| `BatchID` | String | BATCH_20261026_152845 | Mã lần chạy `BATCH_yyyyMMdd_HHmmss`, tính từ `System::StartTime` nên cố định suốt một lần chạy và khác nhau giữa các lần chạy; ghi vào cột `batch_id` của Staging, dimension, fact và `etl_batch` |
+| `LoadedAt` | DateTime | 10/26/2026 4:44:27 PM | Thời điểm nạp, ghi vào cột `loaded_at` của Staging |
+| `LoadFrom` | DateTime | 1/1/1990 | Ngày bắt đầu cửa sổ nạp: *Kiểm tra hợp lệ và cửa sổ nạp* của 4 Data Flow fact chi tiết; *Ghi cửa sổ nạp gia tăng* |
 | `LoadTo` | DateTime | 12/31/9999 | Ngày kết thúc cửa sổ nạp |
 
 **Cách đổi:** Control Flow → click vùng trống → icon **Variables** (góc phải trên) → sửa cột *Value*.
@@ -634,7 +634,7 @@ Gán thuộc tính cho CLB Other                     ────► Thêm CLB O
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(current_club_id AS NVARCHAR(20)) AS club_id, CAST(current_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+SELECT DISTINCT CAST(current_club_id AS NVARCHAR(20)) AS club_id, CAST(current_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_player_valuations
 ```
 
@@ -646,7 +646,7 @@ FROM dbo.stg_raw_player_valuations
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(from_club_id AS NVARCHAR(20)) AS club_id, CAST(from_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+SELECT DISTINCT CAST(from_club_id AS NVARCHAR(20)) AS club_id, CAST(from_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_transfers
 ```
 
@@ -658,7 +658,7 @@ FROM dbo.stg_raw_transfers
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(to_club_id AS NVARCHAR(20)) AS club_id, CAST(to_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+SELECT DISTINCT CAST(to_club_id AS NVARCHAR(20)) AS club_id, CAST(to_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_transfers
 ```
 
@@ -670,7 +670,7 @@ FROM dbo.stg_raw_transfers
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(away_club_id AS NVARCHAR(20)) AS club_id, CAST(away_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+SELECT DISTINCT CAST(away_club_id AS NVARCHAR(20)) AS club_id, CAST(away_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_games
 ```
 
@@ -682,7 +682,7 @@ FROM dbo.stg_raw_games
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(home_club_id AS NVARCHAR(20)) AS club_id, CAST(home_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
+SELECT DISTINCT CAST(home_club_id AS NVARCHAR(20)) AS club_id, CAST(home_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_games
 ```
 
@@ -1383,7 +1383,7 @@ Ghi cửa sổ nạp gia tăng
 Câu lệnh thực tế khi chạy (với giá trị biến hiện tại):
 
 ```sql
-UPDATE dbo.etl_load_window SET window_from = '1900-01-01', window_to = '9999-12-31' WHERE id = 1;
+UPDATE dbo.etl_load_window SET window_from = '1990-01-01', window_to = '9999-12-31' WHERE id = 1;
 DELETE FROM football_dwh_staging.dbo.etl_reject
 WHERE source_table IN (N'stg_raw_club_games', N'stg_raw_appearances', N'stg_raw_player_valuations', N'stg_raw_transfers');
 ```
@@ -1395,7 +1395,7 @@ WHERE source_table IN (N'stg_raw_club_games', N'stg_raw_appearances', N'stg_raw_
 ```sql
 UPDATE dbo.etl_batch SET status = N'FAILED' WHERE status = N'RUNNING';
 INSERT INTO dbo.etl_batch (batch_id, window_from, window_to, started_at, status, fact_rows_before)
-VALUES (N'BATCH_20261018_224515', '1900-01-01', '9999-12-31', '2026-10-18 22:45:15', N'RUNNING',
+VALUES (N'BATCH_20261026_152845', '1990-01-01', '9999-12-31', '2026-10-26 15:28:45', N'RUNNING',
         (SELECT COUNT(*) FROM dbo.fact_team_match) + (SELECT COUNT(*) FROM dbo.fact_player_appearance) + (SELECT COUNT(*) FROM dbo.fact_player_valuation) + (SELECT COUNT(*) FROM dbo.fact_transfer));
 ```
 
@@ -1404,7 +1404,7 @@ VALUES (N'BATCH_20261018_224515', '1900-01-01', '9999-12-31', '2026-10-18 22:45:
 ```sql
 UPDATE dbo.etl_batch SET finished_at = GETDATE(), status = N'SUCCESS',
        fact_rows_after = (SELECT COUNT(*) FROM dbo.fact_team_match) + (SELECT COUNT(*) FROM dbo.fact_player_appearance) + (SELECT COUNT(*) FROM dbo.fact_player_valuation) + (SELECT COUNT(*) FROM dbo.fact_transfer)
-WHERE batch_id = N'BATCH_20261018_224515';
+WHERE batch_id = N'BATCH_20261026_152845';
 ```
 
 Ý nghĩa: mỗi lần chạy có đúng 1 dòng trong `etl_batch`. So `fact_rows_before` và `fact_rows_after` để thấy lần nạp đó thêm bao nhiêu dòng (lần chạy lại toàn bộ thì hai số bằng nhau). Nếu một lần chạy dừng giữa chừng, dòng của nó còn `RUNNING`; lần chạy sau sẽ đổi thành `FAILED`. Dòng fact nào cũng truy được về lần chạy đã nạp nó qua `batch_id`.
@@ -1481,7 +1481,12 @@ SELECT CAST(game_id AS NVARCHAR(20)) AS game_id,
        CAST(opponent_manager_name AS NVARCHAR(200)) AS opponent_manager_name,
        CAST(hosting AS NVARCHAR(10)) AS hosting,
        CAST(batch_id AS NVARCHAR(30)) AS batch_id
-FROM dbo.stg_raw_club_games
+FROM dbo.stg_raw_club_games AS s
+/* Lọc trước: bỏ dòng (trận, CLB) đã có trong fact */
+WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_team_match f
+                  JOIN football_dwh_dw.dbo.dim_match m ON m.match_key = f.match_key
+                  JOIN football_dwh_dw.dbo.dim_club c ON c.club_key = f.club_key
+                  WHERE m.game_id = TRY_CAST(s.game_id AS INT) AND c.club_id = TRY_CAST(s.club_id AS INT))
 ```
 
 **4.3.1.2. Lấy ngày mùa và giải của trận** · *Lookup*
@@ -1883,7 +1888,10 @@ SELECT CAST(appearance_id AS NVARCHAR(50)) AS appearance_id,
        CAST(assists AS NVARCHAR(10)) AS assists,
        CAST(minutes_played AS NVARCHAR(10)) AS minutes_played,
        CAST(batch_id AS NVARCHAR(30)) AS batch_id
-FROM dbo.stg_raw_appearances
+FROM dbo.stg_raw_appearances AS s
+/* Lọc trước: bỏ lượt ra sân đã có trong fact (theo appearance_id) để Sort phía sau chỉ nhận dòng mới */
+WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_player_appearance f
+                  WHERE f.appearance_id = LTRIM(RTRIM(CAST(s.appearance_id AS NVARCHAR(50)))))
 ```
 
 **4.3.2.2. Lấy mùa giải của trận** · *Lookup*
@@ -2212,10 +2220,19 @@ WITH v AS (
            TRY_CAST(LEFT(CAST([date] AS NVARCHAR(30)), 10) AS DATE)   AS d,
            TRY_CAST(CAST(market_value_in_eur AS NVARCHAR(30)) AS BIGINT) AS mv
     FROM dbo.stg_raw_player_valuations
-)
+),
+w AS (
 SELECT player_id, valuation_date_raw, market_value, current_club_id, competition_id, batch_id,
-       CAST(mv - LAG(mv) OVER (PARTITION BY player_id ORDER BY d) AS BIGINT) AS value_change_eur
-FROM v;
+       CAST(mv - LAG(mv) OVER (PARTITION BY player_id ORDER BY d) AS BIGINT) AS value_change_eur, d
+FROM v
+)
+/* Lọc trước SAU khi tính LAG: bỏ lần định giá đã có trong fact (theo cầu thủ + ngày) */
+SELECT player_id, valuation_date_raw, market_value, current_club_id, competition_id, batch_id, value_change_eur
+FROM w
+WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_player_valuation f
+                  JOIN football_dwh_dw.dbo.dim_player p ON p.player_key = f.player_key
+                  WHERE p.player_id = TRY_CAST(w.player_id AS INT)
+                    AND f.date_key = YEAR(w.d) * 10000 + MONTH(w.d) * 100 + DAY(w.d));
 ```
 
 **4.3.3.2. Làm sạch chuỗi** · *Derived Column*
@@ -2470,7 +2487,17 @@ SELECT CAST(player_id AS NVARCHAR(20)) AS player_id,
        CAST(transfer_fee AS NVARCHAR(30)) AS transfer_fee,
        CAST(market_value_in_eur AS NVARCHAR(30)) AS market_value,
        CAST(batch_id AS NVARCHAR(30)) AS batch_id
-FROM dbo.stg_raw_transfers
+FROM dbo.stg_raw_transfers AS s
+/* Lọc trước: bỏ thương vụ (cầu thủ, ngày, CLB đi, CLB đến) đã có trong fact */
+WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_transfer f
+                  JOIN football_dwh_dw.dbo.dim_player p ON p.player_key = f.player_key
+                  JOIN football_dwh_dw.dbo.dim_club cf ON cf.club_key = f.from_club_key
+                  JOIN football_dwh_dw.dbo.dim_club ct ON ct.club_key = f.to_club_key
+                  WHERE p.player_id = TRY_CAST(s.player_id AS INT)
+                    AND f.date_key = YEAR(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 10000
+                                   + MONTH(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 100
+                                   + DAY(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE))
+                    AND cf.club_id = TRY_CAST(s.from_club_id AS INT) AND ct.club_id = TRY_CAST(s.to_club_id AS INT))
 ```
 
 **4.3.4.2. Làm sạch chuỗi** · *Derived Column*
