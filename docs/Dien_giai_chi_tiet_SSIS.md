@@ -767,7 +767,7 @@ Tra dimension trong kho theo khóa tự nhiên: **Match** = đã có (đi tiếp
 SELECT club_id, club_key FROM dbo.dim_club
 ```
 - **Điều kiện nối:** `c_club_id` = `club_id`
-- **Cột lấy về:** `club_key`
+- **Cột lấy về:** (không lấy cột nào — chỉ kiểm tra tồn tại)
 - **Không tìm thấy:** Gửi sang **Lookup No Match Output**
 
 **3.2.3.14. Gán thuộc tính cho CLB Other** · *Derived Column*
@@ -1346,7 +1346,7 @@ Tra dimension trong kho theo khóa tự nhiên: **Match** = đã có (đi tiếp
 SELECT manager_name, manager_key FROM dbo.dim_manager
 ```
 - **Điều kiện nối:** `manager_name` = `manager_name`
-- **Cột lấy về:** `manager_key`
+- **Cột lấy về:** (không lấy cột nào — chỉ kiểm tra tồn tại)
 - **Không tìm thấy:** Gửi sang **Lookup No Match Output**
 
 **3.2.6.8. Thêm HLV mới vào Dim_Manager** · *OLE DB Destination*
@@ -1432,7 +1432,7 @@ Output **Out Of Window** của *Kiểm tra hợp lệ và cửa sổ nạp* **kh
 
 | Đích | Cách nạp | Số component |
 |---|---|---|
-| `Fact_Team_Match` | Nạp gia tăng | 21 |
+| `Fact_Team_Match` | Nạp gia tăng | 20 |
 
 Grain: 1 đội trong 1 trận. Nguồn `stg_raw_club_games`, lấy thêm ngày, mùa, giải của trận từ `stg_raw_games`. Các measure thắng/hòa/thua/sạch lưới được tính lại từ tỉ số. Tra 7 khóa dimension (Club và Manager dùng 2 vai: đội và đối thủ).
 
@@ -1444,12 +1444,11 @@ Lấy ngày mùa và giải của trận                    ── [Lookup Match
 Làm sạch chuỗi                                   ────► Ép kiểu dữ liệu
 Ép kiểu dữ liệu                                  ────► Kiểm tra hợp lệ và cửa sổ nạp
 Ép kiểu dữ liệu                                  ── [Data Conversion Error Output]──► Ghi lý do lỗi ép kiểu
-Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Loại trùng theo trận và CLB
+Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Tính kết quả trận và khóa ngày
 Kiểm tra hợp lệ và cửa sổ nạp                    ── [Reject]──► Ghi lý do vi phạm quy tắc
 Ghi lý do lỗi ép kiểu                            ────► Lưu dòng lỗi ép kiểu vào etl_reject
-Loại trùng theo trận và CLB                      ────► Tính kết quả trận và khóa ngày
-Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tính kết quả trận và khóa ngày                   ────► Tra khóa mùa giải
+Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tra khóa mùa giải                                ── [Lookup Match Output]──► Tra khóa giải đấu
 Tra khóa giải đấu                                ── [Lookup Match Output]──► Tra khóa trận đấu
 Tra khóa trận đấu                                ── [Lookup Match Output]──► Tra khóa CLB
@@ -1471,22 +1470,30 @@ Bỏ qua dòng đã có trong Fact                     ── [Lookup No Match O
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(game_id AS NVARCHAR(20)) AS game_id,
-       CAST(club_id AS NVARCHAR(20)) AS club_id,
-       CAST(opponent_id AS NVARCHAR(20)) AS opponent_id,
-       CAST(own_goals AS NVARCHAR(10)) AS own_goals,
-       CAST(opponent_goals AS NVARCHAR(10)) AS opponent_goals,
-       CAST(own_position AS NVARCHAR(10)) AS own_position,
-       CAST(own_manager_name AS NVARCHAR(200)) AS own_manager_name,
-       CAST(opponent_manager_name AS NVARCHAR(200)) AS opponent_manager_name,
-       CAST(hosting AS NVARCHAR(10)) AS hosting,
-       CAST(batch_id AS NVARCHAR(30)) AS batch_id
-FROM dbo.stg_raw_club_games AS s
-/* Lọc trước: bỏ dòng (trận, CLB) đã có trong fact */
-WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_team_match f
-                  JOIN football_dwh_dw.dbo.dim_match m ON m.match_key = f.match_key
-                  JOIN football_dwh_dw.dbo.dim_club c ON c.club_key = f.club_key
-                  WHERE m.game_id = TRY_CAST(s.game_id AS INT) AND c.club_id = TRY_CAST(s.club_id AS INT))
+/* Loại trùng theo (trận, CLB) ngay tại nguồn (thay component Sort).
+   NOT EXISTS: bỏ dòng (trận, CLB) đã có trong fact. */
+SELECT game_id, club_id, opponent_id, own_goals, opponent_goals, own_position,
+       own_manager_name, opponent_manager_name, hosting, batch_id
+FROM (
+    SELECT CAST(game_id AS NVARCHAR(20)) AS game_id,
+           CAST(club_id AS NVARCHAR(20)) AS club_id,
+           CAST(opponent_id AS NVARCHAR(20)) AS opponent_id,
+           CAST(own_goals AS NVARCHAR(10)) AS own_goals,
+           CAST(opponent_goals AS NVARCHAR(10)) AS opponent_goals,
+           CAST(own_position AS NVARCHAR(10)) AS own_position,
+           CAST(own_manager_name AS NVARCHAR(200)) AS own_manager_name,
+           CAST(opponent_manager_name AS NVARCHAR(200)) AS opponent_manager_name,
+           CAST(hosting AS NVARCHAR(10)) AS hosting,
+           CAST(batch_id AS NVARCHAR(30)) AS batch_id,
+           ROW_NUMBER() OVER (PARTITION BY LTRIM(RTRIM(CAST(game_id AS NVARCHAR(20)))), LTRIM(RTRIM(CAST(club_id AS NVARCHAR(20))))
+                              ORDER BY CAST(batch_id AS NVARCHAR(30)) DESC) AS rn
+    FROM dbo.stg_raw_club_games AS s
+    WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_team_match f WITH (NOLOCK)
+                      JOIN football_dwh_dw.dbo.dim_match m ON m.match_key = f.match_key
+                      JOIN football_dwh_dw.dbo.dim_club c ON c.club_key = f.club_key
+                      WHERE m.game_id = TRY_CAST(s.game_id AS INT) AND c.club_id = TRY_CAST(s.club_id AS INT))
+) AS q
+WHERE rn = 1
 ```
 
 **4.3.1.2. Lấy ngày mùa và giải của trận** · *Lookup*
@@ -1597,39 +1604,7 @@ Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason
     (DT_WSTR,200)"Lỗi ép kiểu (Data Conversion)"
     ```
 
-**4.3.1.7. Loại trùng theo trận và CLB** · *Sort*
-
-Sắp xếp theo khóa tự nhiên và **loại dòng trùng khóa** (Remove rows with duplicate sort values).
-
-- **Khóa sắp xếp:** `c_game_id`, `c_club_id`
-- **Loại trùng:** Có (EliminateDuplicates = True)
-
-**4.3.1.8. Ghi lý do vi phạm quy tắc** · *Derived Column*
-
-Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason`) để ghi vào bảng `etl_reject`.
-
-- **Biểu thức:**
-  - cột mới `rj_source_table` (DT_WSTR(100)):
-    ```
-    (DT_WSTR,100)"stg_raw_club_games"
-    ```
-  - cột mới `rj_natural_key` (DT_WSTR(200)):
-    ```
-    (DT_WSTR,200)(REPLACENULL(game_id,"") + "|" + REPLACENULL(club_id,""))
-    ```
-  - cột mới `rj_reason` (DT_WSTR(200)):
-    ```
-    (DT_WSTR,200)"Thiếu khóa, tỉ số hoặc không tìm thấy trận"
-    ```
-
-**4.3.1.9. Lưu dòng lỗi ép kiểu vào etl_reject** · *OLE DB Destination*
-
-Ghi dữ liệu vào bảng đích (Fast load).
-
-- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
-- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
-
-**4.3.1.10. Tính kết quả trận và khóa ngày** · *Derived Column*
+**4.3.1.7. Tính kết quả trận và khóa ngày** · *Derived Column*
 
 Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
 
@@ -1675,14 +1650,32 @@ Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhó
     (DT_I2)(c_own_goals - c_opponent_goals)
     ```
 
-**4.3.1.11. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
+**4.3.1.8. Ghi lý do vi phạm quy tắc** · *Derived Column*
+
+Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason`) để ghi vào bảng `etl_reject`.
+
+- **Biểu thức:**
+  - cột mới `rj_source_table` (DT_WSTR(100)):
+    ```
+    (DT_WSTR,100)"stg_raw_club_games"
+    ```
+  - cột mới `rj_natural_key` (DT_WSTR(200)):
+    ```
+    (DT_WSTR,200)(REPLACENULL(game_id,"") + "|" + REPLACENULL(club_id,""))
+    ```
+  - cột mới `rj_reason` (DT_WSTR(200)):
+    ```
+    (DT_WSTR,200)"Thiếu khóa, tỉ số hoặc không tìm thấy trận"
+    ```
+
+**4.3.1.9. Lưu dòng lỗi ép kiểu vào etl_reject** · *OLE DB Destination*
 
 Ghi dữ liệu vào bảng đích (Fast load).
 
 - **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
 - **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
 
-**4.3.1.12. Tra khóa mùa giải** · *Lookup*
+**4.3.1.10. Tra khóa mùa giải** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -1696,7 +1689,14 @@ SELECT season_start_year, season_key FROM dbo.dim_season WHERE season_key <> -1
 - **Cột lấy về:** `season_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.1.13. Tra khóa giải đấu** · *Lookup*
+**4.3.1.11. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
+
+Ghi dữ liệu vào bảng đích (Fast load).
+
+- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
+- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
+
+**4.3.1.12. Tra khóa giải đấu** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -1710,7 +1710,7 @@ SELECT competition_id, competition_key FROM dbo.dim_competition
 - **Cột lấy về:** `competition_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.1.14. Tra khóa trận đấu** · *Lookup*
+**4.3.1.13. Tra khóa trận đấu** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -1724,7 +1724,7 @@ SELECT game_id, match_key FROM dbo.dim_match
 - **Cột lấy về:** `match_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.1.15. Tra khóa CLB** · *Lookup*
+**4.3.1.14. Tra khóa CLB** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -1738,7 +1738,7 @@ SELECT club_id, club_key FROM dbo.dim_club WHERE is_current = 1
 - **Cột lấy về:** `club_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.1.16. Tra khóa CLB đối thủ** · *Lookup*
+**4.3.1.15. Tra khóa CLB đối thủ** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -1752,7 +1752,7 @@ SELECT club_id, club_key FROM dbo.dim_club WHERE is_current = 1
 - **Cột lấy về:** `opponent_club_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.1.17. Tra khóa HLV** · *Lookup*
+**4.3.1.16. Tra khóa HLV** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -1766,7 +1766,7 @@ SELECT manager_name, manager_key FROM dbo.dim_manager
 - **Cột lấy về:** `manager_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.1.18. Tra khóa HLV đối thủ** · *Lookup*
+**4.3.1.17. Tra khóa HLV đối thủ** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -1780,7 +1780,7 @@ SELECT manager_name, manager_key FROM dbo.dim_manager
 - **Cột lấy về:** `opponent_manager_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.1.19. Gán khóa Unknown cho khóa không tra được** · *Derived Column*
+**4.3.1.18. Gán khóa Unknown cho khóa không tra được** · *Derived Column*
 
 Khóa dimension không tra được (NULL) được thay bằng **-1**, trỏ về dòng Unknown của dimension.
 
@@ -1814,7 +1814,7 @@ Khóa dimension không tra được (NULL) được thay bằng **-1**, trỏ v�
     REPLACENULL(opponent_manager_key,-1)
     ```
 
-**4.3.1.20. Bỏ qua dòng đã có trong Fact** · *Lookup*
+**4.3.1.19. Bỏ qua dòng đã có trong Fact** · *Lookup*
 
 **Lookup chính bảng fact** theo khóa của grain: dòng đã có trong kho đi vào Match Output và **bị bỏ** (không nối tiếp); chỉ dòng **No Match** (chưa có) mới được nạp → chạy lại nhiều lần không sinh dữ liệu trùng, dữ liệu đã ghi không bị sửa.
 
@@ -1828,7 +1828,7 @@ SELECT match_key, club_key FROM dbo.fact_team_match
 - **Cột lấy về:** (không lấy cột nào — chỉ kiểm tra tồn tại)
 - **Không tìm thấy:** Gửi sang **Lookup No Match Output**
 
-**4.3.1.21. Ghi vào Fact_Team_Match** · *OLE DB Destination*
+**4.3.1.20. Ghi vào Fact_Team_Match** · *OLE DB Destination*
 
 Ghi dữ liệu vào bảng đích (Fast load).
 
@@ -1839,7 +1839,7 @@ Ghi dữ liệu vào bảng đích (Fast load).
 
 | Đích | Cách nạp | Số component |
 |---|---|---|
-| `Fact_Player_Appearance` | Nạp gia tăng | 19 |
+| `Fact_Player_Appearance` | Nạp gia tăng | 18 |
 
 Grain: 1 cầu thủ ra sân trong 1 trận. Nguồn `stg_raw_appearances` (~1,9 triệu dòng); mùa giải lấy từ `stg_raw_games` qua `game_id`. `appearance_id` là khóa tự nhiên để chặn nạp trùng.
 
@@ -1851,12 +1851,11 @@ Lấy mùa giải của trận                            ── [Lookup Match O
 Làm sạch chuỗi                                   ────► Ép kiểu dữ liệu
 Ép kiểu dữ liệu                                  ────► Kiểm tra hợp lệ và cửa sổ nạp
 Ép kiểu dữ liệu                                  ── [Data Conversion Error Output]──► Ghi lý do lỗi ép kiểu
-Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Loại trùng theo appearance_id
+Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Tính khóa ngày và cột đếm
 Kiểm tra hợp lệ và cửa sổ nạp                    ── [Reject]──► Ghi lý do vi phạm quy tắc
 Ghi lý do lỗi ép kiểu                            ────► Lưu dòng lỗi ép kiểu vào etl_reject
-Loại trùng theo appearance_id                    ────► Tính khóa ngày và cột đếm
-Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tính khóa ngày và cột đếm                        ────► Tra khóa mùa giải
+Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tra khóa mùa giải                                ── [Lookup Match Output]──► Tra khóa giải đấu
 Tra khóa giải đấu                                ── [Lookup Match Output]──► Tra khóa trận đấu
 Tra khóa trận đấu                                ── [Lookup Match Output]──► Tra khóa cầu thủ
@@ -1876,22 +1875,30 @@ Bỏ qua dòng đã có trong Fact                     ── [Lookup No Match O
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(appearance_id AS NVARCHAR(50)) AS appearance_id,
-       CAST(game_id AS NVARCHAR(20)) AS game_id,
-       CAST(player_id AS NVARCHAR(20)) AS player_id,
-       CAST(player_club_id AS NVARCHAR(20)) AS player_club_id,
-       CAST([date] AS NVARCHAR(30)) AS game_date_raw,
-       CAST(competition_id AS NVARCHAR(20)) AS competition_id,
-       CAST(yellow_cards AS NVARCHAR(10)) AS yellow_cards,
-       CAST(red_cards AS NVARCHAR(10)) AS red_cards,
-       CAST(goals AS NVARCHAR(10)) AS goals,
-       CAST(assists AS NVARCHAR(10)) AS assists,
-       CAST(minutes_played AS NVARCHAR(10)) AS minutes_played,
-       CAST(batch_id AS NVARCHAR(30)) AS batch_id
-FROM dbo.stg_raw_appearances AS s
-/* Lọc trước: bỏ lượt ra sân đã có trong fact (theo appearance_id) để Sort phía sau chỉ nhận dòng mới */
-WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_player_appearance f
-                  WHERE f.appearance_id = LTRIM(RTRIM(CAST(s.appearance_id AS NVARCHAR(50)))))
+/* Loại trùng theo appearance_id ngay tại nguồn (thay component Sort): mỗi appearance_id giữ 1 dòng.
+   NOT EXISTS: bỏ lượt ra sân đã có trong fact, để chạy lại không phải xử lý lại dữ liệu cũ. */
+SELECT appearance_id, game_id, player_id, player_club_id, game_date_raw, competition_id,
+       yellow_cards, red_cards, goals, assists, minutes_played, batch_id
+FROM (
+    SELECT CAST(appearance_id AS NVARCHAR(50)) AS appearance_id,
+           CAST(game_id AS NVARCHAR(20)) AS game_id,
+           CAST(player_id AS NVARCHAR(20)) AS player_id,
+           CAST(player_club_id AS NVARCHAR(20)) AS player_club_id,
+           CAST([date] AS NVARCHAR(30)) AS game_date_raw,
+           CAST(competition_id AS NVARCHAR(20)) AS competition_id,
+           CAST(yellow_cards AS NVARCHAR(10)) AS yellow_cards,
+           CAST(red_cards AS NVARCHAR(10)) AS red_cards,
+           CAST(goals AS NVARCHAR(10)) AS goals,
+           CAST(assists AS NVARCHAR(10)) AS assists,
+           CAST(minutes_played AS NVARCHAR(10)) AS minutes_played,
+           CAST(batch_id AS NVARCHAR(30)) AS batch_id,
+           ROW_NUMBER() OVER (PARTITION BY LTRIM(RTRIM(CAST(appearance_id AS NVARCHAR(50))))
+                              ORDER BY CAST(batch_id AS NVARCHAR(30)) DESC) AS rn
+    FROM dbo.stg_raw_appearances AS s
+    WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_player_appearance f WITH (NOLOCK)
+                      WHERE f.appearance_id = LTRIM(RTRIM(CAST(s.appearance_id AS NVARCHAR(50)))))
+) AS q
+WHERE rn = 1
 ```
 
 **4.3.2.2. Lấy mùa giải của trận** · *Lookup*
@@ -2002,12 +2009,19 @@ Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason
     (DT_WSTR,200)"Lỗi ép kiểu (Data Conversion)"
     ```
 
-**4.3.2.7. Loại trùng theo appearance_id** · *Sort*
+**4.3.2.7. Tính khóa ngày và cột đếm** · *Derived Column*
 
-Sắp xếp theo khóa tự nhiên và **loại dòng trùng khóa** (Remove rows with duplicate sort values).
+Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
 
-- **Khóa sắp xếp:** `appearance_id`
-- **Loại trùng:** Có (EliminateDuplicates = True)
+- **Biểu thức:**
+  - cột mới `date_key` (DT_I4):
+    ```
+    (DT_I4)(YEAR(c_game_date) * 10000 + MONTH(c_game_date) * 100 + DAY(c_game_date))
+    ```
+  - cột mới `appearance_count` (DT_UI1):
+    ```
+    (DT_UI1)1
+    ```
 
 **4.3.2.8. Ghi lý do vi phạm quy tắc** · *Derived Column*
 
@@ -2034,28 +2048,7 @@ Ghi dữ liệu vào bảng đích (Fast load).
 - **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
 - **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
 
-**4.3.2.10. Tính khóa ngày và cột đếm** · *Derived Column*
-
-Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
-
-- **Biểu thức:**
-  - cột mới `date_key` (DT_I4):
-    ```
-    (DT_I4)(YEAR(c_game_date) * 10000 + MONTH(c_game_date) * 100 + DAY(c_game_date))
-    ```
-  - cột mới `appearance_count` (DT_UI1):
-    ```
-    (DT_UI1)1
-    ```
-
-**4.3.2.11. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
-
-Ghi dữ liệu vào bảng đích (Fast load).
-
-- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
-- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
-
-**4.3.2.12. Tra khóa mùa giải** · *Lookup*
+**4.3.2.10. Tra khóa mùa giải** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2069,7 +2062,14 @@ SELECT season_start_year, season_key FROM dbo.dim_season WHERE season_key <> -1
 - **Cột lấy về:** `season_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.2.13. Tra khóa giải đấu** · *Lookup*
+**4.3.2.11. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
+
+Ghi dữ liệu vào bảng đích (Fast load).
+
+- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
+- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
+
+**4.3.2.12. Tra khóa giải đấu** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2083,7 +2083,7 @@ SELECT competition_id, competition_key FROM dbo.dim_competition
 - **Cột lấy về:** `competition_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.2.14. Tra khóa trận đấu** · *Lookup*
+**4.3.2.13. Tra khóa trận đấu** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2097,7 +2097,7 @@ SELECT game_id, match_key FROM dbo.dim_match
 - **Cột lấy về:** `match_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.2.15. Tra khóa cầu thủ** · *Lookup*
+**4.3.2.14. Tra khóa cầu thủ** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2111,7 +2111,7 @@ SELECT player_id, player_key, date_of_birth FROM dbo.dim_player WHERE is_current
 - **Cột lấy về:** `player_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.2.16. Tra khóa CLB** · *Lookup*
+**4.3.2.15. Tra khóa CLB** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2125,7 +2125,7 @@ SELECT club_id, club_key FROM dbo.dim_club WHERE is_current = 1
 - **Cột lấy về:** `club_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.2.17. Gán khóa Unknown cho khóa không tra được** · *Derived Column*
+**4.3.2.16. Gán khóa Unknown cho khóa không tra được** · *Derived Column*
 
 Khóa dimension không tra được (NULL) được thay bằng **-1**, trỏ về dòng Unknown của dimension.
 
@@ -2151,7 +2151,7 @@ Khóa dimension không tra được (NULL) được thay bằng **-1**, trỏ v�
     REPLACENULL(club_key,-1)
     ```
 
-**4.3.2.18. Bỏ qua dòng đã có trong Fact** · *Lookup*
+**4.3.2.17. Bỏ qua dòng đã có trong Fact** · *Lookup*
 
 **Lookup chính bảng fact** theo khóa của grain: dòng đã có trong kho đi vào Match Output và **bị bỏ** (không nối tiếp); chỉ dòng **No Match** (chưa có) mới được nạp → chạy lại nhiều lần không sinh dữ liệu trùng, dữ liệu đã ghi không bị sửa.
 
@@ -2165,7 +2165,7 @@ SELECT appearance_id FROM dbo.fact_player_appearance
 - **Cột lấy về:** (không lấy cột nào — chỉ kiểm tra tồn tại)
 - **Không tìm thấy:** Gửi sang **Lookup No Match Output**
 
-**4.3.2.19. Ghi vào Fact_Player_Appearance** · *OLE DB Destination*
+**4.3.2.18. Ghi vào Fact_Player_Appearance** · *OLE DB Destination*
 
 Ghi dữ liệu vào bảng đích (Fast load).
 
@@ -2176,7 +2176,7 @@ Ghi dữ liệu vào bảng đích (Fast load).
 
 | Đích | Cách nạp | Số component |
 |---|---|---|
-| `Fact_Player_Valuation` | Nạp gia tăng | 16 |
+| `Fact_Player_Valuation` | Nạp gia tăng | 15 |
 
 Grain: 1 lần định giá của 1 cầu thủ tại 1 ngày (periodic snapshot). `value_change_eur` tính bằng hàm LAG ngay trong câu nguồn (SSIS không có phép tính theo dòng trước); tuổi tại ngày định giá tính bằng Derived Column.
 
@@ -2187,12 +2187,11 @@ Grain: 1 lần định giá của 1 cầu thủ tại 1 ngày (periodic snapshot
 Làm sạch chuỗi                                   ────► Ép kiểu dữ liệu
 Ép kiểu dữ liệu                                  ────► Kiểm tra hợp lệ và cửa sổ nạp
 Ép kiểu dữ liệu                                  ── [Data Conversion Error Output]──► Ghi lý do lỗi ép kiểu
-Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Loại trùng theo cầu thủ và ngày
+Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Tính khóa ngày và cột đếm
 Kiểm tra hợp lệ và cửa sổ nạp                    ── [Reject]──► Ghi lý do vi phạm quy tắc
 Ghi lý do lỗi ép kiểu                            ────► Lưu dòng lỗi ép kiểu vào etl_reject
-Loại trùng theo cầu thủ và ngày                  ────► Tính khóa ngày và cột đếm
-Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tính khóa ngày và cột đếm                        ────► Tra khóa cầu thủ và ngày sinh
+Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tra khóa cầu thủ và ngày sinh                    ── [Lookup Match Output]──► Tra khóa CLB
 Tra khóa CLB                                     ── [Lookup Match Output]──► Tra khóa giải đấu
 Tra khóa giải đấu                                ── [Lookup Match Output]──► Tính tuổi và gán khóa Unknown
@@ -2210,7 +2209,9 @@ Bỏ qua dòng đã có trong Fact                     ── [Lookup No Match O
 - **Câu truy vấn:**
 
 ```sql
-WITH v AS (
+/* Loại trùng theo (cầu thủ, ngày) ngay tại nguồn (thay component Sort), làm TRƯỚC khi tính LAG.
+   NOT EXISTS (sau LAG): bỏ lần định giá đã có trong fact. */
+WITH v0 AS (
     SELECT CAST(player_id AS NVARCHAR(20))                            AS player_id,
            CAST([date] AS NVARCHAR(30))                               AS valuation_date_raw,
            CAST(market_value_in_eur AS NVARCHAR(30))                  AS market_value,
@@ -2218,18 +2219,21 @@ WITH v AS (
            CAST(player_club_domestic_competition_id AS NVARCHAR(20))  AS competition_id,
            CAST(batch_id AS NVARCHAR(30))                             AS batch_id,
            TRY_CAST(LEFT(CAST([date] AS NVARCHAR(30)), 10) AS DATE)   AS d,
-           TRY_CAST(CAST(market_value_in_eur AS NVARCHAR(30)) AS BIGINT) AS mv
+           TRY_CAST(CAST(market_value_in_eur AS NVARCHAR(30)) AS BIGINT) AS mv,
+           ROW_NUMBER() OVER (PARTITION BY LTRIM(RTRIM(CAST(player_id AS NVARCHAR(20)))),
+                                           TRY_CAST(LEFT(CAST([date] AS NVARCHAR(30)), 10) AS DATE)
+                              ORDER BY CAST(batch_id AS NVARCHAR(30)) DESC) AS rn
     FROM dbo.stg_raw_player_valuations
 ),
+v AS (SELECT * FROM v0 WHERE rn = 1),
 w AS (
 SELECT player_id, valuation_date_raw, market_value, current_club_id, competition_id, batch_id,
        CAST(mv - LAG(mv) OVER (PARTITION BY player_id ORDER BY d) AS BIGINT) AS value_change_eur, d
 FROM v
 )
-/* Lọc trước SAU khi tính LAG: bỏ lần định giá đã có trong fact (theo cầu thủ + ngày) */
 SELECT player_id, valuation_date_raw, market_value, current_club_id, competition_id, batch_id, value_change_eur
 FROM w
-WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_player_valuation f
+WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_player_valuation f WITH (NOLOCK)
                   JOIN football_dwh_dw.dbo.dim_player p ON p.player_key = f.player_key
                   WHERE p.player_id = TRY_CAST(w.player_id AS INT)
                     AND f.date_key = YEAR(w.d) * 10000 + MONTH(w.d) * 100 + DAY(w.d));
@@ -2301,12 +2305,19 @@ Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason
     (DT_WSTR,200)"Lỗi ép kiểu (Data Conversion)"
     ```
 
-**4.3.3.6. Loại trùng theo cầu thủ và ngày** · *Sort*
+**4.3.3.6. Tính khóa ngày và cột đếm** · *Derived Column*
 
-Sắp xếp theo khóa tự nhiên và **loại dòng trùng khóa** (Remove rows with duplicate sort values).
+Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
 
-- **Khóa sắp xếp:** `c_player_id`, `c_valuation_date`
-- **Loại trùng:** Có (EliminateDuplicates = True)
+- **Biểu thức:**
+  - cột mới `date_key` (DT_I4):
+    ```
+    (DT_I4)(YEAR(c_valuation_date) * 10000 + MONTH(c_valuation_date) * 100 + DAY(c_valuation_date))
+    ```
+  - cột mới `valuation_count` (DT_UI1):
+    ```
+    (DT_UI1)1
+    ```
 
 **4.3.3.7. Ghi lý do vi phạm quy tắc** · *Derived Column*
 
@@ -2333,28 +2344,7 @@ Ghi dữ liệu vào bảng đích (Fast load).
 - **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
 - **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
 
-**4.3.3.9. Tính khóa ngày và cột đếm** · *Derived Column*
-
-Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
-
-- **Biểu thức:**
-  - cột mới `date_key` (DT_I4):
-    ```
-    (DT_I4)(YEAR(c_valuation_date) * 10000 + MONTH(c_valuation_date) * 100 + DAY(c_valuation_date))
-    ```
-  - cột mới `valuation_count` (DT_UI1):
-    ```
-    (DT_UI1)1
-    ```
-
-**4.3.3.10. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
-
-Ghi dữ liệu vào bảng đích (Fast load).
-
-- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
-- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
-
-**4.3.3.11. Tra khóa cầu thủ và ngày sinh** · *Lookup*
+**4.3.3.9. Tra khóa cầu thủ và ngày sinh** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2368,7 +2358,14 @@ SELECT player_id, player_key, date_of_birth FROM dbo.dim_player WHERE is_current
 - **Cột lấy về:** `player_key`, `date_of_birth`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.3.12. Tra khóa CLB** · *Lookup*
+**4.3.3.10. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
+
+Ghi dữ liệu vào bảng đích (Fast load).
+
+- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
+- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
+
+**4.3.3.11. Tra khóa CLB** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2382,7 +2379,7 @@ SELECT club_id, club_key FROM dbo.dim_club WHERE is_current = 1
 - **Cột lấy về:** `club_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.3.13. Tra khóa giải đấu** · *Lookup*
+**4.3.3.12. Tra khóa giải đấu** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2396,7 +2393,7 @@ SELECT competition_id, competition_key FROM dbo.dim_competition
 - **Cột lấy về:** `competition_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.3.14. Tính tuổi và gán khóa Unknown** · *Derived Column*
+**4.3.3.13. Tính tuổi và gán khóa Unknown** · *Derived Column*
 
 Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
 
@@ -2418,7 +2415,7 @@ Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhó
     ISNULL(date_of_birth) || ISNULL(c_valuation_date) ? NULL(DT_UI1) : ((DATEDIFF("yyyy",date_of_birth,c_valuation_date) - ((MONTH(c_valuation_date) * 100 + DAY(c_valuation_date)) < (MONTH(date_of_birth) * 100 + DAY(date_of_birth)) ? 1 : 0)) < 14 || (DATEDIFF("yyyy",date_of_birth,c_valuation_date) - ((MONTH(c_valuation_date) * 100 + DAY(c_valuation_date)) < (MONTH(date_of_birth) * 100 + DAY(date_of_birth)) ? 1 : 0)) > 100 ? NULL(DT_UI1) : (DT_UI1)(DATEDIFF("yyyy",date_of_birth,c_valuation_date) - ((MONTH(c_valuation_date) * 100 + DAY(c_valuation_date)) < (MONTH(date_of_birth) * 100 + DAY(date_of_birth)) ? 1 : 0)))
     ```
 
-**4.3.3.15. Bỏ qua dòng đã có trong Fact** · *Lookup*
+**4.3.3.14. Bỏ qua dòng đã có trong Fact** · *Lookup*
 
 **Lookup chính bảng fact** theo khóa của grain: dòng đã có trong kho đi vào Match Output và **bị bỏ** (không nối tiếp); chỉ dòng **No Match** (chưa có) mới được nạp → chạy lại nhiều lần không sinh dữ liệu trùng, dữ liệu đã ghi không bị sửa.
 
@@ -2432,7 +2429,7 @@ SELECT player_key, date_key FROM dbo.fact_player_valuation
 - **Cột lấy về:** (không lấy cột nào — chỉ kiểm tra tồn tại)
 - **Không tìm thấy:** Gửi sang **Lookup No Match Output**
 
-**4.3.3.16. Ghi vào Fact_Player_Valuation** · *OLE DB Destination*
+**4.3.3.15. Ghi vào Fact_Player_Valuation** · *OLE DB Destination*
 
 Ghi dữ liệu vào bảng đích (Fast load).
 
@@ -2443,7 +2440,7 @@ Ghi dữ liệu vào bảng đích (Fast load).
 
 | Đích | Cách nạp | Số component |
 |---|---|---|
-| `Fact_Transfer` | Nạp gia tăng | 18 |
+| `Fact_Transfer` | Nạp gia tăng | 17 |
 
 Grain: 1 lần chuyển nhượng. Phí trống (không công bố) giữ NULL, khác phí 0 (miễn phí/cho mượn); hai trường hợp được phân biệt qua Dim_Transfer_Type. Tính thêm `fee_premium_eur` (phí − giá trị thị trường) và tuổi tại ngày chuyển nhượng.
 
@@ -2454,12 +2451,11 @@ Grain: 1 lần chuyển nhượng. Phí trống (không công bố) giữ NULL, 
 Làm sạch chuỗi                                   ────► Ép kiểu dữ liệu
 Ép kiểu dữ liệu                                  ────► Kiểm tra hợp lệ và cửa sổ nạp
 Ép kiểu dữ liệu                                  ── [Data Conversion Error Output]──► Ghi lý do lỗi ép kiểu
-Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Loại trùng theo thương vụ
+Kiểm tra hợp lệ và cửa sổ nạp                    ── [Valid]──► Tính loại phí phí chênh và khóa ngày
 Kiểm tra hợp lệ và cửa sổ nạp                    ── [Reject]──► Ghi lý do vi phạm quy tắc
 Ghi lý do lỗi ép kiểu                            ────► Lưu dòng lỗi ép kiểu vào etl_reject
-Loại trùng theo thương vụ                        ────► Tính loại phí phí chênh và khóa ngày
-Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tính loại phí phí chênh và khóa ngày             ────► Tra khóa mùa giải
+Ghi lý do vi phạm quy tắc                        ────► Lưu dòng vi phạm quy tắc vào etl_reject
 Tra khóa mùa giải                                ── [Lookup Match Output]──► Tra khóa cầu thủ và ngày sinh
 Tra khóa cầu thủ và ngày sinh                    ── [Lookup Match Output]──► Tra khóa CLB đi
 Tra khóa CLB đi                                  ── [Lookup Match Output]──► Tra khóa CLB đến
@@ -2479,25 +2475,34 @@ Bỏ qua dòng đã có trong Fact                     ── [Lookup No Match O
 - **Câu truy vấn:**
 
 ```sql
-SELECT CAST(player_id AS NVARCHAR(20)) AS player_id,
-       CAST(transfer_date AS NVARCHAR(30)) AS transfer_date_raw,
-       CAST(transfer_season AS NVARCHAR(10)) AS transfer_season,
-       CAST(from_club_id AS NVARCHAR(20)) AS from_club_id,
-       CAST(to_club_id AS NVARCHAR(20)) AS to_club_id,
-       CAST(transfer_fee AS NVARCHAR(30)) AS transfer_fee,
-       CAST(market_value_in_eur AS NVARCHAR(30)) AS market_value,
-       CAST(batch_id AS NVARCHAR(30)) AS batch_id
-FROM dbo.stg_raw_transfers AS s
-/* Lọc trước: bỏ thương vụ (cầu thủ, ngày, CLB đi, CLB đến) đã có trong fact */
-WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_transfer f
-                  JOIN football_dwh_dw.dbo.dim_player p ON p.player_key = f.player_key
-                  JOIN football_dwh_dw.dbo.dim_club cf ON cf.club_key = f.from_club_key
-                  JOIN football_dwh_dw.dbo.dim_club ct ON ct.club_key = f.to_club_key
-                  WHERE p.player_id = TRY_CAST(s.player_id AS INT)
-                    AND f.date_key = YEAR(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 10000
-                                   + MONTH(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 100
-                                   + DAY(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE))
-                    AND cf.club_id = TRY_CAST(s.from_club_id AS INT) AND ct.club_id = TRY_CAST(s.to_club_id AS INT))
+/* Loại trùng theo (cầu thủ, ngày, CLB đi, CLB đến) ngay tại nguồn (thay component Sort).
+   NOT EXISTS: bỏ thương vụ đã có trong fact. */
+SELECT player_id, transfer_date_raw, transfer_season, from_club_id, to_club_id, transfer_fee, market_value, batch_id
+FROM (
+    SELECT CAST(player_id AS NVARCHAR(20)) AS player_id,
+           CAST(transfer_date AS NVARCHAR(30)) AS transfer_date_raw,
+           CAST(transfer_season AS NVARCHAR(10)) AS transfer_season,
+           CAST(from_club_id AS NVARCHAR(20)) AS from_club_id,
+           CAST(to_club_id AS NVARCHAR(20)) AS to_club_id,
+           CAST(transfer_fee AS NVARCHAR(30)) AS transfer_fee,
+           CAST(market_value_in_eur AS NVARCHAR(30)) AS market_value,
+           CAST(batch_id AS NVARCHAR(30)) AS batch_id,
+           ROW_NUMBER() OVER (PARTITION BY LTRIM(RTRIM(CAST(player_id AS NVARCHAR(20)))),
+                                           LEFT(LTRIM(RTRIM(CAST(transfer_date AS NVARCHAR(30)))), 10),
+                                           LTRIM(RTRIM(CAST(from_club_id AS NVARCHAR(20)))), LTRIM(RTRIM(CAST(to_club_id AS NVARCHAR(20))))
+                              ORDER BY CAST(batch_id AS NVARCHAR(30)) DESC) AS rn
+    FROM dbo.stg_raw_transfers AS s
+    WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_transfer f WITH (NOLOCK)
+                      JOIN football_dwh_dw.dbo.dim_player p ON p.player_key = f.player_key
+                      JOIN football_dwh_dw.dbo.dim_club cf ON cf.club_key = f.from_club_key
+                      JOIN football_dwh_dw.dbo.dim_club ct ON ct.club_key = f.to_club_key
+                      WHERE p.player_id = TRY_CAST(s.player_id AS INT)
+                        AND f.date_key = YEAR(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 10000
+                                       + MONTH(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 100
+                                       + DAY(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE))
+                        AND cf.club_id = TRY_CAST(s.from_club_id AS INT) AND ct.club_id = TRY_CAST(s.to_club_id AS INT))
+) AS q
+WHERE rn = 1
 ```
 
 **4.3.4.2. Làm sạch chuỗi** · *Derived Column*
@@ -2574,39 +2579,7 @@ Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason
     (DT_WSTR,200)"Lỗi ép kiểu (Data Conversion)"
     ```
 
-**4.3.4.6. Loại trùng theo thương vụ** · *Sort*
-
-Sắp xếp theo khóa tự nhiên và **loại dòng trùng khóa** (Remove rows with duplicate sort values).
-
-- **Khóa sắp xếp:** `c_player_id`, `c_transfer_date`, `c_from_club_id`, `c_to_club_id`
-- **Loại trùng:** Có (EliminateDuplicates = True)
-
-**4.3.4.7. Ghi lý do vi phạm quy tắc** · *Derived Column*
-
-Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason`) để ghi vào bảng `etl_reject`.
-
-- **Biểu thức:**
-  - cột mới `rj_source_table` (DT_WSTR(100)):
-    ```
-    (DT_WSTR,100)"stg_raw_transfers"
-    ```
-  - cột mới `rj_natural_key` (DT_WSTR(200)):
-    ```
-    (DT_WSTR,200)(REPLACENULL(player_id,"") + "|" + REPLACENULL(transfer_date_raw,""))
-    ```
-  - cột mới `rj_reason` (DT_WSTR(200)):
-    ```
-    (DT_WSTR,200)"Thiếu khóa hoặc số tiền âm"
-    ```
-
-**4.3.4.8. Lưu dòng lỗi ép kiểu vào etl_reject** · *OLE DB Destination*
-
-Ghi dữ liệu vào bảng đích (Fast load).
-
-- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
-- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
-
-**4.3.4.9. Tính loại phí phí chênh và khóa ngày** · *Derived Column*
+**4.3.4.6. Tính loại phí phí chênh và khóa ngày** · *Derived Column*
 
 Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
 
@@ -2640,14 +2613,32 @@ Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhó
     (DT_UI1)1
     ```
 
-**4.3.4.10. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
+**4.3.4.7. Ghi lý do vi phạm quy tắc** · *Derived Column*
+
+Tạo 3 cột mô tả dòng bị loại (`source_table`, `natural_key`, `reason`) để ghi vào bảng `etl_reject`.
+
+- **Biểu thức:**
+  - cột mới `rj_source_table` (DT_WSTR(100)):
+    ```
+    (DT_WSTR,100)"stg_raw_transfers"
+    ```
+  - cột mới `rj_natural_key` (DT_WSTR(200)):
+    ```
+    (DT_WSTR,200)(REPLACENULL(player_id,"") + "|" + REPLACENULL(transfer_date_raw,""))
+    ```
+  - cột mới `rj_reason` (DT_WSTR(200)):
+    ```
+    (DT_WSTR,200)"Thiếu khóa hoặc số tiền âm"
+    ```
+
+**4.3.4.8. Lưu dòng lỗi ép kiểu vào etl_reject** · *OLE DB Destination*
 
 Ghi dữ liệu vào bảng đích (Fast load).
 
 - **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
 - **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
 
-**4.3.4.11. Tra khóa mùa giải** · *Lookup*
+**4.3.4.9. Tra khóa mùa giải** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2661,7 +2652,14 @@ SELECT season_short, season_key FROM dbo.dim_season WHERE season_key <> -1
 - **Cột lấy về:** `season_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.4.12. Tra khóa cầu thủ và ngày sinh** · *Lookup*
+**4.3.4.10. Lưu dòng vi phạm quy tắc vào etl_reject** · *OLE DB Destination*
+
+Ghi dữ liệu vào bảng đích (Fast load).
+
+- **Kết nối:** `localhost.football_dwh_staging` — **Bảng đích:** `[dbo].[etl_reject]` — **Chế độ:** Table or view – fast load
+- **Ánh xạ cột (4):** `batch_id`, `rj_source_table`→`source_table`, `rj_natural_key`→`natural_key`, `rj_reason`→`reason`
+
+**4.3.4.11. Tra khóa cầu thủ và ngày sinh** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2675,7 +2673,7 @@ SELECT player_id, player_key, date_of_birth FROM dbo.dim_player WHERE is_current
 - **Cột lấy về:** `player_key`, `date_of_birth`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.4.13. Tra khóa CLB đi** · *Lookup*
+**4.3.4.12. Tra khóa CLB đi** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2689,7 +2687,7 @@ SELECT club_id, club_key FROM dbo.dim_club WHERE is_current = 1
 - **Cột lấy về:** `from_club_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.4.14. Tra khóa CLB đến** · *Lookup*
+**4.3.4.13. Tra khóa CLB đến** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2703,7 +2701,7 @@ SELECT club_id, club_key FROM dbo.dim_club WHERE is_current = 1
 - **Cột lấy về:** `to_club_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.4.15. Tra khóa loại chuyển nhượng** · *Lookup*
+**4.3.4.14. Tra khóa loại chuyển nhượng** · *Lookup*
 
 Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy thì bỏ qua lỗi (Ignore failure) → khóa = NULL, sau đó đổi thành -1.
 
@@ -2717,7 +2715,7 @@ SELECT fee_status, fee_band, transfer_type_key FROM dbo.dim_transfer_type
 - **Cột lấy về:** `transfer_type_key`
 - **Không tìm thấy:** Bỏ qua lỗi (Ignore failure): các cột trả về = NULL
 
-**4.3.4.16. Tính tuổi và gán khóa Unknown** · *Derived Column*
+**4.3.4.15. Tính tuổi và gán khóa Unknown** · *Derived Column*
 
 Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhóm hóa thành band, khóa ngày, cờ 0/1, measure dẫn xuất).
 
@@ -2751,7 +2749,7 @@ Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhó
     ISNULL(date_of_birth) || ISNULL(c_transfer_date) ? NULL(DT_UI1) : (DT_UI1)((DATEDIFF("yyyy",date_of_birth,c_transfer_date) - ((MONTH(c_transfer_date) * 100 + DAY(c_transfer_date)) < (MONTH(date_of_birth) * 100 + DAY(date_of_birth)) ? 1 : 0)) < 18 ? 1 : 0)
     ```
 
-**4.3.4.17. Bỏ qua dòng đã có trong Fact** · *Lookup*
+**4.3.4.16. Bỏ qua dòng đã có trong Fact** · *Lookup*
 
 **Lookup chính bảng fact** theo khóa của grain: dòng đã có trong kho đi vào Match Output và **bị bỏ** (không nối tiếp); chỉ dòng **No Match** (chưa có) mới được nạp → chạy lại nhiều lần không sinh dữ liệu trùng, dữ liệu đã ghi không bị sửa.
 
@@ -2765,7 +2763,7 @@ SELECT player_key, date_key, from_club_key, to_club_key FROM dbo.fact_transfer
 - **Cột lấy về:** (không lấy cột nào — chỉ kiểm tra tồn tại)
 - **Không tìm thấy:** Gửi sang **Lookup No Match Output**
 
-**4.3.4.18. Ghi vào Fact_Transfer** · *OLE DB Destination*
+**4.3.4.17. Ghi vào Fact_Transfer** · *OLE DB Destination*
 
 Ghi dữ liệu vào bảng đích (Fast load).
 
