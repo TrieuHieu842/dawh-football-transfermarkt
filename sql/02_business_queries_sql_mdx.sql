@@ -278,7 +278,7 @@ WITH ClubSpending AS (
         SUM(transfer_fee_eur) / 1000000.0 AS total_expenditure_mil,
         SUM(fee_premium_eur) / 1000000.0 AS total_premium_paid_mil
     FROM dbo.fact_transfer
-    WHERE to_club_key <> -1 AND transfer_fee_eur IS NOT NULL
+    WHERE to_club_key > 0 AND transfer_fee_eur IS NOT NULL      -- bỏ -1 Không rõ, -2 Không thuộc CLB nào
     GROUP BY to_club_key, season_key
 ),
 ClubSelling AS (
@@ -288,7 +288,7 @@ ClubSelling AS (
         COUNT(*) AS total_sold_players,
         SUM(transfer_fee_eur) / 1000000.0 AS total_income_mil
     FROM dbo.fact_transfer
-    WHERE from_club_key <> -1 AND transfer_fee_eur IS NOT NULL
+    WHERE from_club_key > 0 AND transfer_fee_eur IS NOT NULL
     GROUP BY from_club_key, season_key
 )
 SELECT TOP 15
@@ -327,7 +327,7 @@ SELECT
    [Measures].[Chi tiêu ròng (triệu €)], [Measures].[Phí chênh đã trả (triệu €)]} ON COLUMNS,
   TOPCOUNT(
     {[Mùa giải].[Mùa giải].[2013/14], [Mùa giải].[Mùa giải].[2012/13], [Mùa giải].[Mùa giải].[2011/12]} *
-      EXCEPT(NONEMPTY([CLB đến].[CLB].[CLB].MEMBERS, [Measures].[Phí chuyển nhượng]), {[CLB đến].[CLB].&[-1]}),
+      EXCEPT(NONEMPTY([CLB đến].[CLB].[CLB].MEMBERS, [Measures].[Phí chuyển nhượng]), {[CLB đến].[CLB].&[-1], [CLB đến].[CLB].&[-2]}),
     15,
     [Measures].[Chi tiêu ròng]
   ) ON ROWS
@@ -342,27 +342,31 @@ FROM [Thị trường cầu thủ];
     diễn biến ra sao? Tỷ trọng các thương vụ 'Miễn phí' so với thương vụ 'Bom tấn > 50 triệu Euro'?"
    ============================================================================================== */
 
--- [5.1] TRUY VẤN T-SQL NÂNG CAO (SỬ DỤNG GROUP BY CUBE ĐỂ TẠO MA TRẬN ĐA CHIỀU TỔNG HỢP SUB-TOTAL VÀ GRAND-TOTAL)
+-- [5.1] TRUY VẤN T-SQL NÂNG CAO (GROUP BY CUBE TẠO SUB-TOTAL VÀ GRAND-TOTAL; GROUPING() + CASE GẮN NHÃN DÒNG TỔNG,
+--       KHÔNG DÙNG COALESCE/IS NULL VÌ NULL CỦA DÒNG TỔNG KHÁC NULL THẬT; MẪU SỐ TỈ TRỌNG CHỈ LẤY DÒNG TỔNG MÙA,
+--       KHÔNG CỘNG LẪN DÒNG CHI TIẾT VỚI DÒNG SUB-TOTAL)
 SELECT 
-    COALESCE(s.season_label, N'TẤT CẢ MÙA GIẢI') AS season_label,
-    COALESCE(tt.fee_status, N'TẤT CẢ TRẠNG THÁI') AS fee_status,
-    COALESCE(tt.fee_band, N'TẤT CẢ PHÂN KHÚC') AS fee_band,
+    CASE WHEN GROUPING(s.season_label) = 1 THEN N'TẤT CẢ MÙA GIẢI' ELSE s.season_label END AS season_label,
+    CASE WHEN GROUPING(tt.fee_status) = 1 THEN N'TẤT CẢ TRẠNG THÁI' ELSE tt.fee_status END AS fee_status,
+    CASE WHEN GROUPING(tt.fee_band) = 1 THEN N'TẤT CẢ PHÂN KHÚC' ELSE tt.fee_band END AS fee_band,
+    GROUPING_ID(s.season_label, tt.fee_status, tt.fee_band) AS grouping_level,
     COUNT(*) AS total_transactions,
     ROUND(SUM(ISNULL(f.transfer_fee_eur, 0)) / 1000000.0, 2) AS total_fee_volume_mil_eur,
     ROUND(AVG(CAST(ISNULL(f.transfer_fee_eur, 0) AS FLOAT)) / 1000000.0, 2) AS avg_fee_mil_eur,
-    ROUND(COUNT(*) * 100.0 / NULLIF(SUM(COUNT(*)) OVER (PARTITION BY s.season_label), 0), 2) AS percentage_share_in_season
+    ROUND(COUNT(*) * 100.0 / NULLIF(SUM(CASE WHEN GROUPING(tt.fee_status) = 1 AND GROUPING(tt.fee_band) = 1
+                                             THEN COUNT(*) END)
+                                    OVER (PARTITION BY GROUPING(s.season_label), s.season_label), 0), 2) AS percentage_share_in_season
 FROM dbo.fact_transfer f
 JOIN dbo.dim_transfer_type tt ON f.transfer_type_key = tt.transfer_type_key
 JOIN dbo.dim_season s ON f.season_key = s.season_key
 WHERE s.season_label IN ('2013/14', '2012/13')
 GROUP BY CUBE(s.season_label, tt.fee_status, tt.fee_band)
-HAVING (tt.fee_status IS NOT NULL AND tt.fee_band IS NOT NULL) 
-    OR (s.season_label IS NOT NULL AND tt.fee_status IS NULL AND tt.fee_band IS NULL)
-    OR (s.season_label IS NULL AND tt.fee_status IS NULL AND tt.fee_band IS NULL)
+-- Bỏ tập nhóm "phân khúc phí không kèm trạng thái" (khoảng phí vốn nằm trong trạng thái "Có phí")
+HAVING NOT (GROUPING(tt.fee_status) = 1 AND GROUPING(tt.fee_band) = 0)
 ORDER BY 
-    CASE WHEN s.season_label IS NULL THEN 1 ELSE 0 END, s.season_label,
-    CASE WHEN tt.fee_status IS NULL THEN 1 ELSE 0 END, tt.fee_status,
-    total_fee_volume_mil_eur DESC;
+    GROUPING(s.season_label), s.season_label,
+    GROUPING(tt.fee_status) DESC, tt.fee_status,
+    GROUPING(tt.fee_band) DESC, total_fee_volume_mil_eur DESC;
 GO
 
 /* [5.2] TRUY VẤN MDX ĐA CHIỀU TƯƠNG ỨNG
@@ -451,4 +455,351 @@ SELECT
     [Measures].[Điểm mỗi trận]
   ) ON ROWS
 FROM [Hiệu suất đội bóng];
+------------------------------------------------------------------------------------------------- */
+
+
+/* ==============================================================================================
+   CHỦ ĐỀ 7: CƠ CẤU GHI BÀN THEO PHÂN CẤP LIÊN ĐOÀN → QUỐC GIA → GIẢI ĐẤU (ROLLUP & GROUPING_ID)
+   Câu hỏi kinh doanh:
+   "Mùa 2024/25, khu vực / quốc gia / giải đấu nào có mật độ bàn thắng cao nhất?
+    Tổng phụ ở từng cấp phân cấp là bao nhiêu?"
+   ============================================================================================== */
+
+-- [7.1] TRUY VẤN T-SQL (ROLLUP BỎ DẦN CỘT TỪ PHẢI SANG TRÁI; GROUPING_ID MÃ HÓA MỨC TỔNG HỢP;
+--       GROUPING + CASE PHÂN BIỆT NULL CỦA DÒNG TỔNG VỚI NULL THẬT TRONG DỮ LIỆU)
+SELECT
+    GROUPING_ID(c.confederation, c.country_name, c.competition_name) AS muc_tong_hop,   -- 0 giải | 1 quốc gia | 3 liên đoàn | 7 tổng chung
+    CASE WHEN GROUPING(c.confederation) = 1 THEN N'TỔNG CHUNG' ELSE c.confederation END AS lien_doan,
+    CASE WHEN GROUPING(c.country_name) = 1 THEN N'(Tổng liên đoàn)'
+         WHEN c.country_name IS NULL      THEN N'(Không gắn quốc gia)'
+         ELSE c.country_name END AS quoc_gia,
+    CASE WHEN GROUPING(c.competition_name) = 1 THEN N'(Tổng quốc gia)' ELSE c.competition_name END AS giai_dau,
+    COUNT(*)                                                       AS so_tran_doi,
+    SUM(f.goals_for)                                               AS ban_thang,
+    ROUND(1.0 * SUM(f.goals_for) / NULLIF(COUNT(*), 0), 2)         AS ban_moi_tran,       -- tỉ lệ của tổng, không lấy TB các tỉ lệ
+    ROUND(100.0 * SUM(f.is_clean_sheet) / NULLIF(COUNT(*), 0), 2)  AS ti_le_sach_luoi_pct
+FROM dbo.fact_team_match f
+JOIN dbo.dim_competition c ON c.competition_key = f.competition_key
+JOIN dbo.dim_season s      ON s.season_key = f.season_key
+WHERE s.season_label = '2024/25'
+GROUP BY ROLLUP(c.confederation, c.country_name, c.competition_name)
+ORDER BY GROUPING(c.confederation), c.confederation,
+         GROUPING(c.country_name), c.country_name,
+         GROUPING(c.competition_name), c.competition_name;
+GO
+
+/* [7.2] TRUY VẤN MDX TƯƠNG ỨNG (DESCENDANTS ... SELF_AND_BEFORE = ROLLUP TRÊN PHÂN CẤP CỦA CUBE)
+   Cube [Hiệu suất đội bóng]. Hàng cha (tổng phụ) hiện TRƯỚC hàng con, ngược với ORDER BY của câu SQL.
+-------------------------------------------------------------------------------------------------
+SELECT
+  {[Measures].[Số trận], [Measures].[Bàn thắng], [Measures].[Bàn thắng mỗi trận], [Measures].[Sạch lưới]} ON COLUMNS,
+  NON EMPTY
+    DESCENDANTS([Giải đấu].[Liên đoàn - Quốc gia - Giải đấu].[All],
+                [Giải đấu].[Liên đoàn - Quốc gia - Giải đấu].[Giải đấu], SELF_AND_BEFORE) ON ROWS
+FROM [Hiệu suất đội bóng]
+WHERE ([Mùa giải].[Mùa giải].[2024/25]);
+------------------------------------------------------------------------------------------------- */
+
+/* [7.3] MDX DRILL-DOWN (.CHILDREN) VÀ SẮP XẾP THEO ĐỘ ĐO (ORDER)
+   Từ liên đoàn châu Âu (UEFA) đi xuống cấp quốc gia, xếp quốc gia theo số bàn mỗi trận giảm dần.
+-------------------------------------------------------------------------------------------------
+SELECT
+  {[Measures].[Số trận], [Measures].[Bàn thắng], [Measures].[Bàn thắng mỗi trận]} ON COLUMNS,
+  NON EMPTY
+    ORDER([Giải đấu].[Liên đoàn - Quốc gia - Giải đấu].[Liên đoàn].[UEFA].CHILDREN,
+          [Measures].[Bàn thắng mỗi trận], BDESC) ON ROWS
+FROM [Hiệu suất đội bóng]
+WHERE ([Mùa giải].[Mùa giải].[2024/25]);
+------------------------------------------------------------------------------------------------- */
+
+
+/* ==============================================================================================
+   CHỦ ĐỀ 8: THỊ TRƯỜNG CHUYỂN NHƯỢNG THEO KHU VỰC MUA VÀ VỊ TRÍ CẦU THỦ (GROUPING SETS)
+   Câu hỏi kinh doanh:
+   "Mùa 2024/25, tiền chuyển nhượng chảy về khu vực nào và tập trung vào vị trí nào?
+    Chỉ cần tổng theo từng tiêu chí riêng và tổng chung, không cần ma trận chéo khu vực × vị trí."
+   ============================================================================================== */
+
+-- [8.1] TRUY VẤN T-SQL (GROUPING SETS CHỈ RÕ 3 TẬP NHÓM CẦN TÍNH; KHÔNG SINH DÒNG CHI TIẾT KHU VỰC × VỊ TRÍ)
+SELECT
+    CASE GROUPING_ID(c.confederation, p.position)
+         WHEN 1 THEN N'Theo khu vực CLB mua'
+         WHEN 2 THEN N'Theo vị trí'
+         WHEN 3 THEN N'Tổng chung' END                                        AS tap_nhom,
+    CASE WHEN GROUPING(c.confederation) = 1 THEN N'Tất cả' ELSE c.confederation END AS khu_vuc_clb_mua,
+    CASE WHEN GROUPING(p.position) = 1 THEN N'Tất cả' ELSE p.position END           AS vi_tri,
+    COUNT(*)                                                    AS so_thuong_vu,
+    COUNT(f.transfer_fee_eur)                                   AS so_thuong_vu_cong_bo_phi,  -- COUNT(cột) bỏ qua NULL
+    ROUND(SUM(f.transfer_fee_eur) / 1000000.0, 2)               AS tong_phi_trieu_eur,
+    ROUND(100.0 * SUM(f.transfer_fee_eur)
+          / NULLIF(SUM(SUM(f.transfer_fee_eur)) OVER (PARTITION BY GROUPING_ID(c.confederation, p.position)), 0), 2)
+                                                                AS ti_trong_trong_tap_nhom_pct
+FROM dbo.fact_transfer f
+JOIN dbo.dim_club c   ON c.club_key = f.to_club_key
+JOIN dbo.dim_player p ON p.player_key = f.player_key
+JOIN dbo.dim_season s ON s.season_key = f.season_key
+WHERE s.season_label = '2024/25'
+GROUP BY GROUPING SETS ((c.confederation), (p.position), ())
+ORDER BY GROUPING_ID(c.confederation, p.position), tong_phi_trieu_eur DESC;
+GO
+
+/* [8.2] TRUY VẤN MDX TƯƠNG ỨNG (HỢP 3 TẬP TUPLE CÙNG CHIỀU = 3 GROUPING SETS)
+   Cube [Thị trường cầu thủ]. Thành viên [All] của hierarchy còn lại đóng vai trò cột "Tất cả".
+-------------------------------------------------------------------------------------------------
+WITH
+  MEMBER [Measures].[Tổng phí (triệu €)] AS [Measures].[Phí chuyển nhượng] / 1000000, FORMAT_STRING = "#,##0.00"
+SELECT
+  {[Measures].[Số thương vụ], [Measures].[Số thương vụ công bố phí], [Measures].[Tổng phí (triệu €)]} ON COLUMNS,
+  NON EMPTY
+    { [CLB đến].[Liên đoàn].[Liên đoàn].MEMBERS * {[Cầu thủ].[Vị trí].[All]} }
+  + { {[CLB đến].[Liên đoàn].[All]} * [Cầu thủ].[Vị trí].[Vị trí].MEMBERS }
+  + { ([CLB đến].[Liên đoàn].[All], [Cầu thủ].[Vị trí].[All]) } ON ROWS
+FROM [Thị trường cầu thủ]
+WHERE ([Mùa giải].[Mùa giải].[2024/25]);
+------------------------------------------------------------------------------------------------- */
+
+
+/* ==============================================================================================
+   CHỦ ĐỀ 9: PHONG ĐỘ QUA CÁC MÙA VÀ PHÂN NHÓM CHI TIÊU (KHUNG CỬA SỔ, LAG/LEAD, NTILE)
+   Câu hỏi kinh doanh:
+   "Phong độ ghi bàn của Mohamed Salah tiến triển thế nào qua từng mùa (lũy kế, trung bình 3 mùa,
+    so với mùa trước/mùa sau)? Mùa 2024/25, chi tiêu ròng tập trung vào nhóm CLB nào?"
+   ============================================================================================== */
+
+-- [9.1] TRUY VẤN T-SQL (ROWS UNBOUNDED PRECEDING = LŨY KẾ; ROWS BETWEEN 2 PRECEDING = TRUNG BÌNH TRƯỢT 3 MÙA;
+--       LAG/LEAD SO SÁNH MÙA LIỀN KỀ; TỈ TRỌNG TRONG TOÀN SỰ NGHIỆP BẰNG SUM() OVER ())
+WITH SeasonStats AS (
+    SELECT s.season_key, s.season_label,
+           SUM(a.goals) AS ban_thang, SUM(a.assists) AS kien_tao, SUM(a.minutes_played) AS so_phut
+    FROM dbo.fact_player_appearance a
+    JOIN dbo.dim_player p ON p.player_key = a.player_key
+    JOIN dbo.dim_season s ON s.season_key = a.season_key
+    WHERE p.full_name = N'Mohamed Salah'
+    GROUP BY s.season_key, s.season_label
+)
+SELECT
+    season_label, ban_thang, kien_tao, so_phut,
+    SUM(ban_thang) OVER (ORDER BY season_key ROWS UNBOUNDED PRECEDING)                       AS ban_thang_luy_ke,
+    ROUND(AVG(1.0 * ban_thang) OVER (ORDER BY season_key ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS tb_truot_3_mua,
+    LAG(ban_thang)  OVER (ORDER BY season_key)                                                 AS ban_thang_mua_truoc,
+    LEAD(ban_thang) OVER (ORDER BY season_key)                                                 AS ban_thang_mua_sau,
+    ROUND(100.0 * (ban_thang - LAG(ban_thang) OVER (ORDER BY season_key))
+          / NULLIF(LAG(ban_thang) OVER (ORDER BY season_key), 0), 2)                           AS tang_truong_pct,
+    ROUND(100.0 * ban_thang / NULLIF(SUM(ban_thang) OVER (), 0), 2)                            AS ti_trong_su_nghiep_pct
+FROM SeasonStats
+ORDER BY season_key;
+GO
+
+/* [9.2] TRUY VẤN MDX TƯƠNG ỨNG (DẢI THÀNH VIÊN ":" = LŨY KẾ; LASTPERIODS = TRUNG BÌNH TRƯỢT;
+         PREVMEMBER / NEXTMEMBER = LAG / LEAD)
+   Cube [Hiệu suất cầu thủ]. AVG của MDX bỏ qua ô rỗng, giống AVG trên các mùa có dữ liệu của SQL.
+-------------------------------------------------------------------------------------------------
+WITH
+  MEMBER [Measures].[Bàn thắng lũy kế] AS
+    SUM({[Mùa giải].[Mùa giải].[Mùa giải].MEMBERS.ITEM(0) : [Mùa giải].[Mùa giải].CURRENTMEMBER},
+        [Measures].[Bàn thắng cầu thủ])
+  MEMBER [Measures].[TB trượt 3 mùa] AS
+    AVG(LASTPERIODS(3, [Mùa giải].[Mùa giải].CURRENTMEMBER), [Measures].[Bàn thắng cầu thủ]), FORMAT_STRING = "0.00"
+  MEMBER [Measures].[Bàn mùa trước] AS ([Measures].[Bàn thắng cầu thủ], [Mùa giải].[Mùa giải].CURRENTMEMBER.PREVMEMBER)
+  MEMBER [Measures].[Bàn mùa sau]   AS ([Measures].[Bàn thắng cầu thủ], [Mùa giải].[Mùa giải].CURRENTMEMBER.NEXTMEMBER)
+  MEMBER [Measures].[Tăng trưởng] AS
+    IIF(ISEMPTY([Measures].[Bàn mùa trước]) OR [Measures].[Bàn mùa trước] = 0, NULL,
+        ([Measures].[Bàn thắng cầu thủ] - [Measures].[Bàn mùa trước]) / [Measures].[Bàn mùa trước]),
+    FORMAT_STRING = "0.00%"
+  MEMBER [Measures].[Tỉ trọng sự nghiệp] AS
+    [Measures].[Bàn thắng cầu thủ] / ([Measures].[Bàn thắng cầu thủ], [Mùa giải].[Mùa giải].[All]),
+    FORMAT_STRING = "0.00%"
+SELECT
+  {[Measures].[Bàn thắng cầu thủ], [Measures].[Kiến tạo], [Measures].[Số phút], [Measures].[Bàn thắng lũy kế],
+   [Measures].[TB trượt 3 mùa], [Measures].[Bàn mùa trước], [Measures].[Bàn mùa sau], [Measures].[Tăng trưởng],
+   [Measures].[Tỉ trọng sự nghiệp]} ON COLUMNS,
+  NONEMPTY([Mùa giải].[Mùa giải].[Mùa giải].MEMBERS, [Measures].[Số phút]) ON ROWS
+FROM [Hiệu suất cầu thủ]
+WHERE ([Cầu thủ].[Cầu thủ].[Mohamed Salah]);
+------------------------------------------------------------------------------------------------- */
+
+-- [9.3] TRUY VẤN T-SQL (NTILE(4) CHIA CLB THÀNH 4 NHÓM CHI TIÊU RÒNG; RANK XẾP HẠNG; TỈ TRỌNG BẰNG SUM() OVER ())
+--       CLB được xét: có chi mua hoặc thu bán > 0 trong mùa 2024/25.
+WITH Mua AS (
+    SELECT f.to_club_key AS club_key, SUM(f.transfer_fee_eur) AS chi_mua
+    FROM dbo.fact_transfer f JOIN dbo.dim_season s ON s.season_key = f.season_key
+    WHERE s.season_label = '2024/25' GROUP BY f.to_club_key
+),
+Ban AS (
+    SELECT f.from_club_key AS club_key, SUM(f.transfer_fee_eur) AS thu_ban
+    FROM dbo.fact_transfer f JOIN dbo.dim_season s ON s.season_key = f.season_key
+    WHERE s.season_label = '2024/25' GROUP BY f.from_club_key
+),
+Rong AS (
+    SELECT COALESCE(m.club_key, b.club_key) AS club_key,
+           ISNULL(m.chi_mua, 0) AS chi_mua, ISNULL(b.thu_ban, 0) AS thu_ban,
+           ISNULL(m.chi_mua, 0) - ISNULL(b.thu_ban, 0) AS chi_tieu_rong
+    FROM Mua m FULL OUTER JOIN Ban b ON b.club_key = m.club_key
+    WHERE COALESCE(m.club_key, b.club_key) > 0   -- bỏ -1 Không rõ, -2 Không thuộc CLB nào
+      AND (ISNULL(m.chi_mua, 0) > 0 OR ISNULL(b.thu_ban, 0) > 0)
+),
+Nhom AS (
+    SELECT r.*, c.club_name,
+           RANK()   OVER (ORDER BY r.chi_tieu_rong DESC) AS hang,
+           NTILE(4) OVER (ORDER BY r.chi_tieu_rong DESC, r.club_key) AS nhom_chi_tieu,
+           COUNT(*) OVER () AS so_clb_xet
+    FROM Rong r JOIN dbo.dim_club c ON c.club_key = r.club_key
+)
+SELECT TOP 10
+    hang, nhom_chi_tieu, club_name,
+    ROUND(chi_mua / 1000000.0, 2)       AS chi_mua_trieu_eur,
+    ROUND(thu_ban / 1000000.0, 2)       AS thu_ban_trieu_eur,
+    ROUND(chi_tieu_rong / 1000000.0, 2) AS chi_tieu_rong_trieu_eur,
+    so_clb_xet
+FROM Nhom
+ORDER BY hang, club_key;
+GO
+
+-- [9.4] TÓM TẮT THEO NHÓM NTILE: MỖI NHÓM CHIẾM BAO NHIÊU % TỔNG CHI MUA
+WITH Mua AS (
+    SELECT f.to_club_key AS club_key, SUM(f.transfer_fee_eur) AS chi_mua
+    FROM dbo.fact_transfer f JOIN dbo.dim_season s ON s.season_key = f.season_key
+    WHERE s.season_label = '2024/25' GROUP BY f.to_club_key
+),
+Ban AS (
+    SELECT f.from_club_key AS club_key, SUM(f.transfer_fee_eur) AS thu_ban
+    FROM dbo.fact_transfer f JOIN dbo.dim_season s ON s.season_key = f.season_key
+    WHERE s.season_label = '2024/25' GROUP BY f.from_club_key
+),
+Rong AS (
+    SELECT COALESCE(m.club_key, b.club_key) AS club_key,
+           ISNULL(m.chi_mua, 0) AS chi_mua, ISNULL(m.chi_mua, 0) - ISNULL(b.thu_ban, 0) AS chi_tieu_rong
+    FROM Mua m FULL OUTER JOIN Ban b ON b.club_key = m.club_key
+    WHERE COALESCE(m.club_key, b.club_key) > 0   -- bỏ -1 Không rõ, -2 Không thuộc CLB nào
+      AND (ISNULL(m.chi_mua, 0) > 0 OR ISNULL(b.thu_ban, 0) > 0)
+),
+Nhom AS (
+    SELECT *, NTILE(4) OVER (ORDER BY chi_tieu_rong DESC, club_key) AS nhom_chi_tieu FROM Rong
+)
+SELECT nhom_chi_tieu,
+       COUNT(*)                                                         AS so_clb,
+       ROUND(SUM(chi_tieu_rong) / 1000000.0, 2)                         AS chi_tieu_rong_trieu_eur,
+       ROUND(100.0 * SUM(chi_mua) / NULLIF(SUM(SUM(chi_mua)) OVER (), 0), 2) AS ti_trong_chi_mua_pct
+FROM Nhom
+GROUP BY nhom_chi_tieu
+ORDER BY nhom_chi_tieu;
+GO
+
+/* [9.5] TRUY VẤN MDX TƯƠNG ỨNG [9.3] (WITH SET + ORDER + RANK; NHÓM TÍNH GIỐNG NTILE(4))
+   Cube [Thị trường cầu thủ], xem theo [CLB đến]. NTILE(4) với n CLB: n MOD 4 nhóm đầu có (n \ 4) + 1 CLB, các nhóm sau có n \ 4 CLB.
+-------------------------------------------------------------------------------------------------
+WITH
+  SET [CLB xét] AS
+    ORDER(
+      FILTER(EXCEPT([CLB đến].[CLB].[CLB].MEMBERS, {[CLB đến].[CLB].&[-1], [CLB đến].[CLB].&[-2]}),
+             [Measures].[Chi mua] > 0 OR [Measures].[Thu bán] > 0),
+      [Measures].[Chi tiêu ròng], BDESC)
+  MEMBER [Measures].[Hạng] AS RANK([CLB đến].[CLB].CURRENTMEMBER, [CLB xét], [Measures].[Chi tiêu ròng])
+  MEMBER [Measures].[Số CLB xét] AS [CLB xét].COUNT
+  MEMBER [Measures].[Vị trí trong tập] AS RANK([CLB đến].[CLB].CURRENTMEMBER, [CLB xét])
+  MEMBER [Measures].[Cỡ nhóm] AS INT([Measures].[Số CLB xét] / 4)                               -- n \ 4
+  MEMBER [Measures].[Số nhóm dư] AS [Measures].[Số CLB xét] - 4 * [Measures].[Cỡ nhóm]            -- n MOD 4 (MDX không có MOD)
+  MEMBER [Measures].[Nhóm chi tiêu] AS
+    IIF([Measures].[Vị trí trong tập] <= [Measures].[Số nhóm dư] * ([Measures].[Cỡ nhóm] + 1),
+        INT(([Measures].[Vị trí trong tập] - 1) / ([Measures].[Cỡ nhóm] + 1)) + 1,
+        [Measures].[Số nhóm dư]
+          + INT(([Measures].[Vị trí trong tập] - 1 - [Measures].[Số nhóm dư] * ([Measures].[Cỡ nhóm] + 1))
+                / [Measures].[Cỡ nhóm]) + 1)
+  MEMBER [Measures].[Chi mua (triệu €)] AS [Measures].[Chi mua] / 1000000, FORMAT_STRING = "#,##0.00"
+  MEMBER [Measures].[Thu bán (triệu €)] AS [Measures].[Thu bán] / 1000000, FORMAT_STRING = "#,##0.00"
+  MEMBER [Measures].[Chi tiêu ròng (triệu €)] AS [Measures].[Chi tiêu ròng] / 1000000, FORMAT_STRING = "#,##0.00"
+SELECT
+  {[Measures].[Hạng], [Measures].[Nhóm chi tiêu], [Measures].[Chi mua (triệu €)], [Measures].[Thu bán (triệu €)],
+   [Measures].[Chi tiêu ròng (triệu €)], [Measures].[Số CLB xét]} ON COLUMNS,
+  HEAD([CLB xét], 10) ON ROWS
+FROM [Thị trường cầu thủ]
+WHERE ([Mùa giải].[Mùa giải].[2024/25]);
+------------------------------------------------------------------------------------------------- */
+
+
+/* ==============================================================================================
+   CHỦ ĐỀ 10: VẬT HÓA BẢNG XẾP HẠNG CLB THEO MÙA (MATERIALIZED VIEW = INDEXED VIEW TRONG SQL SERVER)
+   Câu hỏi kinh doanh:
+   "Bảng xếp hạng (điểm, thắng, hiệu số) theo CLB × mùa được hỏi lặp lại rất nhiều lần.
+    Có thể tính sẵn một lần rồi đọc lại thay vì quét ~360 nghìn dòng fact mỗi lần không?"
+   Ghi chú:
+   - SQL Server không có lệnh CREATE MATERIALIZED VIEW; tương đương là view WITH SCHEMABINDING
+     + UNIQUE CLUSTERED INDEX. Kết quả được lưu thật và SQL Server tự cập nhật khi SSIS nạp thêm fact.
+   - Điều kiện: đủ các SET ở dưới, tên bảng ghi đủ schema, có COUNT_BIG(*), SUM không được trên biểu thức nullable.
+   - Lưu SUM và COUNT (không lưu tỉ lệ) để tổng hợp lên mức cao hơn vẫn tính đúng tỉ lệ (điểm mỗi trận, tỉ lệ thắng).
+   - Cube MOLAP của SSAS cũng là một dạng vật hóa: aggregation được tính sẵn khi Process.
+   ============================================================================================== */
+
+-- [10.1] TẠO MATERIALIZED VIEW (CHẠY MỘT LẦN)
+SET ANSI_NULLS ON;
+SET ANSI_PADDING ON;
+SET ANSI_WARNINGS ON;
+SET ARITHABORT ON;
+SET CONCAT_NULL_YIELDS_NULL ON;
+SET QUOTED_IDENTIFIER ON;
+SET NUMERIC_ROUNDABORT OFF;
+GO
+IF OBJECT_ID(N'dbo.mv_club_season_standing', N'V') IS NOT NULL
+    DROP VIEW dbo.mv_club_season_standing;
+GO
+CREATE VIEW dbo.mv_club_season_standing
+WITH SCHEMABINDING
+AS
+SELECT f.season_key,
+       f.club_key,
+       COUNT_BIG(*)                          AS so_tran,
+       SUM(ISNULL(f.points, 0))              AS diem,
+       SUM(ISNULL(f.is_win, 0))              AS thang,
+       SUM(ISNULL(f.is_draw, 0))             AS hoa,
+       SUM(ISNULL(f.is_loss, 0))             AS thua,
+       SUM(ISNULL(f.goals_for, 0))           AS ban_thang,
+       SUM(ISNULL(f.goals_against, 0))       AS ban_thua
+FROM dbo.fact_team_match AS f
+GROUP BY f.season_key, f.club_key;
+GO
+CREATE UNIQUE CLUSTERED INDEX ix_mv_club_season_standing
+    ON dbo.mv_club_season_standing (season_key, club_key);
+GO
+
+-- [10.2] ĐỌC TỪ KẾT QUẢ ĐÃ VẬT HÓA: TOP 10 CLB MÙA 2024/25 (NOEXPAND = ĐỌC THẲNG INDEX CỦA VIEW)
+--        Điểm mỗi trận và tỉ lệ thắng tính lại từ SUM / COUNT đã lưu, không lấy trung bình các tỉ lệ.
+SELECT TOP 10
+    RANK() OVER (ORDER BY v.diem DESC, v.ban_thang - v.ban_thua DESC) AS hang,
+    c.club_name, v.so_tran, v.thang, v.hoa, v.thua, v.diem,
+    v.ban_thang - v.ban_thua                                   AS hieu_so,
+    ROUND(1.0 * v.diem / NULLIF(v.so_tran, 0), 2)              AS diem_moi_tran,
+    ROUND(100.0 * v.thang / NULLIF(v.so_tran, 0), 2)           AS ti_le_thang_pct
+FROM dbo.mv_club_season_standing AS v WITH (NOEXPAND)
+JOIN dbo.dim_club c   ON c.club_key = v.club_key
+JOIN dbo.dim_season s ON s.season_key = v.season_key
+WHERE s.season_label = '2024/25'
+ORDER BY hang, c.club_name;
+GO
+
+-- [10.3] TỔNG HỢP LÊN MỨC CAO HƠN TỪ VIEW (QUERY REWRITE THỦ CÔNG): TỈ LỆ THẮNG THEO MÙA CỦA TOÀN BỘ CLB
+--        Cộng các SUM và COUNT đã vật hóa rồi mới chia. Kết quả phải trùng với tính thẳng trên fact.
+SELECT s.season_label,
+       SUM(v.so_tran)                                               AS so_tran,
+       ROUND(100.0 * SUM(v.thang) / NULLIF(SUM(v.so_tran), 0), 2)   AS ti_le_thang_pct,
+       ROUND(1.0 * SUM(v.diem) / NULLIF(SUM(v.so_tran), 0), 3)      AS diem_moi_tran
+FROM dbo.mv_club_season_standing AS v WITH (NOEXPAND)
+JOIN dbo.dim_season s ON s.season_key = v.season_key
+WHERE s.season_label IN ('2022/23', '2023/24', '2024/25')
+GROUP BY s.season_label
+ORDER BY s.season_label;
+GO
+
+/* [10.4] TRUY VẤN MDX TƯƠNG ỨNG [10.2] (CUBE MOLAP ĐỌC AGGREGATION ĐÃ TÍNH SẴN)
+   Cube [Hiệu suất đội bóng]. Top 10 CLB theo điểm, hòa điểm thì xét hiệu số.
+-------------------------------------------------------------------------------------------------
+WITH
+  MEMBER [Measures].[Điểm mỗi trận] AS IIF([Measures].[Số trận] = 0, NULL, [Measures].[Điểm] / [Measures].[Số trận]),
+    FORMAT_STRING = "0.00"
+  MEMBER [Measures].[Khóa xếp hạng] AS [Measures].[Điểm] * 1000 + [Measures].[Hiệu số]
+SELECT
+  {[Measures].[Số trận], [Measures].[Thắng], [Measures].[Hòa], [Measures].[Thua], [Measures].[Điểm],
+   [Measures].[Hiệu số], [Measures].[Điểm mỗi trận], [Measures].[Tỉ lệ thắng]} ON COLUMNS,
+  TOPCOUNT(NONEMPTY([CLB].[CLB].[CLB].MEMBERS, [Measures].[Số trận]), 10, [Measures].[Khóa xếp hạng]) ON ROWS
+FROM [Hiệu suất đội bóng]
+WHERE ([Mùa giải].[Mùa giải].[2024/25]);
 ------------------------------------------------------------------------------------------------- */

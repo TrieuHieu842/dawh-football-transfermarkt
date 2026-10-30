@@ -713,6 +713,7 @@
               <ColumnID>market_value_eur</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="ffa48b7c-b9e5-4c88-812a-67ea32c0d823">
@@ -739,6 +740,7 @@
               <ColumnID>age_at_valuation</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="6f9879a8-c0de-4c12-bd75-8933d8b42c17">
@@ -752,6 +754,7 @@
               <ColumnID>has_age</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="9e129c8d-ebe5-42a6-8c3c-f21b41c52fdd">
@@ -935,6 +938,7 @@
               <ColumnID>has_premium</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="12fcbf7f-cefb-41cf-8585-5c9cee6174c3">
@@ -987,6 +991,7 @@
               <ColumnID>pro_age</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="877c9867-ab0a-4cb4-aa06-b3e6c06e5584">
@@ -1185,6 +1190,23 @@ CREATE MEMBER CURRENTCUBE.[Measures].[Thu bán] AS
 CREATE MEMBER CURRENTCUBE.[Measures].[Chi tiêu ròng] AS
     [Measures].[Chi mua] - [Measures].[Thu bán],
     FORMAT_STRING = "#,##0", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Chuyển nhượng';
+
+/* Bản đơn vị triệu € của các số tiền chuyển nhượng, để báo cáo (Power BI) hiện đúng đơn vị thay vì số € dài hoặc kiểu 84bn */
+CREATE MEMBER CURRENTCUBE.[Measures].[Phí chuyển nhượng (triệu €)] AS
+    [Measures].[Phí chuyển nhượng] / 1000000,
+    FORMAT_STRING = "#,##0.0", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Chuyển nhượng';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Chi mua (triệu €)] AS
+    [Measures].[Chi mua] / 1000000,
+    FORMAT_STRING = "#,##0.0", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Chuyển nhượng';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Thu bán (triệu €)] AS
+    [Measures].[Thu bán] / 1000000,
+    FORMAT_STRING = "#,##0.0", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Chuyển nhượng';
+
+CREATE MEMBER CURRENTCUBE.[Measures].[Chi tiêu ròng (triệu €)] AS
+    [Measures].[Chi tiêu ròng] / 1000000,
+    FORMAT_STRING = "#,##0.0", VISIBLE = 1, ASSOCIATED_MEASURE_GROUP = 'Chuyển nhượng';
 
 /* Ngân sách giả định cho KPI (100 triệu € mỗi CLB mỗi mùa) */
 CREATE MEMBER CURRENTCUBE.[Measures].[Ngân sách chuyển nhượng] AS

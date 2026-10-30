@@ -87,7 +87,7 @@ Lý do: measure ở mức từng dòng không đổi khi người dùng đổi b
 |---|---|---|---|---|---|---|
 | `stadium_capacity_band` | Thuộc tính (SCD2) | Nạp Dim_Club (SCD1 SCD2 SCD3) → *Chuẩn hóa giá trị và nhóm sức chứa sân (Derived Column)* | `?: theo ngưỡng 20.000 / 40.000 / 60.000 chỗ` | Nhóm quy mô sân | Sân lớn có giúp đội nhà thắng nhiều hơn? | Tham khảo khi nâng cấp sân |
 | `country_name, confederation` | Thuộc tính (SCD1) | Nạp Dim_Club (SCD1 SCD2 SCD3) → *Tra tên giải VĐQG… (Lookup) + Chuẩn hóa… (Derived Column)* | `lấy theo giải VĐQG; UPPER + so sánh: EUROPA→UEFA, ASIEN→AFC…` | Quốc gia, liên đoàn của CLB | Dòng tiền chuyển nhượng giữa các quốc gia, châu lục? | Phân tích thị trường mua bán |
-| `club_type` | Thuộc tính (SCD1) | Nạp Dim_Club / Bổ sung CLB… → *Gắn loại … (Derived Column)* | `hằng 'Club' / 'National Team' / 'Other'` | Phân loại CLB, đội tuyển, CLB ngoài phạm vi | — | Tách thống kê CLB và đội tuyển |
+| `club_type` | Thuộc tính (SCD1) | Nạp Dim_Club / Bổ sung CLB… → *Gắn loại … (Derived Column)* | `hằng 'Club' / 'National Team' / 'CLB ngoài dữ liệu'` | Phân loại CLB, đội tuyển, CLB không có trong clubs.csv (dòng đặc biệt: 'Không rõ' = -1, 'Không áp dụng' = -2) | — | Tách thống kê CLB và đội tuyển |
 
 ### Dim_Player
 

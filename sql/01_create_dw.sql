@@ -15,7 +15,8 @@
     USE football_dwh_dw;
     GO
 
-    /* ---------- Xóa theo thứ tự phụ thuộc (fact trước, dimension sau) ---------- */
+    /* ---------- Xóa theo thứ tự phụ thuộc (view vật hóa, fact, rồi dimension) ---------- */
+    DROP VIEW IF EXISTS dbo.mv_club_season_standing;        -- materialized view (02, chủ đề 10) gắn SCHEMABINDING vào fact_team_match
     DROP TABLE IF EXISTS dbo.fact_club_season_summary;      -- bảng cũ (đã thay bằng snapshot)
     DROP TABLE IF EXISTS dbo.fact_player_season_summary;    -- bảng cũ (đã thay bằng snapshot)
     DROP TABLE IF EXISTS dbo.fact_club_season_snapshot;     -- bảng cũ (đã bỏ, tổng hợp chuyển sang SSAS/Power BI)
@@ -86,7 +87,7 @@
         club_key               INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
         club_id                INT           NOT NULL,
         club_name              NVARCHAR(200) NOT NULL,         -- SCD1
-        club_type              NVARCHAR(20)  NOT NULL,         -- SCD1: Club | National Team | Other
+        club_type              NVARCHAR(20)  NOT NULL,         -- SCD1: Club | National Team | CLB ngoài dữ liệu
         country_name           NVARCHAR(100) NOT NULL,         -- SCD1
         confederation          NVARCHAR(20)  NOT NULL,         -- SCD1
         current_league_id      NVARCHAR(20)  NULL,             -- SCD3
@@ -340,23 +341,29 @@
         ( 6, N'Có phí',                  N'> 50 triệu');
     GO
 
-    /* ---------- Dòng Unknown cho các dimension nạp từ nguồn ---------- */
+    /* ---------- Dòng đặc biệt cho các dimension nạp từ nguồn ----------
+       -1 = Không rõ: nguồn có mã nhưng không tra được trong danh mục, hoặc nguồn ghi "Unknown" (được ghi log ở etl_reject).
+       -2 = Không áp dụng: về bản chất không có giá trị (cầu thủ không thuộc CLB nào, CLB không thuộc giải VĐQG nào).
+       Tên dòng đặc biệt nói rõ lý do để khi xem trên cube / Power BI người dùng hiểu vì sao không có thông tin. */
     SET IDENTITY_INSERT dbo.dim_competition ON;
     INSERT dbo.dim_competition (competition_key, competition_id, competition_name, competition_type, competition_sub_type, country_name, confederation)
-    VALUES (-1, N'-1', N'Không xác định', N'Không xác định', N'Không xác định', N'Không xác định', N'Không xác định');
+    VALUES (-1, N'-1', N'Không rõ giải (mã thiếu trong danh mục)', N'Không xác định', N'Không xác định', N'Không xác định', N'Không xác định'),
+           (-2, N'-2', N'Không thuộc giải VĐQG', N'Không áp dụng', N'Không áp dụng', N'Không áp dụng', N'Không áp dụng');
     SET IDENTITY_INSERT dbo.dim_competition OFF;
 
     SET IDENTITY_INSERT dbo.dim_club ON;
     INSERT dbo.dim_club (club_key, club_id, club_name, club_type, country_name, confederation, current_league_id, current_league_name,
                         previous_league_name, stadium_name, stadium_capacity_band, effective_date, expiry_date, is_current)
-    VALUES (-1, -1, N'Không xác định', N'Other', N'Không xác định', N'Không xác định', NULL, N'Không xác định',
-            NULL, N'Không xác định', N'Không xác định', '1900-01-01', '9999-12-31', 1);
+    VALUES (-1, -1, N'Không rõ CLB', N'Không rõ', N'Không xác định', N'Không xác định', NULL, N'Không xác định',
+            NULL, N'Không xác định', N'Không xác định', '1900-01-01', '9999-12-31', 1),
+           (-2, -2, N'Không thuộc CLB nào', N'Không áp dụng', N'Không áp dụng', N'Không áp dụng', NULL, N'Không áp dụng',
+            NULL, N'Không áp dụng', N'Không áp dụng', '1900-01-01', '9999-12-31', 1);
     SET IDENTITY_INSERT dbo.dim_club OFF;
 
     SET IDENTITY_INSERT dbo.dim_player ON;
     INSERT dbo.dim_player (player_key, player_id, full_name, date_of_birth, country_of_birth, citizenship, position, sub_position, foot,
                         height_band, agent_name, contract_expiry_year, international_caps_band, effective_date, expiry_date, is_current)
-    VALUES (-1, -1, N'Không xác định', NULL, N'Không xác định', N'Không xác định', N'Không xác định', N'Không xác định', N'Không xác định',
+    VALUES (-1, -1, N'Không rõ cầu thủ', NULL, N'Không xác định', N'Không xác định', N'Không xác định', N'Không xác định', N'Không xác định',
             N'Không xác định', N'Không xác định', NULL, N'Không xác định', '1900-01-01', '9999-12-31', 1);
     SET IDENTITY_INSERT dbo.dim_player OFF;
 
@@ -366,7 +373,7 @@
     SET IDENTITY_INSERT dbo.dim_match OFF;
 
     SET IDENTITY_INSERT dbo.dim_manager ON;
-    INSERT dbo.dim_manager (manager_key, manager_name) VALUES (-1, N'Không xác định');
+    INSERT dbo.dim_manager (manager_key, manager_name) VALUES (-1, N'Không xác định');   -- nguồn để trống tên HLV; SSIS gán đúng chuỗi này rồi tra ra -1
     SET IDENTITY_INSERT dbo.dim_manager OFF;
     GO
 

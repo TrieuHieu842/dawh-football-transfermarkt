@@ -1727,6 +1727,7 @@
               <ColumnID>age_at_valuation</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="7cbc4d29-3126-4b8c-a82d-497e2b2b387e">
@@ -1740,6 +1741,7 @@
               <ColumnID>has_age</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="1d6f6645-94d6-403e-a440-3f39f86d005f">
@@ -1905,6 +1907,7 @@
               <ColumnID>has_premium</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="55f76a52-76ae-467a-bc70-e7bda867ddf4">
@@ -1957,6 +1960,7 @@
               <ColumnID>pro_age</ColumnID>
             </Source>
           </Source>
+          <Visible>false</Visible>
           <FormatString>#,##0</FormatString>
         </Measure>
         <Measure dwd:design-time-name="9547006d-0a91-4e4a-b184-85d764e6738b">

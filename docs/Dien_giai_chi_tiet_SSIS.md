@@ -145,7 +145,7 @@ Nạp Dim_Competition (SCD1)
    ──► Nạp Dim_Manager
 ```
 
-Thứ tự: Dim_Competition có trước để Dim_Club tra tên giải VĐQG; Dim_Club (từ clubs.csv) có trước để bước bổ sung CLB *Other* biết CLB nào đã tồn tại.
+Thứ tự: Dim_Competition có trước để Dim_Club tra tên giải VĐQG; Dim_Club (từ clubs.csv) có trước để bước bổ sung CLB *ngoài dữ liệu* biết CLB nào đã tồn tại.
 
 ### 3.2. Các Data Flow
 
@@ -601,7 +601,7 @@ EXEC dbo.usp_DimClub_NewVersion ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 
 | Đích | Cách nạp | Số component |
 |---|---|---|
-| `Dim_Club (club_type = Other)` | Chỉ thêm mới | 15 |
+| `Dim_Club (club_type = CLB ngoài dữ liệu)` | Chỉ thêm mới | 15 |
 
 Nhiều `club_id` xuất hiện trong trận đấu, chuyển nhượng, định giá nhưng không có trong `clubs.csv` (CLB hạng dưới, CLB nước ngoài). Data Flow này gom các CLB đó từ 5 nguồn, chỉ thêm những CLB chưa có trong Dim_Club với `club_type = Other`, nhờ vậy khi nạp fact không bị rơi về Unknown.
 
@@ -636,6 +636,7 @@ Gán thuộc tính cho CLB Other                     ────► Thêm CLB O
 ```sql
 SELECT DISTINCT CAST(current_club_id AS NVARCHAR(20)) AS club_id, CAST(current_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_player_valuations
+WHERE ISNULL(TRY_CAST(current_club_id AS INT), 0) NOT IN (123, 515, 2077, 2113, 75)  -- mã đặc biệt, không phải CLB
 ```
 
 **3.2.3.2. Đọc CLB đi từ transfers** · *OLE DB Source*
@@ -648,6 +649,7 @@ FROM dbo.stg_raw_player_valuations
 ```sql
 SELECT DISTINCT CAST(from_club_id AS NVARCHAR(20)) AS club_id, CAST(from_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_transfers
+WHERE ISNULL(TRY_CAST(from_club_id AS INT), 0) NOT IN (123, 515, 2077, 2113, 75)  -- mã đặc biệt, không phải CLB
 ```
 
 **3.2.3.3. Đọc CLB đến từ transfers** · *OLE DB Source*
@@ -660,6 +662,7 @@ FROM dbo.stg_raw_transfers
 ```sql
 SELECT DISTINCT CAST(to_club_id AS NVARCHAR(20)) AS club_id, CAST(to_club_name AS NVARCHAR(200)) AS club_name, CAST(batch_id AS NVARCHAR(30)) AS batch_id
 FROM dbo.stg_raw_transfers
+WHERE ISNULL(TRY_CAST(to_club_id AS INT), 0) NOT IN (123, 515, 2077, 2113, 75)  -- mã đặc biệt, không phải CLB
 ```
 
 **3.2.3.4. Đọc đội khách từ games** · *OLE DB Source*
@@ -781,7 +784,7 @@ Tính toán ở mức từng dòng ngay trong ETL (chuẩn hóa giá trị, nhó
     ```
   - cột mới `club_type` (DT_WSTR(20)):
     ```
-    (DT_WSTR,20)"Other"
+    (DT_WSTR,20)"CLB ngoài dữ liệu"
     ```
   - cột mới `country_std` (DT_WSTR(100)):
     ```
@@ -1371,6 +1374,7 @@ Ghi cửa sổ nạp gia tăng
    ──► Nạp Fact_Player_Appearance
    ──► Nạp Fact_Player_Valuation
    ──► Nạp Fact_Transfer
+   ──► Ghi log mã không tra được
    ──► Ghi nhật ký kết thúc lần chạy
 ```
 
@@ -1409,20 +1413,69 @@ WHERE batch_id = N'BATCH_20261026_152845';
 
 Ý nghĩa: mỗi lần chạy có đúng 1 dòng trong `etl_batch`. So `fact_rows_before` và `fact_rows_after` để thấy lần nạp đó thêm bao nhiêu dòng (lần chạy lại toàn bộ thì hai số bằng nhau). Nếu một lần chạy dừng giữa chừng, dòng của nó còn `RUNNING`; lần chạy sau sẽ đổi thành `FAILED`. Dòng fact nào cũng truy được về lần chạy đã nạp nó qua `batch_id`.
 
+**Ghi log mã không tra được** · *Execute SQL Task* — kết nối `localhost.football_dwh_dw`, chạy sau 4 Data Flow fact. Ghi vào etl_reject các mã có ở nguồn nhưng không có trong dimension (fact vẫn nạp với khóa -1). Câu lệnh:
+
+```sql
+/* Ghi log mã có trong dữ liệu nguồn nhưng không có trong danh mục (dimension): dòng fact vẫn được nạp với khóa -1,
+   log giúp truy vết mã nào thiếu. Mã nguồn để trống không bị ghi vì đó là -2 "Không áp dụng", không phải lỗi. */
+INSERT INTO football_dwh_staging.dbo.etl_reject (batch_id, source_table, natural_key, reason)
+SELECT (SELECT TOP 1 batch_id FROM dbo.etl_batch WHERE status = N'RUNNING' ORDER BY started_at DESC),
+       x.source_table, x.natural_key, x.reason
+FROM (
+    SELECT N'stg_raw_club_games' AS source_table,
+           CAST(cg.game_id AS NVARCHAR(20)) + N'|' + CAST(cg.club_id AS NVARCHAR(20)) AS natural_key,
+           N'Mã giải ' + g.cid + N' không có trong Dim_Competition, gán khóa -1' AS reason
+    FROM football_dwh_staging.dbo.stg_raw_club_games AS cg
+    JOIN (SELECT LTRIM(RTRIM(CAST(game_id AS NVARCHAR(20)))) AS gid, LTRIM(RTRIM(CAST(competition_id AS NVARCHAR(20)))) AS cid
+          FROM football_dwh_staging.dbo.stg_raw_games) AS g ON g.gid = LTRIM(RTRIM(CAST(cg.game_id AS NVARCHAR(20))))
+    WHERE g.cid <> N'' AND NOT EXISTS (SELECT 1 FROM dbo.dim_competition c WHERE c.competition_id = g.cid)
+    UNION ALL
+    SELECT N'stg_raw_appearances', CAST(a.appearance_id AS NVARCHAR(50)),
+           N'Mã giải ' + LTRIM(RTRIM(CAST(a.competition_id AS NVARCHAR(20)))) + N' không có trong Dim_Competition, gán khóa -1'
+    FROM football_dwh_staging.dbo.stg_raw_appearances AS a
+    WHERE LTRIM(RTRIM(CAST(a.competition_id AS NVARCHAR(20)))) <> N''
+      AND NOT EXISTS (SELECT 1 FROM dbo.dim_competition c WHERE c.competition_id = LTRIM(RTRIM(CAST(a.competition_id AS NVARCHAR(20)))))
+    UNION ALL
+    SELECT N'stg_raw_appearances', CAST(a.appearance_id AS NVARCHAR(50)),
+           N'Mã cầu thủ ' + LTRIM(RTRIM(CAST(a.player_id AS NVARCHAR(20)))) + N' không có trong Dim_Player, gán khóa -1'
+    FROM football_dwh_staging.dbo.stg_raw_appearances AS a
+    WHERE TRY_CAST(a.player_id AS INT) IS NOT NULL
+      AND NOT EXISTS (SELECT 1 FROM dbo.dim_player p WHERE p.player_id = TRY_CAST(a.player_id AS INT))
+    UNION ALL
+    SELECT N'stg_raw_player_valuations',
+           CAST(v.player_id AS NVARCHAR(20)) + N'|' + LEFT(CAST(v.[date] AS NVARCHAR(30)), 10),
+           N'Mã giải ' + LTRIM(RTRIM(CAST(v.player_club_domestic_competition_id AS NVARCHAR(20)))) + N' không có trong Dim_Competition, gán khóa -1'
+    FROM football_dwh_staging.dbo.stg_raw_player_valuations AS v
+    WHERE LTRIM(RTRIM(CAST(v.player_club_domestic_competition_id AS NVARCHAR(20)))) <> N''
+      AND NOT EXISTS (SELECT 1 FROM dbo.dim_competition c
+                      WHERE c.competition_id = LTRIM(RTRIM(CAST(v.player_club_domestic_competition_id AS NVARCHAR(20)))))
+    UNION ALL
+    SELECT N'stg_raw_transfers',
+           CAST(t.player_id AS NVARCHAR(20)) + N'|' + LEFT(CAST(t.transfer_date AS NVARCHAR(30)), 10),
+           N'Mã cầu thủ ' + LTRIM(RTRIM(CAST(t.player_id AS NVARCHAR(20)))) + N' không có trong Dim_Player, gán khóa -1'
+    FROM football_dwh_staging.dbo.stg_raw_transfers AS t
+    WHERE TRY_CAST(t.player_id AS INT) IS NOT NULL
+      AND NOT EXISTS (SELECT 1 FROM dbo.dim_player p WHERE p.player_id = TRY_CAST(t.player_id AS INT))
+) AS x;
+```
+
+Ý nghĩa: dòng fact có mã không tra được vẫn được nạp với khóa **-1** (không làm mất số liệu), còn mã bị thiếu được ghi lại trong `etl_reject` để truy vết và bổ sung danh mục. Mã nguồn để trống không bị ghi log vì đó là trường hợp **-2 Không áp dụng**, không phải lỗi. Log được xóa ở đầu container (task *Ghi cửa sổ nạp gia tăng*) nên luôn phản ánh lần chạy gần nhất.
+
 ### 4.2. Khung xử lý chung của 4 Data Flow fact chi tiết
 
 | Bước | Component | Xử lý | Dòng không đạt |
 |---|---|---|---|
-| 1 | Đọc … từ Staging | Đọc stage, CAST cột cần dùng | |
-| 2 | Làm sạch chuỗi | TRIM, bỏ NBSP, rỗng → NULL | |
+| 1 | Đọc … từ Staging | Đọc stage, CAST cột cần dùng; loại trùng bằng `ROW_NUMBER() … WHERE rn = 1`; `NOT EXISTS` bỏ dòng đã có trong fact; đổi mã đặc biệt sang -1 / -2 (xem dưới) |  |
+| 2 | Làm sạch chuỗi | TRIM, bỏ NBSP, rỗng → NULL |  |
 | 3 | Ép kiểu dữ liệu | Ép kiểu số, ngày | Lỗi ép kiểu → `etl_reject` |
 | 4 | Kiểm tra hợp lệ và cửa sổ nạp | Quy tắc nghiệp vụ + cửa sổ nạp | Vi phạm → `etl_reject`; ngoài cửa sổ → bỏ qua |
-| 5 | Loại trùng theo … | Loại trùng theo khóa tự nhiên | |
-| 6 | Tính … | Tính measure mức từng dòng (cờ, tuổi, phí chênh, khóa ngày) | |
-| 7 | Tra khóa … | Tra surrogate key | Không thấy → NULL |
-| 8 | Gán khóa Unknown … | NULL → -1 | |
-| 9 | Bỏ qua dòng đã có trong Fact | Tra chính bảng fact | Đã có → bỏ qua |
-| 10 | Ghi vào Fact_… | Fast load dòng mới | |
+| 5 | Tính … | Tính measure mức từng dòng (cờ, tuổi, phí chênh, khóa ngày) |  |
+| 6 | Tra khóa … | Tra surrogate key | Không thấy → NULL |
+| 7 | Gán khóa Unknown … | NULL → -1 | Mã thiếu được ghi log ở task *Ghi log mã không tra được* |
+| 8 | Bỏ qua dòng đã có trong Fact | Tra chính bảng fact | Đã có → bỏ qua |
+| 9 | Ghi vào Fact_… | Fast load dòng mới |  |
+
+**Hai loại khóa đặc biệt.** **-1 = Không rõ**: nguồn có mã nhưng mã không có trong danh mục (ví dụ 5 mã giải có trong `games.csv` nhưng không có trong `competitions.csv`), hoặc nguồn ghi CLB *Unknown* (`club_id` 75). **-2 = Không áp dụng**: về bản chất không có giá trị, gồm cầu thủ không thuộc CLB nào trong chuyển nhượng và định giá (`club_id` 515 *Without Club*, 123 *Retired*, 2113 *Career break*, 2077 *Ban*) và lần định giá của cầu thủ mà CLB không thuộc giải VĐQG nào (nguồn để trống `player_club_domestic_competition_id`). Các mã này được đổi ngay trong câu SQL nguồn, nên Lookup và `NOT EXISTS` khớp đúng dòng -1 / -2 của dimension; các dòng -1 / -2 do script `01_create_dw.sql` tạo sẵn với tên nói rõ lý do.
 
 Output **Out Of Window** của *Kiểm tra hợp lệ và cửa sổ nạp* **không nối tới đâu**: các sự kiện nằm ngoài cửa sổ được bỏ qua ở lần chạy này và nạp ở lần chạy có cửa sổ phù hợp.
 
@@ -2209,14 +2262,22 @@ Bỏ qua dòng đã có trong Fact                     ── [Lookup No Match O
 - **Câu truy vấn:**
 
 ```sql
-/* Loại trùng theo (cầu thủ, ngày) ngay tại nguồn (thay component Sort), làm TRƯỚC khi tính LAG.
+/* Giải đấu nguồn để trống (CLB không thuộc giải VĐQG nào trong dữ liệu) -> mã -2 "Không thuộc giải VĐQG";
+   mã có nhưng không có trong Dim_Competition vẫn ra -1 và được ghi log.
+   CLB hiện tại là mã đặc biệt (Without Club 515, Retired 123, Career break 2113, Ban 2077) -> -2; Unknown (75) -> -1.
+   Loại trùng theo (cầu thủ, ngày) ngay tại nguồn (thay component Sort), làm TRƯỚC khi tính LAG.
    NOT EXISTS (sau LAG): bỏ lần định giá đã có trong fact. */
 WITH v0 AS (
     SELECT CAST(player_id AS NVARCHAR(20))                            AS player_id,
            CAST([date] AS NVARCHAR(30))                               AS valuation_date_raw,
            CAST(market_value_in_eur AS NVARCHAR(30))                  AS market_value,
-           CAST(current_club_id AS NVARCHAR(20))                      AS current_club_id,
-           CAST(player_club_domestic_competition_id AS NVARCHAR(20))  AS competition_id,
+           CAST(CASE WHEN TRY_CAST(current_club_id AS INT) IN (123, 515, 2077, 2113) THEN N'-2'
+                          WHEN TRY_CAST(current_club_id AS INT) = 75 THEN N'-1'
+                          ELSE CAST(current_club_id AS NVARCHAR(20)) END AS NVARCHAR(20))
+                                                                      AS current_club_id,  -- Without Club, Retired... -> -2; Unknown -> -1
+           CAST(CASE WHEN NULLIF(LTRIM(RTRIM(REPLACE(CAST(player_club_domestic_competition_id AS NVARCHAR(20)), NCHAR(160), N''))), N'') IS NULL
+                     THEN N'-2' ELSE CAST(player_club_domestic_competition_id AS NVARCHAR(20)) END AS NVARCHAR(20))
+                                                                      AS competition_id,  -- nguồn trống: không thuộc giải VĐQG -> -2
            CAST(batch_id AS NVARCHAR(30))                             AS batch_id,
            TRY_CAST(LEFT(CAST([date] AS NVARCHAR(30)), 10) AS DATE)   AS d,
            TRY_CAST(CAST(market_value_in_eur AS NVARCHAR(30)) AS BIGINT) AS mv,
@@ -2475,32 +2536,39 @@ Bỏ qua dòng đã có trong Fact                     ── [Lookup No Match O
 - **Câu truy vấn:**
 
 ```sql
-/* Loại trùng theo (cầu thủ, ngày, CLB đi, CLB đến) ngay tại nguồn (thay component Sort).
-   NOT EXISTS: bỏ thương vụ đã có trong fact. */
+/* Mã CLB đặc biệt của Transfermarkt không phải CLB thật: Without Club (515), Retired (123), Career break (2113),
+   Ban (2077) -> -2 "Không thuộc CLB nào"; Unknown (75) -> -1 "Không rõ CLB". Đổi ngay tại nguồn để Lookup và NOT EXISTS khớp dòng -1/-2.
+   Loại trùng theo (cầu thủ, ngày, CLB đi, CLB đến) bằng ROW_NUMBER; NOT EXISTS bỏ thương vụ đã có trong fact. */
 SELECT player_id, transfer_date_raw, transfer_season, from_club_id, to_club_id, transfer_fee, market_value, batch_id
 FROM (
-    SELECT CAST(player_id AS NVARCHAR(20)) AS player_id,
-           CAST(transfer_date AS NVARCHAR(30)) AS transfer_date_raw,
-           CAST(transfer_season AS NVARCHAR(10)) AS transfer_season,
-           CAST(from_club_id AS NVARCHAR(20)) AS from_club_id,
-           CAST(to_club_id AS NVARCHAR(20)) AS to_club_id,
-           CAST(transfer_fee AS NVARCHAR(30)) AS transfer_fee,
-           CAST(market_value_in_eur AS NVARCHAR(30)) AS market_value,
-           CAST(batch_id AS NVARCHAR(30)) AS batch_id,
-           ROW_NUMBER() OVER (PARTITION BY LTRIM(RTRIM(CAST(player_id AS NVARCHAR(20)))),
-                                           LEFT(LTRIM(RTRIM(CAST(transfer_date AS NVARCHAR(30)))), 10),
-                                           LTRIM(RTRIM(CAST(from_club_id AS NVARCHAR(20)))), LTRIM(RTRIM(CAST(to_club_id AS NVARCHAR(20))))
-                              ORDER BY CAST(batch_id AS NVARCHAR(30)) DESC) AS rn
-    FROM dbo.stg_raw_transfers AS s
+    SELECT m.*,
+           ROW_NUMBER() OVER (PARTITION BY LTRIM(RTRIM(m.player_id)), LEFT(LTRIM(RTRIM(m.transfer_date_raw)), 10),
+                                           LTRIM(RTRIM(m.from_club_id)), LTRIM(RTRIM(m.to_club_id))
+                              ORDER BY m.batch_id DESC) AS rn
+    FROM (
+        SELECT CAST(player_id AS NVARCHAR(20)) AS player_id,
+               CAST(transfer_date AS NVARCHAR(30)) AS transfer_date_raw,
+               CAST(transfer_season AS NVARCHAR(10)) AS transfer_season,
+               CAST(CASE WHEN TRY_CAST(from_club_id AS INT) IN (123, 515, 2077, 2113) THEN N'-2'
+                      WHEN TRY_CAST(from_club_id AS INT) = 75 THEN N'-1'
+                      ELSE CAST(from_club_id AS NVARCHAR(20)) END AS NVARCHAR(20)) AS from_club_id,
+               CAST(CASE WHEN TRY_CAST(to_club_id AS INT) IN (123, 515, 2077, 2113) THEN N'-2'
+                      WHEN TRY_CAST(to_club_id AS INT) = 75 THEN N'-1'
+                      ELSE CAST(to_club_id AS NVARCHAR(20)) END AS NVARCHAR(20)) AS to_club_id,
+               CAST(transfer_fee AS NVARCHAR(30)) AS transfer_fee,
+               CAST(market_value_in_eur AS NVARCHAR(30)) AS market_value,
+               CAST(batch_id AS NVARCHAR(30)) AS batch_id
+        FROM dbo.stg_raw_transfers
+    ) AS m
     WHERE NOT EXISTS (SELECT 1 FROM football_dwh_dw.dbo.fact_transfer f WITH (NOLOCK)
                       JOIN football_dwh_dw.dbo.dim_player p ON p.player_key = f.player_key
                       JOIN football_dwh_dw.dbo.dim_club cf ON cf.club_key = f.from_club_key
                       JOIN football_dwh_dw.dbo.dim_club ct ON ct.club_key = f.to_club_key
-                      WHERE p.player_id = TRY_CAST(s.player_id AS INT)
-                        AND f.date_key = YEAR(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 10000
-                                       + MONTH(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE)) * 100
-                                       + DAY(TRY_CAST(LEFT(CAST(s.transfer_date AS NVARCHAR(30)), 10) AS DATE))
-                        AND cf.club_id = TRY_CAST(s.from_club_id AS INT) AND ct.club_id = TRY_CAST(s.to_club_id AS INT))
+                      WHERE p.player_id = TRY_CAST(m.player_id AS INT)
+                        AND f.date_key = YEAR(TRY_CAST(LEFT(m.transfer_date_raw, 10) AS DATE)) * 10000
+                                       + MONTH(TRY_CAST(LEFT(m.transfer_date_raw, 10) AS DATE)) * 100
+                                       + DAY(TRY_CAST(LEFT(m.transfer_date_raw, 10) AS DATE))
+                        AND cf.club_id = TRY_CAST(m.from_club_id AS INT) AND ct.club_id = TRY_CAST(m.to_club_id AS INT))
 ) AS q
 WHERE rn = 1
 ```
@@ -2709,7 +2777,17 @@ Tra **surrogate key** của dimension theo khóa tự nhiên. Không tìm thấy
 - **Bảng tham chiếu:**
 
 ```sql
-SELECT fee_status, fee_band, transfer_type_key FROM dbo.dim_transfer_type
+/* Nhãn trạng thái phí / khoảng phí đi theo khóa, định nghĩa cùng quy tắc ở "Tính loại phí phí chênh và khóa ngày".
+   Không so chữ với bảng trong kho, nên dù kho tạo bằng script sai bảng mã thì khóa vẫn đúng. */
+SELECT v.fee_status, v.fee_band, t.transfer_type_key
+FROM dbo.dim_transfer_type AS t
+JOIN (VALUES (1, CAST(N'Không công bố' AS NVARCHAR(40)), CAST(N'Không áp dụng' AS NVARCHAR(30))),
+             (2, N'Miễn phí hoặc cho mượn', N'Không áp dụng'),
+             (3, N'Có phí', N'< 1 triệu'),
+             (4, N'Có phí', N'1-10 triệu'),
+             (5, N'Có phí', N'10-50 triệu'),
+             (6, N'Có phí', N'> 50 triệu')) AS v (transfer_type_key, fee_status, fee_band)
+  ON v.transfer_type_key = t.transfer_type_key
 ```
 - **Điều kiện nối:** `fee_status` = `fee_status`, `fee_band` = `fee_band`
 - **Cột lấy về:** `transfer_type_key`
