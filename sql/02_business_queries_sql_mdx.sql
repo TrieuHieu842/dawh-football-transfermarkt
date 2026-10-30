@@ -1,4 +1,4 @@
-﻿/* ==============================================================================================
+/* ==============================================================================================
    TẬP TRUY VẤN PHÂN TÍCH KINH DOANH NÂNG CAO (ADVANCED BUSINESS ANALYTICS: T-SQL & MDX)
    DỰ ÁN: KHO DỮ LIỆU BÓNG ĐÁ QUỐC TẾ (FOOTBALL TRANSFERMARKT DWH)
    CƠ SỞ DỮ LIỆU: football_dwh_dw
@@ -802,4 +802,105 @@ SELECT
   TOPCOUNT(NONEMPTY([CLB].[CLB].[CLB].MEMBERS, [Measures].[Số trận]), 10, [Measures].[Khóa xếp hạng]) ON ROWS
 FROM [Hiệu suất đội bóng]
 WHERE ([Mùa giải].[Mùa giải].[2024/25]);
+------------------------------------------------------------------------------------------------- */
+
+
+/* ==============================================================================================
+   CHỦ ĐỀ 11: PHÂN TÍCH KỶ LUẬT THI ĐẤU & CÔNG TÁC TRỌNG TÀI (CUBE [KỶ LUẬT VÀ TRỌNG TÀI])
+   Câu hỏi kinh doanh:
+   "Trọng tài nào rút thẻ nghiêm khắc nhất mỗi trận? Cơ cấu thẻ phạt theo vị trí thi đấu ra sao?
+    CLB nào có điểm trừ kỷ luật Fair-play cao nhất (chơi bạo lực nhất) ở Ngoại hạng Anh mùa 2024/25?"
+   ============================================================================================== */
+
+-- [11.1] TRUY VẤN T-SQL: TOP 10 TRỌNG TÀI RÚT THẺ NGHIÊM KHẮC NHẤT (TỐI THIỂU 50 TRẬN)
+SELECT TOP 10 
+    m.referee, 
+    COUNT(DISTINCT a.match_key) AS matches, 
+    SUM(a.yellow_cards) AS yellows, 
+    SUM(a.red_cards) AS reds,
+    SUM(a.yellow_cards) + SUM(a.red_cards) AS total_cards,
+    ROUND(CAST(SUM(a.yellow_cards) + SUM(a.red_cards) AS FLOAT) / COUNT(DISTINCT a.match_key), 2) AS cards_per_match
+FROM dbo.fact_player_appearance a
+JOIN dbo.dim_match m ON a.match_key = m.match_key
+WHERE m.referee <> N'Không xác định'
+GROUP BY m.referee
+HAVING COUNT(DISTINCT a.match_key) >= 50
+ORDER BY cards_per_match DESC;
+GO
+
+/* [11.2] TRUY VẤN MDX TƯƠNG ỨNG [11.1] TRÊN CUBE [Kỷ luật và Trọng tài]
+-------------------------------------------------------------------------------------------------
+SELECT 
+    {[Measures].[Số trận đấu], [Measures].[Thẻ vàng], [Measures].[Thẻ đỏ], [Measures].[Thẻ mỗi trận]} ON COLUMNS,
+    TOPCOUNT(
+        FILTER(
+            [Trận đấu].[Trọng tài].[Trọng tài].MEMBERS,
+            [Trận đấu].[Trọng tài].CURRENTMEMBER.NAME <> "Không xác định" 
+            AND [Measures].[Số trận đấu] >= 50
+        ),
+        10,
+        [Measures].[Thẻ mỗi trận]
+    ) ON ROWS
+FROM [Kỷ luật và Trọng tài];
+------------------------------------------------------------------------------------------------- */
+
+-- [11.3] TRUY VẤN T-SQL: CƠ CẤU THẺ PHẠT PHÂN BỔ THEO VỊ TRÍ THI ĐẤU TRÊN SÂN
+SELECT 
+    p.position, 
+    SUM(a.yellow_cards) AS yellows, 
+    SUM(a.red_cards) AS reds,
+    SUM(a.yellow_cards) + SUM(a.red_cards) AS total_cards,
+    ROUND(100.0 * (SUM(a.yellow_cards) + SUM(a.red_cards)) / SUM(SUM(a.yellow_cards) + SUM(a.red_cards)) OVER(), 2) as pct
+FROM dbo.fact_player_appearance a
+JOIN dbo.dim_player p ON a.player_key = p.player_key
+WHERE p.position NOT IN (N'Không xác định', 'Missing')
+GROUP BY p.position
+ORDER BY SUM(a.yellow_cards) + SUM(a.red_cards) DESC;
+GO
+
+/* [11.4] TRUY VẤN MDX TƯƠNG ỨNG [11.3] TRÊN CUBE [Kỷ luật và Trọng tài]
+-------------------------------------------------------------------------------------------------
+WITH 
+MEMBER [Measures].[Tỉ trọng thẻ] AS
+    [Measures].[Tổng thẻ phạt] / ([Measures].[Tổng thẻ phạt], [Cầu thủ].[Vị trí].[All]),
+    FORMAT_STRING = "0.0%"
+SELECT 
+    {[Measures].[Thẻ vàng], [Measures].[Thẻ đỏ], [Measures].[Tổng thẻ phạt], [Measures].[Tỉ trọng thẻ]} ON COLUMNS,
+    FILTER(
+        [Cầu thủ].[Vị trí].[Vị trí].MEMBERS,
+        [Cầu thủ].[Vị trí].CURRENTMEMBER.NAME NOT IN {"Không xác định", "Missing"}
+    ) ON ROWS
+FROM [Kỷ luật và Trọng tài];
+------------------------------------------------------------------------------------------------- */
+
+-- [11.5] TRUY VẤN T-SQL: ĐIỂM TRỪ KỶ LUẬT FAIR-PLAY CLB (PREMIER LEAGUE 2024/25)
+SELECT TOP 5 
+    c.club_name, 
+    SUM(a.yellow_cards) AS yellows, 
+    SUM(a.red_cards) AS reds,
+    SUM(a.yellow_cards) + SUM(a.red_cards) AS total_cards,
+    (SUM(a.yellow_cards) * 1) + (SUM(a.red_cards) * 3) AS discipline_points
+FROM dbo.fact_player_appearance a
+JOIN dbo.dim_club c ON a.club_key = c.club_key
+JOIN dbo.dim_competition k ON a.competition_key = k.competition_key
+JOIN dbo.dim_season s ON a.season_key = s.season_key
+WHERE k.competition_id = 'GB1' AND s.season_label = '2024/25'
+GROUP BY c.club_name
+ORDER BY discipline_points DESC;
+GO
+
+/* [11.6] TRUY VẤN MDX TƯƠNG ỨNG [11.5] TRÊN CUBE [Kỷ luật và Trọng tài]
+-------------------------------------------------------------------------------------------------
+SELECT 
+    {[Measures].[Thẻ vàng], [Measures].[Thẻ đỏ], [Measures].[Tổng thẻ phạt], [Measures].[Điểm kỷ luật Fair Play]} ON COLUMNS,
+    TOPCOUNT(
+        [CLB].[CLB].[CLB].MEMBERS,
+        5,
+        [Measures].[Điểm kỷ luật Fair Play]
+    ) ON ROWS
+FROM [Kỷ luật và Trọng tài]
+WHERE (
+    [Giải đấu].[Mã giải].[GB1],
+    [Mùa giải].[Mùa giải].[2024/25]
+);
 ------------------------------------------------------------------------------------------------- */

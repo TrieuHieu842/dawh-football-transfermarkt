@@ -47,6 +47,16 @@
         </ProjectItem>
       </Dependencies>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Ky luat va Trong tai.cube</Name>
+      <FullPath>Ky luat va Trong tai.cube</FullPath>
+      <Dependencies>
+        <ProjectItem>
+          <Name>Ky luat va Trong tai.partitions</Name>
+          <FullPath>Ky luat va Trong tai.partitions</FullPath>
+        </ProjectItem>
+      </Dependencies>
+    </ProjectItem>
   </Cubes>
   <Dimensions>
     <ProjectItem>
@@ -106,7 +116,7 @@
           <ConfigurationSetting>
             <Id>Football DWH</Id>
             <Name>Football DWH</Name>
-            <Value xsi:type="xsd:string">Provider=MSOLEDBSQL.1;Data Source=localhost;Integrated Security=SSPI;Initial Catalog=football_dwh_dw</Value>
+            <Value xsi:type="xsd:string">Provider=MSOLEDBSQL.1;Data Source=localhost\SSAS;Integrated Security=SSPI;Initial Catalog=football_dwh_dw</Value>
           </ConfigurationSetting>
         </ConnectionMappings>
         <ConnectionSecurityMappings>
